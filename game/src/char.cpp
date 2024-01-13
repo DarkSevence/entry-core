@@ -2104,26 +2104,7 @@ BYTE CHARACTER::GetMobBattleType() const
 
 void CHARACTER::ComputeBattlePoints()
 {
-	if (IsPolymorphed())
-	{
-		DWORD dwMobVnum = GetPolymorphVnum();
-		const CMob * pMob = CMobManager::instance().Get(dwMobVnum);
-		int iAtt = 0;
-		int iDef = 0;
-
-		if (pMob)
-		{
-			iAtt = GetLevel() * 2 + GetPolymorphPoint(POINT_ST) * 2;
-			// lev + con
-			iDef = GetLevel() + GetPolymorphPoint(POINT_HT) + pMob->m_table.wDef;
-		}
-
-		SetPoint(POINT_ATT_GRADE, iAtt);
-		SetPoint(POINT_DEF_GRADE, iDef);
-		SetPoint(POINT_MAGIC_ATT_GRADE, GetPoint(POINT_ATT_GRADE)); 
-		SetPoint(POINT_MAGIC_DEF_GRADE, GetPoint(POINT_DEF_GRADE));
-	}
-	else if (IsPC())
+	if (IsPC())
 	{
 		SetPoint(POINT_ATT_GRADE, 0);
 		SetPoint(POINT_DEF_GRADE, 0);
