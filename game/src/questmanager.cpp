@@ -648,41 +648,32 @@ namespace quest
 	bool CQuestManager::UseItem(unsigned int pc, LPITEM item, bool bReceiveAll)
 	{
 		if (test_server)
+		{
 			sys_log( 0, "questmanager::UseItem Start : itemVnum : %d PC : %d", item->GetOriginalVnum(), pc);
+		}
+	
 		PC* pPC;
+		
 		if ((pPC = GetPC(pc)))
 		{
 			if (!CheckQuestLoaded(pPC))
 			{
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
+				
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;306]");
 				}
+				
 				return false;
 			}
-			// call script
+			
 			SetCurrentItem(item);
-			/*
-			if (test_server)
-			{
-				sys_log( 0, "Quest UseItem Start : itemVnum : %d PC : %d", item->GetOriginalVnum(), pc);
-				itertype(m_mapNPC) it = m_mapNPC.begin();
-				itertype(m_mapNPC) end = m_mapNPC.end();
-				for( ; it != end ; ++it)
-				{
-					sys_log( 0, "Quest UseItem : vnum : %d item Vnum : %d", it->first, item->GetOriginalVnum());
-				}
-			}
-			if(test_server)
-			sys_log( 0, "questmanager:useItem: mapNPCVnum : %d\n", m_mapNPC[item->GetVnum()].GetVnum());
-			*/
 
 			return m_mapNPC[item->GetVnum()].OnUseItem(*pPC, bReceiveAll);
 		}
 		else
 		{
-			//cout << "no such pc id : " << pc;
 			sys_err("QUEST USE_ITEM_EVENT no such pc id : %d", pc);
 			return false;
 		}

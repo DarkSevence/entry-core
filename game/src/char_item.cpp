@@ -1743,13 +1743,19 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			return ItemProcess_Polymorph(item);
 
 		case ITEM_QUEST:
-			if (GetArena() != NULL || IsObserverMode() == true)
+		{
+			if (GetArena() || IsObserverMode() || GetWarMap())
 			{
 				if (item->GetVnum() == 50051 || item->GetVnum() == 50052 || item->GetVnum() == 50053)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "[LS;201;]");
+					ChatPacket(CHAT_TYPE_INFO, "[LS;201]");
 					return false;
 				}
+			}
+
+			if (item->IsExchanging() || item->IsEquipped())
+			{
+				return false;
 			}
 
 			if (!IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE | ITEM_FLAG_QUEST_USE_MULTIPLE))
@@ -1763,7 +1769,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					quest::CQuestManager::instance().SIGUse(GetPlayerID(), item->GetSIGVnum(), item, false);
 				}
 			}
-			break;
+		}
+		break;
 
 		case ITEM_CAMPFIRE:
 			{
