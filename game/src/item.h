@@ -51,7 +51,7 @@ class CItem : public CEntity
 		int32_t CalculateDragonSoulCell(int32_t iCandidateCell);
 		int32_t CalculateCostumeEquipCell();
 		int32_t CalculateRingEquipCell(LPCHARACTER character);
-		int32_t CalculateEquipCellByWearFlag(int32_t wearFlag);
+		int32_t CalculateEquipCellByWearFlag(int32_t wearFlag, LPCHARACTER character);
 		int32_t CalculateAbilityEquipCell(LPCHARACTER character);
 
 		void AssignToOwner(LPCHARACTER newOwner, uint8_t wearCell);

@@ -1753,11 +1753,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				}
 			}
 
-			if (item->IsExchanging() || item->IsEquipped())
-			{
-				return false;
-			}
-
 			if (!IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE | ITEM_FLAG_QUEST_USE_MULTIPLE))
 			{
 				if (item->GetSIGVnum() == 0)
@@ -6056,18 +6051,15 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 			}
 		}
 		
-#ifdef ENABLE_MOUNT_COSTUME_SYSTEM
 		if (COSTUME_MOUNT == item->GetSubType())
 		{
 			quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);
 		}
-#endif
+		
 		if (
 			(ITEM_UNIQUE == item->GetType() && UNIQUE_SPECIAL_RIDE == item->GetSubType() && IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE))
 			|| (ITEM_UNIQUE == item->GetType() && UNIQUE_SPECIAL_MOUNT_RIDE == item->GetSubType() && IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE))
-#ifdef ENABLE_MOUNT_COSTUME_SYSTEM
 			|| (ITEM_COSTUME == item->GetType() && COSTUME_MOUNT == item->GetSubType())
-#endif
 		)
 		{
 			quest::CQuestManager::instance().UseItem(GetPlayerID(), item, false);

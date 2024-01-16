@@ -588,7 +588,7 @@ int32_t CItem::FindEquipCell(LPCHARACTER character, int32_t iCandidateCell)
 		return WEAR_BELT;
 	}
 
-	int32_t wearType = CalculateEquipCellByWearFlag(GetWearFlag());
+	int32_t wearType = CalculateEquipCellByWearFlag(GetWearFlag(), character);
 	
 	if (wearType != -1)
 	{
@@ -644,11 +644,11 @@ int32_t CItem::CalculateRingEquipCell(LPCHARACTER character)
 	return character->GetWear(WEAR_RING1) ? WEAR_RING2 : WEAR_RING1;
 }
 
-int32_t CItem::CalculateEquipCellByWearFlag(int32_t wearFlag)
+int32_t CItem::CalculateEquipCellByWearFlag(int32_t wearFlag, LPCHARACTER character)
 {
 	using WearMapping = std::pair<int32_t, int32_t>;
 
-	constexpr std::array<WearMapping, 9> wearMapping = 
+	constexpr std::array<WearMapping, 10> wearMapping = 
 	{{
 		{WEARABLE_BODY, WEAR_BODY},
 		{WEARABLE_HEAD, WEAR_HEAD},
@@ -658,13 +658,19 @@ int32_t CItem::CalculateEquipCellByWearFlag(int32_t wearFlag)
 		{WEARABLE_SHIELD, WEAR_SHIELD},
 		{WEARABLE_NECK, WEAR_NECK},
 		{WEARABLE_EAR, WEAR_EAR},
-		{WEARABLE_ARROW, WEAR_ARROW}
+		{WEARABLE_ARROW, WEAR_ARROW},
+		{WEARABLE_UNIQUE, WEAR_UNIQUE1}
 	}};
 
 	for (const auto& [flag, wearType] : wearMapping) 
 	{
 		if (wearFlag & flag) 
 		{
+			if (flag == WEARABLE_UNIQUE)
+			{
+				return (character->GetWear(WEAR_UNIQUE1) ? WEAR_UNIQUE2 : WEAR_UNIQUE1);
+			}
+
 			return wearType;
 		}
 	}
