@@ -1717,6 +1717,12 @@ bool CHARACTER::ChangeSex()
 	}
 
 	sys_log(0, "CHANGE_SEX: %s (%d -> %d)", GetName(), src_race, m_points.job);
+	
+	if (GetDesc())
+	{
+		GetDesc()->DelayedDisconnect(3);
+	}
+
 	return true;
 }
 
