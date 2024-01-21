@@ -187,19 +187,17 @@ static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 		dest->SetSocket(i, src->GetSocket(i));
 	}
 }
-static bool FN_check_item_sex(LPCHARACTER ch, LPITEM item)
+
+bool FN_check_item_sex(LPCHARACTER ch, LPITEM item)
 {
-	// 남자 금지
-	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE))
+	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE)) 
 	{
-		if (SEX_MALE==GET_SEX(ch))
-			return false;
+		return SEX_MALE != GET_SEX(ch);
 	}
-	// 여자금지
+
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE)) 
 	{
-		if (SEX_FEMALE==GET_SEX(ch))
-			return false;
+		return SEX_FEMALE != GET_SEX(ch);
 	}
 
 	return true;

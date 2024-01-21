@@ -57,6 +57,8 @@ extern void gm_insert(const char * name, BYTE level);
 extern BYTE	gm_get_level(const char * name, const char * host, const char* account );
 extern void gm_host_insert(const char * host);
 extern int openid_server;
+extern bool FN_check_item_sex(LPCHARACTER ch, LPITEM item);
+
 
 #define MAPNAME_DEFAULT	"none"
 
@@ -1531,7 +1533,7 @@ void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 					break;
 
 				case EQUIPMENT:
-					if (item->CheckItemUseLevel(ch->GetLevel()) == true )
+					if (item->CheckItemUseLevel(ch->GetLevel()) && FN_check_item_sex(ch, item))
 					{
 						if (item->EquipTo(ch, p->pos) == false )
 						{

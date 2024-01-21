@@ -1657,45 +1657,63 @@ void CHARACTER::PointsPacket()
 
 bool CHARACTER::ChangeSex()
 {
-	int src_race = GetRaceNum();
+	int32_t src_race = GetRaceNum();
 
 	switch (src_race)
 	{
 		case MAIN_RACE_WARRIOR_M:
+		{
 			m_points.job = MAIN_RACE_WARRIOR_W;
 			break;
+		}
 
 		case MAIN_RACE_WARRIOR_W:
+		{
 			m_points.job = MAIN_RACE_WARRIOR_M;
 			break;
+		}
 
 		case MAIN_RACE_ASSASSIN_M:
+		{
 			m_points.job = MAIN_RACE_ASSASSIN_W;
 			break;
+		}
 
 		case MAIN_RACE_ASSASSIN_W:
+		{
 			m_points.job = MAIN_RACE_ASSASSIN_M;
 			break;
+		}
 
 		case MAIN_RACE_SURA_M:
+		{
 			m_points.job = MAIN_RACE_SURA_W;
 			break;
+		}
 
 		case MAIN_RACE_SURA_W:
+		{
 			m_points.job = MAIN_RACE_SURA_M;
 			break;
+		}
 
 		case MAIN_RACE_SHAMAN_M:
+		{
 			m_points.job = MAIN_RACE_SHAMAN_W;
 			break;
+		}
 
 		case MAIN_RACE_SHAMAN_W:
+		{
 			m_points.job = MAIN_RACE_SHAMAN_M;
 			break;
+		}
 
 		default:
+		{
 			sys_err("CHANGE_SEX: %s unknown race %d", GetName(), src_race);
 			return false;
+		}
 	}
 
 	sys_log(0, "CHANGE_SEX: %s (%d -> %d)", GetName(), src_race, m_points.job);
