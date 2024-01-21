@@ -1752,6 +1752,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					return false;
 				}
 			}
+			
+			if (item->IsExchanging() || item->IsEquipped())
+			{
+				return false;
+			}			
 
 			if (!IS_SET(item->GetFlag(), ITEM_FLAG_QUEST_USE | ITEM_FLAG_QUEST_USE_MULTIPLE))
 			{

@@ -255,7 +255,26 @@ void CPVPManager::Connect(LPCHARACTER pkChr)
 
 void CPVPManager::Disconnect(LPCHARACTER pkChr)
 {
-	//ConnectEx(pkChr, true);
+	CPVPSetMap::iterator it = m_map_pkPVPSetByID.find(pkChr->GetPlayerID());
+
+	if (it == m_map_pkPVPSetByID.end())
+		return;
+
+	std::unordered_set<CPVP*>::iterator it2 = it->second.begin();
+
+	while (it2 != it->second.end())
+	{
+		CPVP * pkPVP = *it2++;
+
+		if (pkPVP->m_players[0].dwPID == pkChr->GetPlayerID() || pkPVP->m_players[1].dwPID == pkChr->GetPlayerID())
+		{
+			pkPVP->SetVID(pkChr->GetPlayerID(), 0);
+
+			pkPVP->Packet(true);
+
+			Delete(pkPVP);
+		}
+	}
 }
 
 void CPVPManager::GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID) // This method is calling from no where yet.
@@ -654,4 +673,3 @@ void CPVPManager::Process()
 		}
 	}
 }
-
