@@ -747,7 +747,7 @@ ACMD(do_stat)
 }
 
 ACMD(do_pvp)
-{
+{	
 	if (ch->GetArena() != NULL || CArenaManager::instance().IsArenaMap(ch->GetMapIndex()) == true)
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련장에서 사용하실 수 없습니다."));
@@ -771,7 +771,13 @@ ACMD(do_pvp)
 	{
 		pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상대방이 대련중입니다."));
 		return;
-	}
+	}		
+	
+    if (pkVictim->GetLevel() < 15)
+    {
+        ch->ChatPacket(CHAT_TYPE_INFO, "[LS;307]");
+        return;
+    }		
 
 	CPVPManager::instance().Insert(ch, pkVictim);
 }
