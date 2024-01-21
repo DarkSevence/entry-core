@@ -253,26 +253,22 @@ void CPVPManager::Connect(LPCHARACTER pkChr)
 	ConnectEx(pkChr, false);
 }
 
-void CPVPManager::Disconnect(LPCHARACTER pkChr)
+void CPVPManager::Disconnect(LPCHARACTER playerCharacter)
 {
-	CPVPSetMap::iterator it = m_map_pkPVPSetByID.find(pkChr->GetPlayerID());
+	auto pvpSetIterator = m_map_pkPVPSetByID.find(playerCharacter->GetPlayerID());
 
-	if (it == m_map_pkPVPSetByID.end())
-		return;
-
-	std::unordered_set<CPVP*>::iterator it2 = it->second.begin();
-
-	while (it2 != it->second.end())
+	if (pvpSetIterator == m_map_pkPVPSetByID.end())
 	{
-		CPVP * pkPVP = *it2++;
+		return;
+	}
 
-		if (pkPVP->m_players[0].dwPID == pkChr->GetPlayerID() || pkPVP->m_players[1].dwPID == pkChr->GetPlayerID())
+	for (auto* pvpInstance : pvpSetIterator->second)
+	{
+		if (pvpInstance->m_players[0].dwPID == playerCharacter->GetPlayerID() || pvpInstance->m_players[1].dwPID == playerCharacter->GetPlayerID())
 		{
-			pkPVP->SetVID(pkChr->GetPlayerID(), 0);
-
-			pkPVP->Packet(true);
-
-			Delete(pkPVP);
+			pvpInstance->SetVID(playerCharacter->GetPlayerID(), 0);
+			pvpInstance->Packet(true);
+			Delete(pvpInstance);
 		}
 	}
 }
