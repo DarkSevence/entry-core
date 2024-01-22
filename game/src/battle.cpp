@@ -60,10 +60,11 @@ bool timed_event_cancel(LPCHARACTER ch)
 
 bool battle_is_attackable(LPCHARACTER ch, LPCHARACTER victim)
 {
-if (victim->IsDead())
-{
-	return false;
-}
+	if (victim->IsDead())
+	{
+		return false;
+	}
+	
 	if (victim->IsObserverMode())
 	{
 		return false;
@@ -89,11 +90,22 @@ if (victim->IsDead())
 		{
 			return false;
 		}
+		
+		if (ch->IsMining())
+		{
+			return false;
+		}
+	
 	}
 	
 	if (victim->IsPC())
 	{
 		if (victim->GetMyShop())
+		{
+			return false;
+		}
+		
+		if (victim->IsMining())
 		{
 			return false;
 		}
