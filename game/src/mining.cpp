@@ -8,7 +8,6 @@
 #include "db.h"
 #include "log.h"
 #include "skill.h"
-#include "utils.h"
 
 namespace mining
 {
