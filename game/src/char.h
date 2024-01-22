@@ -794,6 +794,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void StartMining(LPCHARACTER chLoad);
 		void CancelMining();
 		void ClearMiningEvent();
+		bool IsMining() const { return currentMiningEventPtr ? true : false; }
+
 
 		void			ResetPlayTime(DWORD dwTimeRemain = 0);
 

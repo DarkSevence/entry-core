@@ -2023,16 +2023,12 @@ void CHARACTER::SetProto(const CMob * pkMob)
 		m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateHorse, &CHARACTER::EndStateEmpty);
 	}
 
-	// MINING
-	if (mining::IsVeinOfOre (GetRaceNum()))
+	if (mining::IsVeinOfOre(GetRaceNum()))
 	{
 		char_event_info* info = AllocEventInfo<char_event_info>();
-
 		info->ch = this;
-
 		currentMiningEventPtr = event_create(kill_ore_load_event, info, PASSES_PER_SEC(number(7 * 60, 15 * 60)));
 	}
-	// END_OF_MINING
 }
 
 const TMobTable & CHARACTER::GetMobTable() const
@@ -3970,14 +3966,13 @@ void CHARACTER::ClearMiningEvent()
 
 void CHARACTER::CancelMining()
 {
-	if (currentMiningEventPtr == nullptr)
+	if (currentMiningEventPtr)
 	{
-		return;
+
+		sys_log(0, "Mining operation cancelled.");
+		event_cancel(&currentMiningEventPtr);
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ä���� �ߴ��Ͽ����ϴ�."));
 	}
-	
-	sys_log(0, "Mining operation cancelled.");
-	event_cancel(&currentMiningEventPtr);
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ä���� �ߴ��Ͽ����ϴ�."));
 }
 
 void CHARACTER::StartMining(LPCHARACTER chLoad)
@@ -3993,11 +3988,7 @@ void CHARACTER::StartMining(LPCHARACTER chLoad)
 		return;
 	}
 	
-	const auto currentMapIndex = GetMapIndex();
-	const auto targetMapIndex = chLoad->GetMapIndex();
-	const auto distance = DISTANCE_APPROX(GetX() - chLoad->GetX(), GetY() - chLoad->GetY());
-
-	if (currentMapIndex != targetMapIndex || distance > 1000) 
+	if (GetMapIndex() != chLoad->GetMapIndex() || DISTANCE_APPROX(GetX() - chLoad->GetX(), GetY() - chLoad->GetY()) > 1000)
 	{
 		return;
 	}
@@ -4929,6 +4920,12 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 
 	DWORD vid = GetVID();
 	sys_log(0, "OnClick %s[vnum %d ServerUniqueID %d, pid %d] by %s", GetName(), GetRaceNum(), vid, GetPlayerID(), pkChrCauser->GetName());
+
+	if (mining::IsVeinOfOre(GetRaceNum()))
+    {
+        pkChrCauser->StartMining(this);
+        return;
+    }
 
 	// ������ �����·� ����Ʈ�� ������ �� ����.
 	{

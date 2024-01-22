@@ -3,6 +3,7 @@
 
 namespace mining
 {
+	    void StartMiningProcess(LPCHARACTER ch, LPCHARACTER npc);
 	LPEVENT CreateMiningEvent(LPCHARACTER ch, LPCHARACTER load, int count);
 	DWORD GetRawOreFromLoad(DWORD dwLoadVnum);
 	bool OreRefine(LPCHARACTER ch, LPCHARACTER npc, LPITEM item, int cost, int pct, LPITEM metinstone_item);
