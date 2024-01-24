@@ -3973,7 +3973,7 @@ void CHARACTER::CancelMining()
 	
 	sys_log(0, "Mining operation cancelled.");
 	event_cancel(&currentMiningEventPtr);
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ä���� �ߴ��Ͽ����ϴ�."));
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("xxxx"));
 }
 
 void CHARACTER::StartMining(LPCHARACTER chLoad)
@@ -3989,14 +3989,10 @@ void CHARACTER::StartMining(LPCHARACTER chLoad)
 		return;
 	}
 	
-	const auto currentMapIndex = GetMapIndex();
-	const auto targetMapIndex = chLoad->GetMapIndex();
-	const auto distance = DISTANCE_APPROX(GetX() - chLoad->GetX(), GetY() - chLoad->GetY());
-
-	if (currentMapIndex != targetMapIndex || distance > 1000) 
+	if (GetMapIndex() != chLoad->GetMapIndex() || DISTANCE_APPROX(GetX() - chLoad->GetX(), GetY() - chLoad->GetY()) > 1000)
 	{
 		return;
-	}	
+	}
 
 	if (mining::GetRawOreFromLoad(chLoad->GetRaceNum()) == 0)
 	{
