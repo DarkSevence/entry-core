@@ -375,7 +375,7 @@ ACMD(do_cmd)
 {
 	if (ch->m_pkTimedEvent)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;80;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;80]");
 		event_cancel(&ch->m_pkTimedEvent);
 		return;
 	}
@@ -383,15 +383,15 @@ ACMD(do_cmd)
 	switch (subcmd)
 	{
 		case SCMD_LOGOUT:
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;77;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;77]");
 			break;
 
 		case SCMD_QUIT:
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;78;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;78]");
 			break;
 
 		case SCMD_PHASE_SELECT:
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;79;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;79]");
 			break;
 	}
 
@@ -536,7 +536,7 @@ ACMD(do_restart)
 			{
 				if (CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()) <= 0)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("성지에서 부활 기회를 모두 잃었습니다! 마을로 이동합니다!"));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;424]");
 					ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
 				}
 				else
@@ -638,7 +638,7 @@ ACMD(do_stat_minus)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;425]");
 		return;
 	}
 
@@ -705,7 +705,7 @@ ACMD(do_stat)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;426]");
 		return;
 	}
 
@@ -750,7 +750,7 @@ ACMD(do_pvp)
 {	
 	if (ch->GetArena() != NULL || CArenaManager::instance().IsArenaMap(ch->GetMapIndex()) == true)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련장에서 사용하실 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;427]");
 		return;
 	}
 
@@ -769,7 +769,7 @@ ACMD(do_pvp)
 
 	if (pkVictim->GetArena() != NULL)
 	{
-		pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상대방이 대련중입니다."));
+		pkVictim->ChatPacket(CHAT_TYPE_INFO, "[LS;428]");
 		return;
 	}		
 	
@@ -792,7 +792,7 @@ ACMD(do_guildskillup)
 
 	if (!ch->GetGuild())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드에 속해있지 않습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;430]");
 		return;
 	}
 
@@ -806,7 +806,7 @@ ACMD(do_guildskillup)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드 스킬 레벨을 변경할 권한이 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;429]");
 	}
 }
 
@@ -873,13 +873,13 @@ ACMD(do_safebox_change_password)
 
 	if (!*arg1 || strlen(arg1)>6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84]");
 		return;
 	}
 
 	if (!*arg2 || strlen(arg2)>6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84]");
 		return;
 	}
 
@@ -899,7 +899,7 @@ ACMD(do_mall_password)
 
 	if (!*arg1 || strlen(arg1) > 6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;84]");
 		return;
 	}
 
@@ -907,13 +907,13 @@ ACMD(do_mall_password)
 
 	if (ch->GetMall())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO,"[LS;59;]");
+		ch->ChatPacket(CHAT_TYPE_INFO,"[LS;59]");
 		return;
 	}
 
 	if (iPulse - ch->GetMallLoadTime() < passes_per_sec * 10) // 10초에 한번만 요청 가능
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;60;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;60]");
 		return;
 	}
 
@@ -944,13 +944,13 @@ ACMD(do_ungroup)
 
 	if (!CPartyManager::instance().IsEnablePCParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;43;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;43]");
 		return;
 	}
 
 	if (ch->GetDungeon())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;85;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;85]");
 		return;
 	}
 
@@ -962,7 +962,7 @@ ACMD(do_ungroup)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO,  "[LS;86;]");
+		ch->ChatPacket(CHAT_TYPE_INFO,  "[LS;86]");
 		pParty->Quit(ch->GetPlayerID());
 	}
 }
@@ -999,7 +999,7 @@ ACMD(do_war)
 
 	if (playerGuild->UnderAnyWar())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;87;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;87]");
 		return;
 	}
 
@@ -1025,7 +1025,7 @@ ACMD(do_war)
 
 	if (playerGuild->GetMasterPID() != ch->GetPlayerID())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;88;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;88]");
 		return;
 	}
 
@@ -1033,7 +1033,7 @@ ACMD(do_war)
 
 	if (!opponentGuild)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;89;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;89]");
 		return;
 	}
 
@@ -1043,7 +1043,7 @@ ACMD(do_war)
 		{
 			if (opponentGuild->UnderAnyWar())
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;90;]");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;90]");
 				return;
 			}
 
@@ -1051,13 +1051,13 @@ ACMD(do_war)
 
 			if (playerGuild->GetGuildMoney() < iWarPrice)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;91;]");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;91]");
 				return;
 			}
 
 			if (opponentGuild->GetGuildMoney() < iWarPrice)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO,  "[LS;92;]");
+				ch->ChatPacket(CHAT_TYPE_INFO,  "[LS;92]");
 				return;
 			}
 		}
@@ -1065,7 +1065,7 @@ ACMD(do_war)
 
 		case GUILD_WAR_SEND_DECLARE:
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;93;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;93]");
 			return;
 		}
 		break;
@@ -1074,7 +1074,7 @@ ACMD(do_war)
 		{
 			if (opponentGuild->UnderAnyWar())
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;87;]");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;87]");
 				playerGuild->RequestRefuseWar(opponentGuild ->GetID());
 				return;
 			}
@@ -1083,7 +1083,7 @@ ACMD(do_war)
 
 		case GUILD_WAR_RESERVE:
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;93;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;93]");
 			return;
 		}
 		break;
@@ -1095,7 +1095,7 @@ ACMD(do_war)
 
 		default:
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;90;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;90]");
 			playerGuild->RequestRefuseWar(opponentGuild ->GetID());
 			return;
 		}
@@ -1105,7 +1105,7 @@ ACMD(do_war)
 	{
 		if (playerGuild->GetLadderPoint() == 0)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;94;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;94]");
 			sys_log(0, "GuildWar.StartError.NEED_LADDER_POINT");
 		}
 		else if (playerGuild->GetMemberCount() < GUILD_WAR_MIN_MEMBER_COUNT)
@@ -1125,11 +1125,11 @@ ACMD(do_war)
 	{
 		if (opponentGuild ->GetLadderPoint() == 0)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;94;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;94]");
 		}
 		else if (opponentGuild ->GetMemberCount() < GUILD_WAR_MIN_MEMBER_COUNT)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;96;]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;96]");
 		}
 		
 		return;
@@ -1149,7 +1149,7 @@ ACMD(do_war)
 			break;
 		}
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;97;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;97]");
 		playerGuild->RequestRefuseWar(opponentGuild ->GetID());
 		return;
 
@@ -1169,7 +1169,7 @@ ACMD(do_war)
 			break;
 		}
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;98;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;98]");
 		playerGuild->RequestRefuseWar(opponentGuild ->GetID());
 		return;
 
@@ -1194,7 +1194,7 @@ ACMD(do_nowar)
 
 	if (gm_pid != ch->GetPlayerID())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전에 대한 권한이 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;431]");
 		return;
 	}
 
@@ -1202,7 +1202,7 @@ ACMD(do_nowar)
 
 	if (!opp_g)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;89;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;89]");
 		return;
 	}
 
@@ -1243,7 +1243,7 @@ ACMD(do_messenger_auth)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련장에서 사용하실 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;101]");
 		return;
 	}
 
@@ -1320,7 +1320,7 @@ ACMD(do_unmount)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("인벤토리가 꽉 차서 내릴 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;432]");
 	}
 }
 
@@ -1369,16 +1369,7 @@ ACMD(do_view_equip)
 
 		if (!tch->IsPC())
 			return;
-		/*
-		   int iSPCost = ch->GetMaxSP() / 3;
 
-		   if (ch->GetSP() < iSPCost)
-		   {
-		   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("정신력이 부족하여 다른 사람의 장비를 볼 수 없습니다."));
-		   return;
-		   }
-		   ch->PointChange(POINT_SP, -iSPCost);
-		 */
 		tch->SendEquipment(ch);
 	}
 }
@@ -1387,13 +1378,13 @@ ACMD(do_party_request)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;101;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;101]");
 		return;
 	}
 
 	if (ch->GetParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;102;]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;102]");
 		return;
 	}
 
@@ -1443,6 +1434,8 @@ ACMD(do_party_request_deny)
 	if (tch)
 		ch->DenyToParty(tch);
 }
+
+/*To do remove monarch system */
 
 ACMD(do_monarch_warpto)
 {
@@ -2378,12 +2371,12 @@ ACMD(do_costume)
 	CItem* pHair = ch->GetWear(WEAR_COSTUME_HAIR);
 	CItem* pMount = ch->GetWear(WEAR_COSTUME_MOUNT);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "COSTUME status:");
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;435]");
 
 	if (pHair)
 	{
 		const char* itemName = pHair->GetName();
-		ch->ChatPacket(CHAT_TYPE_INFO, "  HAIR : %s", itemName);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;436]", itemName);
 
 		for (int i = 0; i < pHair->GetAttributeCount(); ++i)
 		{
@@ -2398,7 +2391,7 @@ ACMD(do_costume)
 				}
 			
 				snprintf(buf, bufferSize, pointString.c_str(), attr.sValue);
-				ch->ChatPacket(CHAT_TYPE_INFO, "     %s", buf);
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;436]", buf);
 			}
 		}
 
@@ -2409,7 +2402,7 @@ ACMD(do_costume)
 	if (pBody)
 	{
 		const char* itemName = pBody->GetName();
-		ch->ChatPacket(CHAT_TYPE_INFO, "  BODY : %s", itemName);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;438]", itemName);
 
 		if (pBody->IsEquipped() && arg1[0] == 'b')
 			ch->UnequipItem(pBody);
@@ -2418,7 +2411,7 @@ ACMD(do_costume)
 	if (pMount)
 	{
 		const char* itemName = pMount->GetName();
-		ch->ChatPacket(CHAT_TYPE_INFO, "  MOUNT : %s", itemName);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;439]", itemName);
 
 		if (pMount->IsEquipped() && arg1[0] == 'm')
 			ch->UnequipItem(pMount);
@@ -2471,8 +2464,7 @@ ACMD(do_inventory)
 
 		item = ch->GetInventoryItem(index);
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "inventory [%d] = %s",
-						index, item ? item->GetName() : "<NONE>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "ekwipunek [%d] = %s", index, item ? item->GetName() : "<NONE>");
 		++index;
 	}
 }
@@ -2622,9 +2614,9 @@ ACMD(do_dice)
 	int n = number(start, end);
 	
 	if (ch->GetParty())
-		ch->GetParty()->ChatPacketToAllMember(CHAT_TYPE_INFO, LC_TEXT("%s님이 주사위를 굴려 %d가 나왔습니다. (%d-%d)"), ch->GetName(), n, start, end);
+		ch->GetParty()->ChatPacketToAllMember(CHAT_TYPE_INFO, "[LS;433;%s;%d;%d;%d]", ch->GetName(), n, start, end);
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("당신이 주사위를 굴려 %d가 나왔습니다. (%d-%d)"), n, start, end);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;434;%d;%d;%d]", n, start, end);
 }
 
 ACMD(do_click_mall)
@@ -2643,7 +2635,7 @@ ACMD(do_ride)
 
 	if(ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "nie tym razem koleszko");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;11]");
 		return;
 	}
 
@@ -2686,9 +2678,11 @@ ACMD(do_ride)
 		}
 	}
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말을 먼저 소환해주세요."));
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;3]");
 }
 
+
+//todo remove auction
 #ifdef __AUCTION__
 // temp_auction
 ACMD(do_get_item_id_list)

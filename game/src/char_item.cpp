@@ -900,7 +900,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	// REFINE_COST
 	if (GetGold() < cost)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "[LS;185;]");
+		ChatPacket(CHAT_TYPE_INFO, "[LS;185]");
 		return false;
 	}
 
@@ -912,9 +912,9 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			{
 				if (test_server)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Find %d, count %d, require %d", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
+					ChatPacket(CHAT_TYPE_INFO, "[LS;395;%d;%d;%d]", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
 				}
-				ChatPacket(CHAT_TYPE_INFO, "[LS;186;]");
+				ChatPacket(CHAT_TYPE_INFO, "[LS;186]");
 				return false;
 			}
 		}
@@ -1114,7 +1114,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		{
 			if (test_server)
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Find %d, count %d, require %d", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
+				ChatPacket(CHAT_TYPE_INFO, "[LS;395;%d;%d;%d]", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
 			}
 			ChatPacket(CHAT_TYPE_INFO, "[LS;186]");
 			return false;

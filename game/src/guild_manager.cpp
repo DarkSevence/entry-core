@@ -77,7 +77,7 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 
 	if (!check_name(gcp.name))
 	{
-		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드 이름이 적합하지 않습니다."));
+		gcp.master->ChatPacket(CHAT_TYPE_INFO, "[LS;89]");
 		return 0;
 	}
 
@@ -98,13 +98,13 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 
 		if (!(row[0] && row[0][0] == '0'))
 		{
-			gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 이미 같은 이름의 길드가 있습니다."));
+			gcp.master->ChatPacket(CHAT_TYPE_INFO, "[LS;630]");
 			return 0;
 		}
 	}
 	else
 	{
-		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드를 생성할 수 없습니다."));
+		gcp.master->ChatPacket(CHAT_TYPE_INFO, "[LS;631]");
 		return 0;
 	}
 
@@ -549,7 +549,7 @@ void CGuildManager::DeclareWar(DWORD guild_id1, DWORD guild_id2, BYTE bType)
 		if (false == LC_IsGermany())
 		{
 			char buf[256];
-			snprintf(buf, sizeof(buf), LC_TEXT("%s 길드가 %s 길드에 선전포고를 하였습니다!"), TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
+			snprintf(buf, sizeof(buf), "[LS;632;%s]", TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
 			SendNotice(buf);
 		}
 	}
@@ -563,7 +563,7 @@ void CGuildManager::RefuseWar(DWORD guild_id1, DWORD guild_id2)
 	if (g1 && g2)
 	{
 		if (g2->GetMasterCharacter())
-			g2->GetMasterCharacter()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> %s 길드가 길드전을 거부하였습니다."), g1->GetName());
+			g2->GetMasterCharacter()->ChatPacket(CHAT_TYPE_INFO, "[LS;633;%s;%s]", g1->GetName(), g2->GetName());
 	}
 
 	if ( g1 != NULL )
@@ -587,7 +587,7 @@ void CGuildManager::WaitStartWar(DWORD guild_id1, DWORD guild_id2)
 	if (g1->WaitStartWar(guild_id2) || g2->WaitStartWar(guild_id1) )
 	{
 		char buf[256];
-		snprintf(buf, sizeof(buf), LC_TEXT("%s 길드와 %s 길드가 잠시 후 전쟁을 시작합니다!"), g1->GetName(), g2->GetName());
+		snprintf(buf, sizeof(buf), "[LS;634;%s;%s]", g1->GetName(), g2->GetName());
 		SendNotice(buf);
 	}
 }
@@ -635,7 +635,7 @@ void CGuildManager::StartWar(DWORD guild_id1, DWORD guild_id2)
 	g2->StartWar(guild_id1);
 
 	char buf[256];
-	snprintf(buf, sizeof(buf), LC_TEXT("%s 길드와 %s 길드가 전쟁을 시작하였습니다!"), g1->GetName(), g2->GetName());
+	snprintf(buf, sizeof(buf), "[LS;635;%s;%s]", g1->GetName(), g2->GetName());
 	SendNotice(buf);
 
 	if (guild_id1 > guild_id2)
@@ -653,17 +653,17 @@ void SendGuildWarOverNotice(CGuild* g1, CGuild* g2, bool bDraw)
 
 		if (bDraw)
 		{
-			snprintf(buf, sizeof(buf), LC_TEXT("%s 길드와 %s 길드 사이의 전쟁이 무승부로 끝났습니다."), g1->GetName(), g2->GetName());
+			snprintf(buf, sizeof(buf), "[LS;636;%s;%s]", g1->GetName(), g2->GetName());
 		}
 		else
 		{
 			if ( g1->GetWarScoreAgainstTo( g2->GetID() ) > g2->GetWarScoreAgainstTo( g1->GetID() ) )
 			{
-				snprintf(buf, sizeof(buf), LC_TEXT("%s 길드가 %s 길드와의 전쟁에서 승리 했습니다."), g1->GetName(), g2->GetName());
+				snprintf(buf, sizeof(buf), "[LS;637;%s;%s]", g1->GetName(), g2->GetName());
 			}
 			else
 			{
-				snprintf(buf, sizeof(buf), LC_TEXT("%s 길드가 %s 길드와의 전쟁에서 승리 했습니다."), g2->GetName(), g1->GetName());
+				snprintf(buf, sizeof(buf), "[LS;637;%s;%s]", g2->GetName(), g1->GetName());
 			}
 		}
 
@@ -747,7 +747,7 @@ void CGuildManager::CancelWar(DWORD guild_id1, DWORD guild_id2)
 		LPCHARACTER master1 = g1->GetMasterCharacter();
 
 		if (master1)
-			master1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전이 취소 되었습니다."));
+			master1->ChatPacket(CHAT_TYPE_INFO, "[LS;638]");
 	}
 
 	if (g2)
@@ -755,13 +755,13 @@ void CGuildManager::CancelWar(DWORD guild_id1, DWORD guild_id2)
 		LPCHARACTER master2 = g2->GetMasterCharacter();
 
 		if (master2)
-			master2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전이 취소 되었습니다."));
+			master2->ChatPacket(CHAT_TYPE_INFO, "[LS;638]");
 	}
 
 	if (g1 && g2)
 	{
 		char buf[256+1];
-		snprintf(buf, sizeof(buf), LC_TEXT("%s 길드와 %s 길드 사이의 전쟁이 취소되었습니다."), g1->GetName(), g2->GetName());
+		snprintf(buf, sizeof(buf), "[LS;633;%s;%s]", g1->GetName(), g2->GetName());
 		SendNotice(buf);
 	}
 }

@@ -117,7 +117,7 @@ void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
 	
 	if (quest::CQuestManager::instance().GetPCForce(ch->GetPlayerID())->IsRunning() == true)
 	{
-	    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상대방이 친구 추가를 받을 수 없는 상태입니다."));
+	    ch->ChatPacket(CHAT_TYPE_INFO, "[LS;712]");
 	    return;
 	}
 
@@ -126,7 +126,7 @@ void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
 
     if (IsAlreadyFriends(ch->GetName(), target->GetName()))
     {
-        ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("NOTIFICATION_IS_ALREADY_FRIENDS"));
+        ch->ChatPacket(CHAT_TYPE_INFO, "[LS;713;%s;%s]", ch->GetName(), target->GetName());
         return;
     }
 

@@ -441,11 +441,11 @@ void FishingPractice(LPCHARACTER ch)
 		if ( rod->GetRefinedVnum()>0 && rod->GetSocket(0) < rod->GetValue(2) && number(1,rod->GetValue(1))==1 )
 		{
 			rod->SetSocket(0, rod->GetSocket(0) + 1);
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("낚시대의 수련도가 증가하였습니다! (%d/%d)"),rod->GetSocket(0), rod->GetValue(2));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;597;%d;%d]",rod->GetSocket(0), rod->GetValue(2));
 			if (rod->GetSocket(0) == rod->GetValue(2))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("낚시대가 최대 수련도에 도달하였습니다."));
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("어부를 통해 다음 레벨의 낚시대로 업그레이드 할 수 있습니다."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;598]");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;599]");
 			}
 		}
 	}
@@ -647,7 +647,7 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 						item->SetSocket(0,GetFishLength(info->fish_id));
 						if (test_server)
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이번에 잡은 물고기의 길이는 %.2fcm"), item->GetSocket(0)/100.f);
+							ch->ChatPacket(CHAT_TYPE_INFO, "[LS;600;%0.2f]", item->GetSocket(0)/100.f);
 						}
 
 						if (quest::CQuestManager::instance().GetEventFlag("fishevent") > 0 && (info->fish_id == 5 || info->fish_id == 6))
@@ -660,11 +660,11 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 
 							if (info->fish_id == 5)
 							{
-								strlcpy(p.szBoard, LC_TEXT("낚시이벤트월척붕어"), sizeof(p.szBoard));
+								strlcpy(p.szBoard, "[LS;601]", sizeof(p.szBoard));
 							}
 							else if (info->fish_id == 6)
 							{
-								strlcpy(p.szBoard, LC_TEXT("낚시이벤트잉어"), sizeof(p.szBoard));
+								strlcpy(p.szBoard, "[LS;602]", sizeof(p.szBoard));
 							}
 
 							db_clientdesc->DBPacket(HEADER_GD_HIGHSCORE_REGISTER, 0, &p, sizeof(TPacketGDHighscore));
@@ -749,9 +749,9 @@ void Simulation(int level, int count, int prob_idx, LPCHARACTER ch)
 	}
 
 	for (std::map<std::string,int>::iterator it = fished.begin(); it != fished.end(); ++it)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s : %d 마리"), it->first.c_str(), it->second);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;603;%s;%d]", it->first.c_str(), it->second);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 종류 %d 마리 낚음"), fished.size(), total_count);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;604;%d;%d]", fished.size(), total_count);
 }
 
 void UseFish(LPCHARACTER ch, LPITEM item)
@@ -788,7 +788,7 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 			case USED_TREASURE_MAP:	// 3
 			case USED_NONE:		// 0
 			case USED_WATER_STONE:	// 2
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("고기가 흔적도 없이 사라집니다."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;605]");
 				break;
 
 			case USED_SHELLFISH:	// 1
@@ -797,12 +797,12 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 					if ( number(0, 2) != 2 ) return;
 				}
 
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("배 속에서 조개가 나왔습니다."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS:606]");
 				ch->AutoGiveItem(SHELLFISH_VNUM);
 				break;
 
 			case USED_EARTHWARM:	// 4
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("배 속에서 지렁이가 나왔습니다."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;607]");
 				ch->AutoGiveItem(EARTHWORM_VNUM);
 				break;
 
@@ -833,7 +833,7 @@ void Grill(LPCHARACTER ch, LPITEM item)
 
 	int count = item->GetCount();
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s를 구웠습니다."), item->GetName());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;596]", item->GetName());
 	item->SetCount(0);
 	ch->AutoGiveItem(fish_info[idx].grill_vnum, count);
 }

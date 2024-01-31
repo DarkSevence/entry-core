@@ -315,12 +315,12 @@ void Cube_open (LPCHARACTER ch)
 
 	if (ch->IsCubeOpen())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 제조창이 열려있습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;563]");
 		return;
 	}
 	if ( ch->GetExchange() || ch->GetMyShop() || ch->GetShopOwner() || ch->IsOpenSafebox() || ch->IsCubeOpen() )
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 거래중(창고,교환,상점)에는 사용할 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;564]");
 		return;
 	}
 
@@ -524,7 +524,7 @@ bool Cube_make (LPCHARACTER ch)
 
 	if (!(ch)->IsCubeOpen())
 	{
-		(ch)->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조창이 열려있지 않습니다"));
+		(ch)->ChatPacket(CHAT_TYPE_INFO, "[LS;565]");
 		return false;
 	}
 
@@ -539,13 +539,13 @@ bool Cube_make (LPCHARACTER ch)
 
 	if (NULL == cube_proto)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조 재료가 부족합니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;566]");
 		return false;
 	}
 
 	if (ch->GetGold() < cube_proto->gold)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈이 부족하거나 아이템이 제자리에 없습니다."));	// 이 텍스트는 이미 널리 쓰이는거라 추가번역 필요 없음
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;567]");	// 이 텍스트는 이미 널리 쓰이는거라 추가번역 필요 없음
 		return false;
 	}
 
@@ -572,7 +572,7 @@ bool Cube_make (LPCHARACTER ch)
 	else
 	{
 		// 실패
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조에 실패하였습니다."));	// 2012.11.12 새로 추가된 메세지 (locale_string.txt 에 추가해야 함)
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;568]");	// 2012.11.12 새로 추가된 메세지 (locale_string.txt 에 추가해야 함)
 		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube fail");
 		LogManager::instance().CubeLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(),
 				reward_value->vnum, 0, 0, 0);
@@ -598,8 +598,7 @@ void Cube_show_list (LPCHARACTER ch)
 		item = cube_item[i];
 		if (NULL==item)	continue;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "cube[%d]: inventory[%d]: %s",
-				i, item->GetCell(), item->GetName());
+		ch->ChatPacket(CHAT_TYPE_INFO, "cube[%d]: inventory[%d]: %s", i, item->GetCell(), item->GetName());
 	}
 }
 

@@ -776,7 +776,7 @@ bool CHARACTER::RemoveAffect(DWORD dwType)
 {
 	if (dwType == AFFECT_BLOCK_CHAT)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("채팅 금지가 풀렸습니다."));
+		ChatPacket(CHAT_TYPE_INFO, "[LS;389]");
 	}
 	
 	bool flag = false;

@@ -46,15 +46,6 @@ bool timed_event_cancel(LPCHARACTER ch)
 		return true;
 	}
 
-	/* RECALL_DELAY
-	   차후 전투로 인해 귀환부 딜레이가 취소 되어야 할 경우 주석 해제
-	   if (ch->m_pk_RecallEvent)
-	   {
-	   event_cancel(&ch->m_pkRecallEvent);
-	   return true;
-	   }
-	   END_OF_RECALL_DELAY */
-
 	return false;
 }
 
@@ -183,10 +174,10 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 	}
 
 	if (timed_event_cancel(ch))
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("전투가 시작 되어 취소 되었습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;387]");
 
 	if (timed_event_cancel(victim))
-		victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("전투가 시작 되어 취소 되었습니다."));
+		victim->ChatPacket(CHAT_TYPE_INFO, "[LS;387]");
 
 	ch->SetPosition(POS_FIGHTING);
 	ch->SetVictim(victim);

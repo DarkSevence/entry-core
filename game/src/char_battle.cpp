@@ -1359,7 +1359,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 
 					if (number(1, 100) < iNoPenaltyProb)
-						pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("용신의 보호로 아이템이 떨어지지 않았습니다."));
+						pkKiller->ChatPacket(CHAT_TYPE_INFO, "[LS;390]");
 					else
 					{
 						if (g_iUseLocale && pkKiller->GetParty())
@@ -1443,7 +1443,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				if (pkKiller->m_dwUnderGuildWarInfoMessageTime < get_dword_time())
 				{
 					pkKiller->m_dwUnderGuildWarInfoMessageTime = get_dword_time() + 60000;
-					pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전중에는 사냥에 따른 이익이 없습니다."));
+					pkKiller->ChatPacket(CHAT_TYPE_INFO, "[LS;391]");
 				}
 			}
 		}
@@ -1733,7 +1733,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int32_t dam, EDamageType type)
 					IsPenetrate = true;
 
 					if (test_server)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("관통 추가 데미지 %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+						ChatPacket(CHAT_TYPE_INFO, "[LS;392]", GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
 
 					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
 
@@ -1757,8 +1757,8 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int32_t dam, EDamageType type)
 			{
 				if (test_server)
 				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 블럭! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 블럭! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
+					pAttacker->ChatPacket(CHAT_TYPE_INFO, "[LS;393]", GetName(), GetPoint(POINT_BLOCK));
+					ChatPacket(CHAT_TYPE_INFO, "[LS;393]", GetName(), GetPoint(POINT_BLOCK));
 				}
 
 				SendDamagePacket(pAttacker, 0, DAMAGE_BLOCK);
@@ -1772,8 +1772,8 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int32_t dam, EDamageType type)
 			{
 				if (test_server)
 				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 회피! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 회피! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
+					pAttacker->ChatPacket(CHAT_TYPE_INFO, "[LS;393]", GetName(), GetPoint(POINT_DODGE));
+					ChatPacket(CHAT_TYPE_INFO, "[LS;393]", GetName(), GetPoint(POINT_DODGE));
 				}
 
 				SendDamagePacket(pAttacker, 0, DAMAGE_DODGE);
@@ -2188,37 +2188,6 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int32_t dam, EDamageType type)
 
 		if (pAttacker)
 			SendDamagePacket(pAttacker, dam, damageFlag);
-
-		if (test_server)
-		{
-			int healthPercentage = (GetMaxHP() > 0) ? (GetHP() * 100) / GetMaxHP() : 0;
-
-			if(pAttacker)
-			{
-				pAttacker->ChatPacket(CHAT_TYPE_INFO, "-> %s, DAM %d HP %d(%d%%) %s%s",
-						GetName(),
-						dam,
-						GetHP(),
-						healthPercentage,
-						IsCritical ? "crit " : "",
-						IsPenetrate ? "pene " : "",
-						IsDeathBlow ? "deathblow " : "");
-			}
-
-			ChatPacket(CHAT_TYPE_PARTY, "<- %s, DAM %d HP %d(%d%%) %s%s",
-					pAttacker ? pAttacker->GetName() : 0,
-					dam,
-					GetHP(),
-					healthPercentage,
-					IsCritical ? "crit " : "",
-					IsPenetrate ? "pene " : "",
-					IsDeathBlow ? "deathblow " : "");
-		}
-
-		if (m_bDetailLog)
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s[%d]가 공격 위치: %d %d"), pAttacker->GetName(), (DWORD) pAttacker->GetVID(), pAttacker->GetX(), pAttacker->GetY());
-		}
 	}
 
 	//

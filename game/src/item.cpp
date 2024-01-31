@@ -1600,7 +1600,7 @@ void CItem::SetAccessorySocketDownGradeTime(uint32_t time)
 
 	if (test_server && GetOwner())
 	{
-		GetOwner()->ChatPacket (CHAT_TYPE_INFO, LC_TEXT ("%s?? ?? ????? ?? ?? %d"), GetName(), time);
+		GetOwner()->ChatPacket (CHAT_TYPE_INFO, "[LS;711;%s;%d]", GetName(), time);
 	}
 }
 
@@ -1747,7 +1747,7 @@ void CItem::AccessorySocketDegrade()
 
 		if (ch)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s?? ??????? ?????? ????????."), GetName());
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;710;%s]", GetName());
 		}
 
 		ModifyPoints(false);

@@ -277,45 +277,25 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 
 	if (!IsLearnableSkill(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련할 수 없는 스킬입니다."));
+		ChatPacket(CHAT_TYPE_INFO, "[LS;398]");
 		return false;
 	}
 
 	sys_log(0, "learn grand master skill[%d] cur %d, next %d", dwSkillVnum, get_global_time(), GetSkillNextReadTime(dwSkillVnum));
 
-	/*
-	   if (get_global_time() < GetSkillNextReadTime(dwSkillVnum))
-	   {
-	   if (!(test_server && quest::CQuestManager::instance().GetEventFlag("no_read_delay")))
-	   {
-	   if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
-	   {
-	// 주안술서 사용중에는 시간 제한 무시
-	RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("주안술서를 통해 주화입마에서 빠져나왔습니다."));
-	}
-	else
-	{
-	SkillLearnWaitMoreTimeMessage(GetSkillNextReadTime(dwSkillVnum) - get_global_time());
-	return false;
-	}
-	}
-	}
-	 */
-
 	// bType이 0이면 처음부터 책으로 수련 가능
 	if (pkSk->dwType == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그랜드 마스터 수련을 할 수 없는 스킬입니다."));
+		ChatPacket(CHAT_TYPE_INFO, "[LS;399]");
 		return false;
 	}
 
 	if (GetSkillMasterType(dwSkillVnum) != SKILL_GRAND_MASTER)
 	{
 		if (GetSkillMasterType(dwSkillVnum) > SKILL_GRAND_MASTER)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퍼펙트 마스터된 스킬입니다. 더 이상 수련 할 수 없습니다."));
+			ChatPacket(CHAT_TYPE_INFO, "[LS;400]");
 		else
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 스킬은 아직 그랜드 마스터 수련을 할 경지에 이르지 않았습니다."));
+			ChatPacket(CHAT_TYPE_INFO, "[LS;401]");
 		return false;
 	}
 
@@ -396,15 +376,12 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 
 	if (bLastLevel == GetSkillLevel(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("크윽, 기가 역류하고 있어! 이거 설마 주화입마인가!? 젠장!"));
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련이 실패로 끝났습니다. 다시 도전해주시기 바랍니다."));
+		ChatPacket(CHAT_TYPE_INFO, "[LS;289]");
 		LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_FAIL", "");
 		return false;
 	}
 
-	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("몸에서 뭔가 힘이 터져 나오는 기분이야!"));
-	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("뜨거운 무엇이 계속 용솟음치고 있어! 이건, 이것은!"));
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("더 높은 경지의 수련을 성공적으로 끝내셨습니다."));
+	ChatPacket(CHAT_TYPE_INFO, "[LS;281]");
 	LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_SUCCESS", "");
 	return true;
 }
@@ -699,7 +676,7 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 
 	if (IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+		ChatPacket(CHAT_TYPE_INFO, "[LS;402]");
 		return;
 	}
 
@@ -1187,7 +1164,7 @@ struct FuncSplashDamage
 
 		if (test_server && iAmount == 0 && m_pkSk->bPointOn != POINT_NONE)
 		{
-			m_pkChr->ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+			m_pkChr->ChatPacket(CHAT_TYPE_INFO, "[LS;403]");
 		}
 		////////////////////////////////////////////////////////////////////////////////
 		iAmount = -iAmount;
@@ -1705,7 +1682,7 @@ EVENTFUNC(skill_gwihwan_event)
 	else
 	{
 		//실패
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("귀환에 실패하였습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;404]");
 	}
 	return 0;
 }
@@ -1820,7 +1797,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 
 	if (test_server && iAmount == 0 && pkSk->bPointOn != POINT_NONE)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+		ChatPacket(CHAT_TYPE_INFO, "[LS;403");
 	}
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_REMOVE_BAD_AFFECT))
@@ -2165,7 +2142,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 
 	if (test_server && iAmount == 0 && pkSk->bPointOn != POINT_NONE)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+		ChatPacket(CHAT_TYPE_INFO, "[LS;403]");
 	}
 	// END_OF_ADD_GRANDMASTER_SKILL
 
@@ -2481,12 +2458,12 @@ bool CHARACTER::BlockBuffForGM(uint32_t dwVnum, LPCHARACTER pkVictim, LPCHARACTE
 
 	if (std::find(iArrayIndexSkill.begin(), iArrayIndexSkill.end(), dwVnum) != iArrayIndexSkill.end() && pkCaster->IsGM() && !pkVictim->IsGM())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CANNOT_BUFF_TO_%s_NOT_GM"), pkVictim->GetName());
+		ChatPacket(CHAT_TYPE_INFO, "[LS;405;%s]", pkVictim->GetName());
 		shouldReturnBuff = true;
 	}
 	else if (std::find(iArrayIndexSkill.begin(), iArrayIndexSkill.end(), dwVnum) != iArrayIndexSkill.end() && !pkCaster->IsGM() && pkVictim->IsGM())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CANNOT_BUFF_TO_GM_%s"), pkVictim->GetName());
+		ChatPacket(CHAT_TYPE_INFO, "[LS;406;%s]", pkVictim->GetName());
 		shouldReturnBuff = true;
 	}
 
@@ -2542,9 +2519,9 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 			return false;
 
 		if (GetHorseLevel() <= 0)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말이 없습니다. 마굿간 경비병을 찾아가세요."));
+			ChatPacket(CHAT_TYPE_INFO, "[LS;407]");
 		else
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말 소환 아이템을 사용하세요."));
+			ChatPacket(CHAT_TYPE_INFO, "[LS;408]");
 
 		return true;
 	}
@@ -2707,8 +2684,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 				   	iSplashCount,
 				   	lMaxHit))
 		{
-			if (test_server)
-				ChatPacket(CHAT_TYPE_NOTICE, "cooltime not finished %s %d", pkSk->szName, iCooltime);
 
 			return false;
 		}
@@ -2864,27 +2839,23 @@ void CHARACTER::StopMuyeongEvent()
 
 void CHARACTER::SkillLearnWaitMoreTimeMessage(DWORD dwSkillVnum)
 {
-    time_t tNextReadTime = GetSkillNextReadTime(dwSkillVnum);
+	time_t tNextReadTime = GetSkillNextReadTime(dwSkillVnum);
 
-    // Obliczenie ro?nicy czasu w sekundach
-    time_t tCurrentTime = time(nullptr); // Pobranie obecnego czasu
-    int iTimeDifference = static_cast<int>(difftime(tNextReadTime, tCurrentTime));
+	time_t tCurrentTime = time(nullptr);
+	int iTimeDifference = static_cast<int>(difftime(tNextReadTime, tCurrentTime));
 
-    // Je?li czas do kolejnego czytania jest mniejszy lub rowny 0, nie robimy nic
-    if (iTimeDifference <= 0) {
-        return;
-    }
+	if (iTimeDifference <= 0) 
+	{
+		return;
+	}
 
-    // Konwersja czasu na godziny i minuty
-    int iHoursLeft = iTimeDifference / 3600;
-    int iMinutesLeft = (iTimeDifference % 3600) / 60;
+	int iHoursLeft = iTimeDifference / 3600;
+	int iMinutesLeft = (iTimeDifference % 3600) / 60;
 
-    // Stworzenie komunikatu z czasem
-    char szMessage[256];
-    snprintf(szMessage, sizeof(szMessage), "[LS;291;%d;%d]", iHoursLeft, iMinutesLeft);
+	char szMessage[256];
+	snprintf(szMessage, sizeof(szMessage), "[LS;291;%d;%d]", iHoursLeft, iMinutesLeft);
 
-    // Wysłanie komunikatu do gracza
-    ChatPacket(CHAT_TYPE_INFO, szMessage);
+	ChatPacket(CHAT_TYPE_INFO, szMessage);
 }
 
 
@@ -3604,7 +3575,6 @@ void CHARACTER::AddPerfectSkillLevel()
     int job = GetJob();
     int group = GetSkillGroup();
 
-    // Tablica umiej?tno?ci dla ka?dej klasy i grupy
     const std::vector<DWORD> skills[JOB_MAX_NUM][SKILL_GROUP_MAX_NUM] = {
         {{1, 2, 3, 4, 5, 6}, {16, 17, 18, 19, 20, 21}},    // Wojownik (Body, Mental)
         {{31, 32, 33, 34, 35, 36}, {46, 47, 48, 49, 50, 51}}, // Ninja (Dagger, Archer)
@@ -3622,7 +3592,6 @@ void CHARACTER::AddPerfectSkillLevel()
         }
     }
 }
-
 
 bool CHARACTER::CheckSkillHitCount(const BYTE SkillID, const VID TargetVID)
 {
@@ -3693,4 +3662,3 @@ bool CHARACTER::CheckSkillHitCount(const BYTE SkillID, const VID TargetVID)
 
 	return true;
 }
-

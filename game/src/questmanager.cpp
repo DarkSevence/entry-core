@@ -579,7 +579,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 
 				return;
 			}
@@ -604,7 +604,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 				}
 				return;
 			}
@@ -629,7 +629,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 				}
 				return false;
 			}
@@ -692,7 +692,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 				}
 				return false;
 			}
@@ -746,7 +746,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 
 				return false;
 			}
@@ -1721,7 +1721,7 @@ namespace quest
 			LPCHARACTER ch = GetCurrentCharacterPtr();
 			if (ch)
 			{
-				ch->ChatPacket(CHAT_TYPE_PARTY, "error occurred on [%s:%d]", func,line);
+				ch->ChatPacket(CHAT_TYPE_PARTY, "[LS;742;%s;%d]", func,line);
 				ch->ChatPacket(CHAT_TYPE_PARTY, "%s", szMsg);
 			}
 		}
@@ -1742,7 +1742,7 @@ namespace quest
 			LPCHARACTER ch = GetCurrentCharacterPtr();
 			if (ch)
 			{
-				ch->ChatPacket(CHAT_TYPE_PARTY, "error occurred on [%s:%d]", func,line);
+				ch->ChatPacket(CHAT_TYPE_PARTY, "[LS;742;%s;%d]", func,line);
 				ch->ChatPacket(CHAT_TYPE_PARTY, "%s", szMsg);
 			}
 		}
@@ -1815,7 +1815,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퀘스트를 로드하는 중입니다. 잠시만 기다려 주십시오."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;741]");
 				}
 				return false;
 			}

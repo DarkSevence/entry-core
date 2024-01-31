@@ -408,12 +408,12 @@ namespace quest
 			{
 				if (dwVnums[i] == 1)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈 %d 냥을 획득했습니다."), dwCounts[i]);
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;733;%d]", dwCounts[i]);
 				}
 				else if (dwVnums[i] == 2)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("나무에서 부터 신비한 빛이 나옵니다."));
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d의 경험치를 획득했습니다."), dwCounts[i]);
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;734]");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;735;%d]", dwCounts[i]);
 				}
 			}
 		}
@@ -1927,7 +1927,7 @@ namespace quest
 				{
 					if (pkCCI->bChannel != g_bChannel)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Target is in %d channel (my channel %d)", pkCCI->bChannel, g_bChannel);
+						ch->ChatPacket(CHAT_TYPE_INFO, "[LS;736;%d;%d]", pkCCI->bChannel, g_bChannel);
 					}
 					else
 					{
@@ -1936,11 +1936,11 @@ namespace quest
 
 						if (!SECTREE_MANAGER::instance().GetCenterPositionOfMap(pkCCI->lMapIndex, pos))
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, "Cannot find map (index %d)", pkCCI->lMapIndex);
+							ch->ChatPacket(CHAT_TYPE_INFO, "[LS;737;%d]", pkCCI->lMapIndex);
 						}
 						else
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", pos.x, pos.y);
+							ch->ChatPacket(CHAT_TYPE_INFO, "[LS;738;%d;%d]", pos.x, pos.y);
 							ch->WarpSet(pos.x, pos.y);
 							lua_pushnumber(L, 1 );
 						}
@@ -1948,7 +1948,7 @@ namespace quest
 				}
 				else if (NULL == CHARACTER_MANAGER::instance().FindPC(arg1))
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "There is no one by that name");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;739]");
 				}
 
 				lua_pushnumber(L, 0 );
@@ -1967,7 +1967,7 @@ teleport_area:
 		x *= 100;
 		y *= 100;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", x, y);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;738;%d;%d]", x, y);
 		ch->WarpSet(x,y);
 		ch->Stop();
 		lua_pushnumber(L, 1 );
@@ -2148,7 +2148,7 @@ teleport_area:
 		
 		currentCharacter->Save();
 		currentCharacter->SetExchangeTime();
-		currentCharacter->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("PC_CHANGE_CHARACTER_NAME_SUCCES_INFO"));
+		currentCharacter->ChatPacket(CHAT_TYPE_INFO, "[LS;740]");
 		currentCharacter->GetDesc()->DelayedDisconnect(10);
 
 		MessengerManager::instance().RemoveAllList(currentCharacter->GetName());

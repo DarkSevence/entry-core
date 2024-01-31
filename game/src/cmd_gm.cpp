@@ -135,7 +135,7 @@ ACMD(do_transfer)
 
 	if (ch == tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Transfer me?!?");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Transfer me?");
 		return;
 	}
 
@@ -247,7 +247,7 @@ bool CHARACTER_GoToName(LPCHARACTER ch, BYTE empire, int mapIndex, const char* g
 			int x = c_eachGotoInfo.x * 100;
 			int y = c_eachGotoInfo.y * 100;
 
-			ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", x, y);
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;440;%d;%d]", x, y);
 			ch->WarpSet(x, y);
 			ch->Stop();
 			return true;
@@ -313,7 +313,7 @@ ACMD(do_goto)
 
 	if (!*arg1 && !*arg2)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: goto <x meter> <y meter>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;441]");
 		return;
 	}
 
@@ -330,7 +330,7 @@ ACMD(do_goto)
 			y += p.y / 100;
 		}
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "You goto ( %d, %d )", x, y);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;442;%d;%d]", x, y);
 	}
 	else
 	{
@@ -350,37 +350,11 @@ ACMD(do_goto)
 
 		if (CHARACTER_GoToName(ch, empire, mapIndex, arg1))
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "Cannot find map command syntax: /goto <mapname> [empire]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;443]");
 			return;
 		}
 
 		return;
-
-		/*
-		   int iMapIndex = 0;
-		   for (int i = 0; aWarpInfo[i].c_pszName != NULL; ++i)
-		   {
-		   if (iMapIndex != 0)
-		   {
-		   if (iMapIndex != aWarpInfo[i].iMapIndex)
-		   continue;
-		   }
-		   else if (!FindInString(arg1, aWarpInfo[i].c_pszName))
-		   continue;
-
-		   if (aWarpInfo[i].bEmpire == 0 || aWarpInfo[i].bEmpire == bEmpire)
-		   {
-		   x = aWarpInfo[i].x * 100;
-		   y = aWarpInfo[i].y * 100;
-
-		   ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", x, y);
-		   ch->WarpSet(x, y);
-		   ch->Stop();
-		   return;
-		   }
-		   }
-		 */
-
 	}
 
 	x *= 100;
@@ -398,7 +372,7 @@ ACMD(do_warp)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: warp <character name> | <x meter> <y meter>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;444]");
 		return;
 	}
 
@@ -421,7 +395,7 @@ ACMD(do_warp)
 			{
 				if (pkCCI->bChannel != g_bChannel)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Target is in %d channel (my channel %d)", pkCCI->bChannel, g_bChannel);
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;445;%d;%d]", pkCCI->bChannel, g_bChannel);
 					return;
 				}
 
@@ -429,7 +403,7 @@ ACMD(do_warp)
 			}
 			else
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "There is no one by that name");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;446]");
 			}
 
 			return;
@@ -444,7 +418,7 @@ ACMD(do_warp)
 	x *= 100;
 	y *= 100;
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "You warp to ( %d, %d )", x, y);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;447;%d;%d]", x, y);
 	ch->WarpSet(x, y);
 	ch->Stop();
 }
@@ -456,7 +430,7 @@ ACMD(do_item)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: item <item vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;448]");
 		return;
 	}
 
@@ -476,7 +450,7 @@ ACMD(do_item)
 	{
 		if (!ITEM_MANAGER::instance().GetVnum(arg1, dwVnum))
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "#%u item not exist by that vnum.", dwVnum);
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;449;%d]", dwVnum);
 			return;
 		}
 	}
@@ -499,10 +473,10 @@ ACMD(do_item)
 				M2_DESTROY_ITEM(item);
 				if (!ch->DragonSoul_IsQualified())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "인벤이 활성화 되지 않음.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;450]");
 				}
 				else
-					ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;314]");
 			}
 		}
 		else
@@ -517,13 +491,13 @@ ACMD(do_item)
 			else
 			{
 				M2_DESTROY_ITEM(item);
-				ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;314]");
 			}
 		}
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "#%u item not exist by that vnum.", dwVnum);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;449;%d]", dwVnum);
 	}
 }
 
@@ -534,7 +508,7 @@ ACMD(do_group_random)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: grrandom <group vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;451]");
 		return;
 	}
 
@@ -550,7 +524,7 @@ ACMD(do_group)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: group <group vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;452]");
 		return;
 	}
 
@@ -631,7 +605,7 @@ ACMD(do_mob_map)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: mm <vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;453]");
 		return;
 	}
 
@@ -640,9 +614,9 @@ ACMD(do_mob_map)
 	LPCHARACTER tch = CHARACTER_MANAGER::instance().SpawnMobRandomPosition(vnum, ch->GetMapIndex());
 
 	if (tch)
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s spawned in %dx%d", tch->GetName(), tch->GetX(), tch->GetY());
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;454;%s;%d;%d]", tch->GetName(), tch->GetX(), tch->GetY());
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Spawn failed.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;455]");
 }
 
 ACMD(do_mob_aggresive)
@@ -655,7 +629,7 @@ ACMD(do_mob_aggresive)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;456]");
 		return;
 	}
 
@@ -678,7 +652,7 @@ ACMD(do_mob_aggresive)
 
 	if (vnum == 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;457]");
 		return;
 	}
 
@@ -715,7 +689,7 @@ ACMD(do_mob)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;456]");
 		return;
 	}
 
@@ -738,7 +712,7 @@ ACMD(do_mob)
 
 	if (vnum == 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;457]");
 		return;
 	}
 
@@ -776,7 +750,7 @@ ACMD(do_mob_ld)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;456]");
 		return;
 	}
 
@@ -799,7 +773,7 @@ ACMD(do_mob_ld)
 
 	if (vnum == 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;457]");
 		return;
 	}
 
@@ -1227,7 +1201,7 @@ ACMD(do_who)
 
 	DESC_MANAGER::instance().GetUserCount(iTotal, &paiEmpireUserCount, iLocal);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Total [%d] %d / %d / %d (this server %d)", 
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;458;%d;%d;%d;%d;%d]", 
 			iTotal, paiEmpireUserCount[1], paiEmpireUserCount[2], paiEmpireUserCount[3], iLocal);
 }
 
@@ -1289,7 +1263,7 @@ ACMD(do_user)
 	if (func.count % 4)
 		ch->ChatPacket(CHAT_TYPE_INFO, func.str);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Total %d", func.count);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;459]", func.count);
 }
 
 ACMD(do_disconnect)
@@ -1299,7 +1273,7 @@ ACMD(do_disconnect)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "ex) /dc <player name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;460]");
 		return;
 	}
 
@@ -1308,13 +1282,13 @@ ACMD(do_disconnect)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s: no such a player.", arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;461;%s]", arg1);
 		return;
 	}
 
 	if (tch == ch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "cannot disconnect myself");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;462]");
 		return;
 	}
 	
@@ -1328,7 +1302,7 @@ ACMD(do_kill)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "ex) /kill <player name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;463]");
 		return;
 	}
 
@@ -1337,7 +1311,7 @@ ACMD(do_kill)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s: no such a player", arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;461;%s]", arg1);
 		return;
 	}
 
@@ -1379,7 +1353,7 @@ ACMD(do_set)
 
 	if (!*arg1 || !*arg2 || !*arg3)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: set <name> <field> <value>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;464]");
 		return;
 	}
 
@@ -1387,7 +1361,7 @@ ACMD(do_set)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s not exist", arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;465;%s]", arg1);
 		return;
 	}
 
@@ -1466,7 +1440,7 @@ ACMD(do_set)
 	{
 		int	amount = 0;
 		str_to_number(amount, arg3);
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s's %s set to [%d]", tch->GetName(), set_fields[i].cmd, amount);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;466;%s;%s;%d]", tch->GetName(), set_fields[i].cmd, amount);
 	}
 }
 
@@ -1484,7 +1458,7 @@ ACMD(do_advance)
 
 	if (!*arg1 || !*arg2)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: advance <name> <level>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;467]");
 		return;
 	}
 
@@ -1492,7 +1466,7 @@ ACMD(do_advance)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s not exist", arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;465;%s]", arg1);
 		return;
 	}
 
@@ -1533,7 +1507,7 @@ ACMD(do_safebox_size)
 	if (size > 3 || size < 0)
 		size = 0;
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Safebox size set to %d", size);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;468;%d]", size);
 	ch->ChangeSafeboxSize(size);
 }
 
@@ -1555,12 +1529,12 @@ ACMD(do_makeguild)
 
 	if (!check_name(cp.name))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("적합하지 않은 길드 이름 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;89]");
 		return;
 	}
 
 	gm.CreateGuild(cp);
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("(%s) 길드가 생성되었습니다. [임시]"), cp.name);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;469;%s]", cp.name);
 }
 
 ACMD(do_deleteguild)
@@ -1633,7 +1607,7 @@ ACMD(do_fishing_simul)
 	int prob_idx = 0;
 	int level = 100;
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Usage: fishing_simul <level> <prob index> <count>");
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;470]");
 
 	if (*arg1)
 		str_to_number(level, arg1);
@@ -1702,7 +1676,7 @@ ACMD(do_private)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: private <map index>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;471]");
 		return;
 	}
 
@@ -1717,7 +1691,7 @@ ACMD(do_private)
 		ch->WarpSet(pkSectreeMap->m_setting.posSpawn.x, pkSectreeMap->m_setting.posSpawn.y, lMapIndex); 
 	}
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Can't find map by index %d", map_index);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;472;%d]", map_index);
 }
 
 ACMD(do_qf)
@@ -1753,11 +1727,11 @@ ACMD(do_qf)
 			++it;
 		}
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "setting quest state flag %s %s %d", questname.c_str(), arg1, value);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;473;%s;%s;%d]", questname.c_str(), arg1, value);
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "setting quest state flag failed");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;474]");
 	}
 }
 
@@ -1914,7 +1888,7 @@ ACMD(do_book)
 
 	if (!pkProto)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "There is no such a skill.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS:475]");
 		return;
 	}
 
@@ -1930,7 +1904,7 @@ ACMD(do_setskillother)
 
 	if (!*arg1 || !*arg2 || !*arg3 || !isdigit(*arg3))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: setskillother <target> <skillname> <lev>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS:476]");
 		return;
 	}
 
@@ -1940,7 +1914,7 @@ ACMD(do_setskillother)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "There is no such character.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;477]");
 		return;
 	}
 
@@ -1957,7 +1931,7 @@ ACMD(do_setskillother)
 
 	if (!pk)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such a skill by that name.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;478]");
 		return;
 	}
 
@@ -1975,7 +1949,7 @@ ACMD(do_setskill)
 
 	if (!*arg1 || !*arg2 || !isdigit(*arg2))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: setskill <name> <lev>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;479]");
 		return;
 	}
 
@@ -1993,7 +1967,7 @@ ACMD(do_setskill)
 
 	if (!pk)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such a skill by that name.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;478]");
 		return;
 	}
 
@@ -2030,7 +2004,7 @@ ACMD(do_set_skill_group)
 	ch->SetSkillGroup(skill_group);
 	
 	ch->ClearSkill();
-	ch->ChatPacket(CHAT_TYPE_INFO, "skill group to %d.", skill_group);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;480;%d]", skill_group);
 }
 
 ACMD(do_reload)
@@ -2043,22 +2017,22 @@ ACMD(do_reload)
 		switch (LOWER(*arg1))
 		{
 			case 'u':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading state_user_count.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;481]");
 				LoadStateUserCount();
 				break;
 
 			case 'p':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading prototype tables,");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;482]");
 				db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
 				break;
 
 			case 's':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading notice string.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;485]");
 				DBManager::instance().LoadDBString();
 				break;
 
 			case 'q':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading quest.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;483]");
 				quest::CQuestManager::instance().Reload();
 				break;
 
@@ -2068,7 +2042,7 @@ ACMD(do_reload)
 
 				//RELOAD_ADMIN
 			case 'a':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading Admin infomation.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;484]");
 				db_clientdesc->DBPacket(HEADER_GD_RELOAD_ADMIN, 0, NULL, 0);
 				sys_log(0, "Reloading admin infomation.");
 				break;
@@ -2081,13 +2055,13 @@ ACMD(do_reload)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading state_user_count.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;481]");
 		LoadStateUserCount();
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading prototype tables,");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;482]");
 		db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading notice string.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;485]");
 		DBManager::instance().LoadDBString();    
 	}
 }
@@ -2104,7 +2078,7 @@ ACMD(do_level)
 
 	if (!*arg2)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: level <level>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;486]");
 		return;
 	}
 
@@ -2115,7 +2089,7 @@ ACMD(do_level)
 
 ACMD(do_gwlist)
 {
-	ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("현재 전쟁중인 길드 입니다"));
+	ch->ChatPacket(CHAT_TYPE_NOTICE, "[LS;487]");
 	CGuildManager::instance().ShowGuildWarList(ch);
 }
 
@@ -2173,7 +2147,7 @@ ACMD(do_guild_state)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s: 존재하지 않는 길드 입니다."), arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;488;%s]", arg1);
 	}
 }
 
@@ -2232,7 +2206,7 @@ ACMD(do_getqf)
 
 		if (!tch)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "There is no such character.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;489]");
 			return;
 		}
 	}
@@ -2279,11 +2253,11 @@ ACMD(do_set_state)
 			++it;
 		}
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "setting quest state flag %s %s %d", questname.c_str(), arg1, value);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;473;%s;%s;%d]", questname.c_str(), arg1, value);
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "setting quest state flag failed");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;474]");
 	}
 }
 
@@ -2297,7 +2271,7 @@ ACMD(do_setqf)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: setqf <flagname> <value> [<character name>]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;490]");
 		return;
 	}
 
@@ -2308,7 +2282,7 @@ ACMD(do_setqf)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "There is no such character.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;489]");
 		return;
 	}
 
@@ -2319,7 +2293,7 @@ ACMD(do_setqf)
 		int value = 0;
 		str_to_number(value, arg2);
 		pPC->SetFlag(arg1, value);
-		ch->ChatPacket(CHAT_TYPE_INFO, "Quest flag set: %s %d", arg1, value);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;491;%s;%d]", arg1, value);
 	}
 }
 
@@ -2332,7 +2306,7 @@ ACMD(do_delqf)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: delqf <flagname> [<character name>]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;492]");
 		return;
 	}
 
@@ -2343,7 +2317,7 @@ ACMD(do_delqf)
 
 	if (!tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "There is no such character.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;489]");
 		return;
 	}
 
@@ -2352,9 +2326,9 @@ ACMD(do_delqf)
 	if (pPC)
 	{
 		if (pPC->DeleteFlag(arg1))
-			ch->ChatPacket(CHAT_TYPE_INFO, "Delete success.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;493]");
 		else
-			ch->ChatPacket(CHAT_TYPE_INFO, "Delete failed. Quest flag does not exist.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;494]");
 	}
 }
 
@@ -2424,12 +2398,12 @@ ACMD(do_polymorph_item)
 			else
 			{
 				M2_DESTROY_ITEM(item);
-				ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;314]");
 			}
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "#%d item not exist by that vnum.", 70103);
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;495;%d]", 70103);
 		}
 		//ch->SetPolymorph(dwVnum, bMaintainStat);
 	}
@@ -2512,7 +2486,7 @@ ACMD(do_priv_guild)
 		}
 
 		if (!g)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그런 이름 또는 번호의 길드가 없습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;496]");
 		else
 		{
 			char buf[1024+1];
@@ -2575,7 +2549,7 @@ ACMD(do_socket_item)
 		{
 			if (!ITEM_MANAGER::instance().GetVnum(arg1, dwVnum))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "#%d item not exist by that vnum.", dwVnum);
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;495;%d]", dwVnum);
 				return;
 			}
 		}
@@ -2589,7 +2563,7 @@ ACMD(do_socket_item)
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "#%d cannot create item.", dwVnum);
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;497;%d]", dwVnum);
 		}
 	}
 }
@@ -2627,7 +2601,7 @@ ACMD(do_block_chat_list)
 	// GM이 아니거나 block_chat_privilege가 없는 사람은 명령어 사용 불가
 	if (!ch || (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그런 명령어는 없습니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS:498]");
 		return;
 	}
 
@@ -2645,7 +2619,7 @@ ACMD(do_vote_block_chat)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: vote_block_chat <name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;499]");
 		return;
 	}
 
@@ -2679,7 +2653,7 @@ ACMD(do_vote_block_chat)
 		}
 
 		if (ch)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Chat block requested.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;500]");
 
 		return;
 	}
@@ -2693,7 +2667,7 @@ ACMD(do_block_chat)
 	// GM이 아니거나 block_chat_privilege가 없는 사람은 명령어 사용 불가
 	if (ch && (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그런 명령어는 없습니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS:498]");
 		return;
 	}
 
@@ -2703,7 +2677,7 @@ ACMD(do_block_chat)
 	if (!*arg1)
 	{
 		if (ch)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Usage: block_chat <name> <time> (0 to off)");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;501]");
 
 		return;
 	}
@@ -2715,8 +2689,8 @@ ACMD(do_block_chat)
 	{
 		if (ch)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "잘못된 형식의 시간입니다. h, m, s를 붙여서 지정해 주십시오.");
-			ch->ChatPacket(CHAT_TYPE_INFO, "예) 10s, 10m, 1m 30s");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;502]");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;503]");
 		}
 		return;
 	}
@@ -2748,7 +2722,7 @@ ACMD(do_block_chat)
 		}
 
 		if (ch)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Chat block requested.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;500]");
 
 		return;
 	}
@@ -2779,7 +2753,7 @@ ACMD(do_build)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Invalid syntax: no command");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;504]");
 		return;
 	}
 
@@ -2812,7 +2786,7 @@ ACMD(do_build)
 
 				if (!*arg1 || !*arg2 || !*arg3 || !*arg4 || !*arg5 || !*arg6)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Invalid syntax");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;505]");
 					return;
 				}
 
@@ -2824,7 +2798,7 @@ ACMD(do_build)
 				const TObjectProto * t = CManager::instance().GetObjectProto(dwVnum);
 				if (!t)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("존재하지 않는 건물입니다."));
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;506]");
 					return;
 				}
 
@@ -2834,7 +2808,7 @@ ACMD(do_build)
 				{
 					if (pkLand->FindObjectByGroup(t->dwGroupVnum))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("같이 지을 수 없는 종류의 건물이 지어져 있습니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, "[LS;507]");
 						return;
 					}
 				}
@@ -2848,7 +2822,7 @@ ACMD(do_build)
 						// 지어져있는가?
 						if (!pkLand->FindObjectByGroup(t->dwDependOnGroupVnum))
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("건설에 필요한 건물이 지어져 있지 않습니다."));
+							ch->ChatPacket(CHAT_TYPE_INFO, "[LS;508]");
 							return;
 						}
 					}
@@ -2860,13 +2834,13 @@ ACMD(do_build)
 					// 건설 비용 체크
 					if (t->dwPrice > BUILDING_MAX_PRICE)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("건물 비용 정보 이상으로 건설 작업에 실패했습니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, "[LS;509]");
 						return;
 					}
 
 					if (ch->GetGold() < (int)t->dwPrice)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("건설 비용이 부족합니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, "[LS;510]");
 						return;
 					}
 
@@ -2883,7 +2857,7 @@ ACMD(do_build)
 
 						if ((int) dwItemCount > ch->CountSpecifyItem(dwItemVnum))
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자재가 부족하여 건설할 수 없습니다."));
+							ch->ChatPacket(CHAT_TYPE_INFO, "[LS;511]");
 							return;
 						}
 					}
@@ -2917,7 +2891,7 @@ ACMD(do_build)
 				if (!isSuccess)
 				{
 					if (test_server)
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("건물을 지을 수 없는 위치입니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, "[LS;512]");
 					return;
 				}
 
@@ -2953,7 +2927,7 @@ ACMD(do_build)
 
 				if (!*arg1)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Invalid syntax");
+					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;505]");
 					return;
 				}
 
@@ -3053,7 +3027,7 @@ ACMD(do_build)
 			break;
 
 		default:
-			ch->ChatPacket(CHAT_TYPE_INFO, "Invalid command %s", arg1);
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;513;%s]", arg1);
 			break;
 	}
 }
@@ -3074,10 +3048,10 @@ ACMD(do_clear_quest)
 
 ACMD(do_horse_state)
 {
-	ch->ChatPacket(CHAT_TYPE_INFO, "Horse Information:");
-	ch->ChatPacket(CHAT_TYPE_INFO, "    Level  %d", ch->GetHorseLevel());
-	ch->ChatPacket(CHAT_TYPE_INFO, "    Health %d/%d (%d%%)", ch->GetHorseHealth(), ch->GetHorseMaxHealth(), ch->GetHorseHealth() * 100 / ch->GetHorseMaxHealth());
-	ch->ChatPacket(CHAT_TYPE_INFO, "    Stam   %d/%d (%d%%)", ch->GetHorseStamina(), ch->GetHorseMaxStamina(), ch->GetHorseStamina() * 100 / ch->GetHorseMaxStamina());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;514]");
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;515]", ch->GetHorseLevel());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;516]", ch->GetHorseHealth(), ch->GetHorseMaxHealth(), ch->GetHorseHealth() * 100 / ch->GetHorseMaxHealth());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;517]", ch->GetHorseStamina(), ch->GetHorseMaxStamina(), ch->GetHorseStamina() * 100 / ch->GetHorseMaxStamina());
 }
 
 ACMD(do_horse_level)
@@ -3091,7 +3065,7 @@ ACMD(do_horse_level)
 
 	if (!*arg1 || !*arg2)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "usage : /horse_level <name> <level>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;518]");
 		return;
 	}
 
@@ -3099,14 +3073,14 @@ ACMD(do_horse_level)
 
 	if (NULL == victim)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("존재하지 않는 캐릭터 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;418]");
 		return;
 	}
 
 	str_to_number(level, arg2);
 	level = MINMAX(0, level, HORSE_MAX_LEVEL);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "horse level set (%s: %d)", victim->GetName(), level);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;519;%s;%d]", victim->GetName(), level);
 
 	victim->SetHorseLevel(level);
 	victim->ComputePoints();
@@ -3159,7 +3133,7 @@ ACMD(do_horse_set_stat)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage : /horse_set_stat <hp> <stamina>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;520]");
 	}
 }
 
@@ -3172,7 +3146,7 @@ ACMD(do_save_attribute_to_image) // command "/saveati" for alias
 
 	if (!*szMapIndex || !*szFileName)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: /saveati <map_index> <filename>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;521]");
 		return;
 	}
 
@@ -3180,9 +3154,9 @@ ACMD(do_save_attribute_to_image) // command "/saveati" for alias
 	str_to_number(lMapIndex, szMapIndex);
 
 	if (SECTREE_MANAGER::instance().SaveAttributeToImage(lMapIndex, szFileName))
-		ch->ChatPacket(CHAT_TYPE_INFO, "Save done.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;522]");
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Save failed.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;523]");
 }
 
 ACMD(do_affect_remove)
@@ -3194,8 +3168,8 @@ ACMD(do_affect_remove)
 
 	if (!*arg1 || !*arg2)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: /affect_remove <player name>");
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: /affect_remove <type> <point>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;524]");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;525]");
 
 		LPCHARACTER tch = ch;
 
@@ -3203,8 +3177,8 @@ ACMD(do_affect_remove)
 			if (!(tch = CHARACTER_MANAGER::instance().FindPC(arg1)))
 				tch = ch;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "-- Affect List of %s -------------------------------", tch->GetName());
-		ch->ChatPacket(CHAT_TYPE_INFO, "Type Point Modif Duration Flag");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;526;%s]", tch->GetName());
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS:527]");
 
 		const std::list<CAffect *> & cont = tch->GetAffectContainer();
 
@@ -3214,8 +3188,7 @@ ACMD(do_affect_remove)
 		{
 			CAffect * pkAff = *it++;
 
-			ch->ChatPacket(CHAT_TYPE_INFO, "%4d %5d %5d %8d %u", 
-					pkAff->dwType, pkAff->bApplyOn, pkAff->lApplyValue, pkAff->lDuration, pkAff->dwFlag);
+			ch->ChatPacket(CHAT_TYPE_INFO, "%4d %5d %5d %8d %u", pkAff->dwType, pkAff->bApplyOn, pkAff->lApplyValue, pkAff->lDuration, pkAff->dwFlag);
 		}
 		return;
 	}
@@ -3235,9 +3208,9 @@ ACMD(do_affect_remove)
 	}
 
 	if (removed)
-		ch->ChatPacket(CHAT_TYPE_INFO, "Affect successfully removed.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;528]");
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Not affected by that type and point.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;529]");
 }
 
 ACMD(do_change_attr)
@@ -3280,17 +3253,17 @@ ACMD(do_end_duel)
 	LPCHARACTER pChar = CHARACTER_MANAGER::instance().FindPC(szName);
 	if (pChar == NULL)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("존재하지 않는 캐릭터 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;418]");
 		return;
 	}
 
 	if (CArenaManager::instance().EndDuel(pChar->GetPlayerID()) == false)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련 강제 종료 실패"));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;530]");
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련 강제 종료 성공"));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;531]");
 	}
 }
 
@@ -3346,7 +3319,7 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 파티에서 나가셨습니다."));
+				pChar1->ChatPacket(CHAT_TYPE_INFO, "[LS;532]");
 				pParty->Quit(pChar1->GetPlayerID());
 			}
 		}
@@ -3360,23 +3333,23 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 파티에서 나가셨습니다."));
+				pChar2->ChatPacket(CHAT_TYPE_INFO, "[LS;532]");
 				pParty->Quit(pChar2->GetPlayerID());
 			}
 		}
 		
 		if (CArenaManager::instance().StartDuel(pChar1, pChar2, set, minute) == true)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련이 성공적으로 시작 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;533]");
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련 시작에 문제가 있습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;534]");
 		}
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("대련자가 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;535]");
 	}
 }
 
@@ -3391,7 +3364,7 @@ ACMD(do_stat_plus_amount)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;426]");
 		return;
 	}
 
@@ -3399,7 +3372,7 @@ ACMD(do_stat_plus_amount)
 
 	if (nRemainPoint <= 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("남은 스탯 포인트가 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;537]");
 		return;
 	}
 
@@ -3408,13 +3381,13 @@ ACMD(do_stat_plus_amount)
 
 	if (nRemainPoint < nPoint)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("남은 스탯 포인트가 적습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;538]");
 		return;
 	}
 
 	if (nPoint < 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("값을 잘못 입력하였습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;539]");
 		return;
 	}
 	
@@ -3449,7 +3422,7 @@ ACMD(do_stat_plus_amount)
 			break;
 
 		default :
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("명령어의 서브 커맨드가 잘못 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;540]");
 			return;
 			break;
 	}
@@ -3482,7 +3455,7 @@ ACMD(do_break_marriage)
 	str_to_number(pids.pid1, arg1);
 	str_to_number(pids.pid2, arg2);
 	
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("플레이어 %d 와 플레이어  %d를 파혼시킵니다.."), pids.pid1, pids.pid2);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;541;%d;%d]", pids.pid1, pids.pid2);
 	db_clientdesc->DBPacket(HEADER_GD_BREAK_MARRIAGE, 0, &pids, sizeof(pids));
 }
 
@@ -3633,7 +3606,7 @@ ACMD(do_reset_subskill)
 	
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: reset_subskill <name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;556]");
 		return;
 	}
 	
@@ -3643,7 +3616,7 @@ ACMD(do_reset_subskill)
 		return;
 
 	tch->ClearSubSkill();
-	ch->ChatPacket(CHAT_TYPE_INFO, "Subskill of [%s] was reset", tch->GetName());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;557;%s]", tch->GetName());
 }
 
 ACMD(do_siege)
@@ -3742,7 +3715,7 @@ ACMD(do_flush)
 
 	if (0 == arg1[0])
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "usage : /flush player_id");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;555]");
 		return;
 	}
 
@@ -3786,12 +3759,12 @@ ACMD(do_weeklyevent)
 		{
 			CBattleArena::instance().Start(rand()%3 + 1);
 		}
-		ch->ChatPacket(CHAT_TYPE_INFO, "Weekly Event Start");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;553]");
 	}
 	else
 	{
 		CBattleArena::instance().ForceEnd();
-		ch->ChatPacket(CHAT_TYPE_INFO, "Weekly Event End");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;554]");
 	}
 }
 
@@ -3806,12 +3779,12 @@ ACMD(do_event_helper)
 	if (mode == 1)
 	{
 		xmas::SpawnEventHelper(true);
-		ch->ChatPacket(CHAT_TYPE_INFO, "Event Helper Spawn");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;551]");
 	}
 	else
 	{
 		xmas::SpawnEventHelper(false);
-		ch->ChatPacket(CHAT_TYPE_INFO, "Event Helper Delete");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;552]");
 	}
 }
 
@@ -3845,7 +3818,7 @@ ACMD(do_get_mob_count)
 
 	pSectree->for_each(f);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "MapIndex: %d MobCount %d", ch->GetMapIndex(), f.nCount);
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;550;%d;%d]", ch->GetMapIndex(), f.nCount);
 }
 
 ACMD(do_clear_land)
@@ -3857,7 +3830,7 @@ ACMD(do_clear_land)
 		return;
 	}
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Guild Land(%d) Cleared", pLand->GetID());
+	ch->ChatPacket(CHAT_TYPE_INFO, "[LS;549;%d]", pLand->GetID());
 
 	building::CManager::instance().ClearLand(pLand->GetID());
 }
@@ -3876,7 +3849,7 @@ ACMD(do_set_stat)
 
 	if (*szName == 0 || *szChangeAmount == '\0')
 	{
-		ch->ChatPacket (CHAT_TYPE_INFO, "Invalid argument.");
+		ch->ChatPacket (CHAT_TYPE_INFO, "[LS;543]");
 		return;
 	}
 
@@ -3888,12 +3861,12 @@ ACMD(do_set_stat)
 
 		if (pkCCI)
 		{
-			ch->ChatPacket (CHAT_TYPE_INFO, "Cannot find player(%s). %s is not in your game server.", szName, szName);
+			ch->ChatPacket (CHAT_TYPE_INFO, "[LS;544;%s;%s]", szName, szName);
 			return;
 		}
 		else
 		{
-			ch->ChatPacket (CHAT_TYPE_INFO, "Cannot find player(%s). Perhaps %s doesn't login or exist.", szName, szName);
+			ch->ChatPacket (CHAT_TYPE_INFO, "[LS;545;%s;%s]", szName, szName);
 			return;
 		}
 	}
@@ -3901,13 +3874,13 @@ ACMD(do_set_stat)
 	{
 		if (tch->IsPolymorphed())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;426]");
 			return;
 		}
 
 		if (subcmd != POINT_HT && subcmd != POINT_IQ && subcmd != POINT_ST && subcmd != POINT_DX)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("명령어의 서브 커맨드가 잘못 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;540]");
 			return;
 		}
 		int nRemainPoint = tch->GetPoint(POINT_STAT);
@@ -3922,7 +3895,7 @@ ACMD(do_set_stat)
 		case POINT_HT:
 			if (nPoint < JobInitialPoints[tch->GetJob()].ht)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot set stat under initial stat."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;546]");
 				return;
 			}
 			n = 0;
@@ -3930,7 +3903,7 @@ ACMD(do_set_stat)
 		case POINT_IQ:
 			if (nPoint < JobInitialPoints[tch->GetJob()].iq)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot set stat under initial stat."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;546]");
 				return;
 			}
 			n = 1;
@@ -3938,7 +3911,7 @@ ACMD(do_set_stat)
 		case POINT_ST:
 			if (nPoint < JobInitialPoints[tch->GetJob()].st)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot set stat under initial stat."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;546]");
 				return;
 			}
 			n = 2;
@@ -3946,7 +3919,7 @@ ACMD(do_set_stat)
 		case POINT_DX:
 			if (nPoint < JobInitialPoints[tch->GetJob()].dx)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot set stat under initial stat."));
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;546]");
 				return;
 			}
 			n = 3;
@@ -3961,7 +3934,7 @@ ACMD(do_set_stat)
 
 		if (nRemainPoint < nChangeAmount)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("남은 스탯 포인트가 적습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;538]");
 			return;
 		}
 
@@ -3975,7 +3948,7 @@ ACMD(do_set_stat)
 
 		const char* stat_name[4] = {"con", "int", "str", "dex"};
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s's %s change %d to %d", szName, stat_name[n], nCurPoint, nPoint);
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;547;%s;%s;%d;%d]", szName, stat_name[n], nCurPoint, nPoint);
 	}
 }
 
@@ -3985,7 +3958,7 @@ ACMD(do_get_item_id_list)
 	{
 		LPITEM item = ch->GetInventoryItem(i);
 		if (item != NULL)
-			ch->ChatPacket(CHAT_TYPE_INFO, "cell : %d, name : %s, id : %d", item->GetCell(), item->GetName(), item->GetID());
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;548;%d;%s;%d]", item->GetCell(), item->GetName(), item->GetID());
 	}
 }
 
@@ -4306,7 +4279,7 @@ ACMD (do_use_item)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "아이템이 없어서 착용할 수 없어.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;542]");
 	}
 }
 
@@ -4348,6 +4321,6 @@ ACMD (do_ds_list)
 		
 		LPITEM item = ch->GetItem(cell);
 		if (item != NULL)
-			ch->ChatPacket(CHAT_TYPE_INFO, "cell : %d, name : %s, id : %d", item->GetCell(), item->GetName(), item->GetID());
+			ch->ChatPacket(CHAT_TYPE_INFO, "[LS;548;%d;%s;%d]", item->GetCell(), item->GetName(), item->GetID());
 	}
 }
