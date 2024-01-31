@@ -28,7 +28,6 @@
 #include "war_map.h"
 #include "xmas_event.h"
 #include "marriage.h"
-#include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
 #include "castle.h"

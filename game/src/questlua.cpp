@@ -482,9 +482,7 @@ namespace quest
 		RegisterTargetFunctionTable();
 		RegisterArenaFunctionTable();
 		RegisterForkedFunctionTable();
-		RegisterMonarchFunctionTable(); 
 		RegisterOXEventFunctionTable();
-		RegisterMgmtFunctionTable();
 		RegisterBattleArenaFunctionTable();
 		RegisterDanceEventFunctionTable();
 		RegisterDragonLairFunctionTable();

@@ -265,14 +265,7 @@ protected:
 	void		WeddingReady(TPacketWeddingReady* p);
 	void		WeddingStart(TPacketWeddingStart* p);
 	void		WeddingEnd(TPacketWeddingEnd* p);
-
-	void		TakeMonarchMoney(LPDESC d, const char * data );
-	void		AddMonarchMoney(LPDESC d, const char * data );
-	void		DecMonarchMoney(LPDESC d, const char * data );
-	void		SetMonarch( LPDESC d, const char * data );
-
-	void		ChangeMonarchLord(TPacketChangeMonarchLordACK* data);
-	void		UpdateMonarchInfo(TMonarchInfo* data);
+	
 	void		AddBlockCountryIp(TPacketBlockCountryIp * data);
 	void		BlockException(TPacketBlockException * data);
 
@@ -335,8 +328,6 @@ class CInputP2P : public CInputProcessor
 		void		Logout(LPDESC d, const char * c_pData);
 		int			Relay(LPDESC d, const char * c_pData, size_t uiBytes);
 		int			Notice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchTransfer(LPDESC d, const char * c_pData);
 		int			Guild(LPDESC d, const char* c_pData, size_t uiBytes);
 		void		Shout(const char * c_pData);
 		void		Disconnect(const char * c_pData);

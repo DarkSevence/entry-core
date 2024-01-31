@@ -318,8 +318,6 @@ enum
 
 	HEADER_GG_BLOCK_EXCEPTION		= 24,
 	HEADER_GG_SIEGE					= 25,
-	HEADER_GG_MONARCH_NOTICE		= 26,
-	HEADER_GG_MONARCH_TRANSFER		= 27,
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
 };
@@ -360,13 +358,6 @@ typedef struct SPacketGGNotice
 	BYTE	bHeader;
 	long	lSize;
 } TPacketGGNotice;
-
-typedef struct SPacketGGMonarchNotice
-{
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	long	lSize;
-} TPacketGGMonarchNotice;
 
 //FORKED_ROAD
 typedef struct SPacketGGForkedMapInfo
@@ -2184,14 +2175,6 @@ typedef struct tag_GGSiege
 	BYTE	bEmpire;
 	BYTE	bTowerCount;
 } TPacketGGSiege;
-
-typedef struct SPacketGGMonarchTransfer
-{
-	BYTE	bHeader;
-	DWORD	dwTargetPID;
-	long	x;
-	long	y;
-} TPacketMonarchGGTransfer;
 
 typedef struct SPacketGGCheckAwakeness
 {

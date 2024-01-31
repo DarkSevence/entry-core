@@ -15,7 +15,6 @@
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 
@@ -333,12 +332,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		}
 	}
 
-	// 상점에서 살떄 세금 5%
-	if (!m_pkPC) 
-	{
-		CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
-	}
-
 	// 군주 시스템 : 세금 징수
 	if (m_pkPC)
 	{
@@ -382,8 +375,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 
 		if (iVal > 0)
 			m_pkPC->ChatPacket(CHAT_TYPE_INFO, "[LS;25;%d]", iVal);
-
-		CMonarch::instance().SendtoDBAddMoney(dwTax, m_pkPC->GetEmpire(), m_pkPC);
 	}
 	else
 	{

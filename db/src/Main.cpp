@@ -9,14 +9,16 @@
 #include "PrivManager.h"
 #include "MoneyLog.h"
 #include "Marriage.h"
-#include "Monarch.h"
 #include "BlockCountry.h"
 #include "ItemIDRangeManager.h"
+
 #ifdef __AUCTION__
-#include "AuctionManager.h"
+	#include "AuctionManager.h"
 #endif
+
 #include <signal.h>
 #undef __FreeBSD__
+
 void SetPlayerDBName(const char* c_pszPlayerDBName);
 void SetTablePostfix(const char* c_pszTablePostfix);
 int Start();
@@ -79,7 +81,6 @@ int main()
 	CMoneyLog MoneyLog;
 	ItemAwardManager ItemAwardManager;
 	marriage::CManager MarriageManager;
-	CMonarch Monarch;
 	CBlockCountry	BlockCountry;
 	CItemIDRangeManager ItemIDRangeManager;
 #ifdef __AUCTION__
