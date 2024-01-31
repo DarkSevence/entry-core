@@ -953,7 +953,7 @@ void CArena::OnDisconnect(DWORD pid)
 	if (m_dwPIDA == pid)
 	{
 		if (GetPlayerB() != NULL)
-			GetPlayerB()->ChatPacket(CHAT_TYPE_INFO, "[LS;749]");
+			GetPlayerB()->ChatPacket(CHAT_TYPE_INFO, "[LS;763]");
 
 		sys_log(0, "ARENA : Duel is end because of Opp(%d) is disconnect. MyPID(%d)", GetPlayerAPID(), GetPlayerBPID());
 		EndDuel();
@@ -961,7 +961,7 @@ void CArena::OnDisconnect(DWORD pid)
 	else if (m_dwPIDB == pid)
 	{
 		if (GetPlayerA() != NULL)
-			GetPlayerA()->ChatPacket(CHAT_TYPE_INFO, "[LS;749]");
+			GetPlayerA()->ChatPacket(CHAT_TYPE_INFO, "[LS;763]");
 
 		sys_log(0, "ARENA : Duel is end because of Opp(%d) is disconnect. MyPID(%d)", GetPlayerBPID(), GetPlayerAPID());
 		EndDuel();
