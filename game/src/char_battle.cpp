@@ -1267,12 +1267,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 	//END_CHECK_FORKEDROAD_WAR
 
-	if (pkKiller &&
-			!isAgreedPVP &&
-			!isUnderGuildWar &&
-			IsPC() &&
-			!isDuel &&
-			!isForked)
+	if (pkKiller && !isAgreedPVP && !isUnderGuildWar && IsPC() && !isDuel && !isForked)
 	{
 		if (GetGMLevel() == GM_PLAYER || test_server)
 		{

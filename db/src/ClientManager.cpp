@@ -2042,28 +2042,6 @@ void CClientManager::UpdateLand(DWORD * pdw)
 		ForwardPacket(HEADER_DG_UPDATE_LAND, p, sizeof(building::TLand));
 }
 
-void CClientManager::VCard(TPacketGDVCard * p)
-{
-	sys_log(0, "VCARD: %u %s %s %s %s", 
-			p->dwID, p->szSellCharacter, p->szSellAccount, p->szBuyCharacter, p->szBuyAccount);
-
-	m_queue_vcard.push(*p);
-}
-
-void CClientManager::VCardProcess()
-{
-	if (!m_pkAuthPeer)
-		return;
-
-	while (!m_queue_vcard.empty())
-	{
-		m_pkAuthPeer->EncodeHeader(HEADER_DG_VCARD, 0, sizeof(TPacketGDVCard));
-		m_pkAuthPeer->Encode(&m_queue_vcard.front(), sizeof(TPacketGDVCard));
-
-		m_queue_vcard.pop();
-	}
-}
-
 // BLOCK_CHAT
 void CClientManager::BlockChat(TPacketBlockChat* p)
 {
@@ -2512,10 +2490,6 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				UpdateLand((DWORD *) data);
 				break;
 
-			case HEADER_GD_VCARD:
-				VCard((TPacketGDVCard *) data);
-				break;
-
 			case HEADER_GD_MARRIAGE_ADD:
 				MarriageAdd((TPacketMarriageAdd *) data);
 				break;
@@ -2849,23 +2823,11 @@ int CClientManager::Process()
 	{
 		++thecore_heart->pulse;
 
-		/*
-		//30분마다 변경
-		if (((thecore_pulse() % (60 * 30 * 10)) == 0))
-		{
-			g_iPlayerCacheFlushSeconds = MAX(60, rand() % 180);
-			g_iItemCacheFlushSeconds = MAX(60, rand() % 180);
-			sys_log(0, "[SAVE_TIME]Change saving time item %d player %d", g_iPlayerCacheFlushSeconds, g_iItemCacheFlushSeconds);
-		}
-		*/
-
 		if (!(thecore_heart->pulse % thecore_heart->passes_per_sec))
 		{
 			if (g_test_server)
 			{
-			
-				if (!(thecore_heart->pulse % thecore_heart->passes_per_sec * 10))	
-					
+				if (!(thecore_heart->pulse % thecore_heart->passes_per_sec * 10))
 				{
 					pt_log("[%9d] return %d/%d/%d/%d async %d/%d/%d/%d",
 							thecore_heart->pulse,
@@ -2927,17 +2889,10 @@ int CClientManager::Process()
 
 			m_iCacheFlushCount = 0;
 
-
-			//플레이어 플러쉬
 			UpdatePlayerCache();
-			//아이템 플러쉬
 			UpdateItemCache();
-			//로그아웃시 처리- 캐쉬셋 플러쉬
 			UpdateLogoutPlayer();
-
-			// MYSHOP_PRICE_LIST
 			UpdateItemPriceListCache();
-			// END_OF_MYSHOP_PRICE_LIST
 
 			CGuildManager::instance().Update();
 			CPrivManager::instance().Update();
@@ -2951,64 +2906,20 @@ int CClientManager::Process()
 
 		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 10)))
 		{
-			/*
-			char buf[4096 + 1];
-			int len
-			itertype(g_query_info.m_map_info) it;
-
-			/////////////////////////////////////////////////////////////////
-			buf[0] = '\0';
-			len = 0;
-
-			it = g_query_info.m_map_info.begin();
-
-			int count = 0;
-
-			while (it != g_query_info.m_map_info.end())
-			{
-				len += snprintf(buf + len, sizeof(buf) - len, "%2d %3d\n", it->first, it->second);
-				count += it->second;
-				it++;
-			}
-
-			pt_log("QUERY:\n%s-------------------- MAX : %d\n", buf, count);
-			g_query_info.Reset();
-			*/
 			pt_log("QUERY: MAIN[%d] ASYNC[%d]", g_query_count[0], g_query_count[1]);
 			g_query_count[0] = 0;
 			g_query_count[1] = 0;
-			/////////////////////////////////////////////////////////////////
 
-			/////////////////////////////////////////////////////////////////
-			/*
-			buf[0] = '\0';
-			len = 0;
-
-			it = g_item_info.m_map_info.begin();
-
-			count = 0;
-			while (it != g_item_info.m_map_info.end())
-			{
-				len += snprintf(buf + len, sizeof(buf) - len, "%5d %3d\n", it->first, it->second);
-				count += it->second;
-				it++;
-			}
-
-			pt_log("ITEM:\n%s-------------------- MAX : %d\n", buf, count);
-			g_item_info.Reset();
-			*/
 			pt_log("ITEM:%d\n", g_item_count);
 			g_item_count = 0;
-			/////////////////////////////////////////////////////////////////
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))	// 60초에 한번
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))
 		{
-			// 유니크 아이템을 위한 시간을 보낸다.
 			CClientManager::instance().SendTime();
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))	// 한시간에 한번
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))
 		{
 			CMoneyLog::instance().Save();
 		}
@@ -3018,7 +2929,7 @@ int CClientManager::Process()
 	int idx;
 	CPeer * peer;
 
-	for (idx = 0; idx < num_events; ++idx) // 인풋
+	for (idx = 0; idx < num_events; ++idx)
 	{
 		peer = (CPeer *) fdwatch_get_client_data(m_fdWatcher, idx);
 
@@ -3092,7 +3003,6 @@ int CClientManager::Process()
 	}
 #endif
 
-	VCardProcess();
 	return 1;
 }
 
