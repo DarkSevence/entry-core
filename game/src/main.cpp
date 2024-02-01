@@ -387,8 +387,6 @@ int main(int argc, char **argv)
 
 	if (g_bAuthServer)
 	{
-		DBManager::instance().FlushBilling(true);
-
 		int iLimit = DBManager::instance().CountQuery() / 50;
 		int i = 0;
 
