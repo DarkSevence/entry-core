@@ -317,7 +317,6 @@ enum
 	HEADER_GG_BLOCK_CHAT			= 22,
 
 	HEADER_GG_BLOCK_EXCEPTION		= 24,
-	HEADER_GG_SIEGE					= 25,
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
 };
@@ -2168,13 +2167,6 @@ typedef struct packet_passpod_failed
 	BYTE    bHeader;
 	char    szMessage[128];
 } TPacketCGPasspodFailed;
-
-typedef struct tag_GGSiege
-{
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	BYTE	bTowerCount;
-} TPacketGGSiege;
 
 typedef struct SPacketGGCheckAwakeness
 {

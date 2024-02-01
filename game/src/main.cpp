@@ -42,7 +42,6 @@
 #include "OXEvent.h"
 #include "polymorph.h"
 #include "blend_item.h"
-#include "castle.h"
 #include "passpod.h"
 #include "ani.h"
 #include "BattleArena.h"

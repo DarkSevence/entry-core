@@ -13,7 +13,6 @@
 #include "login_sim.h"
 #include "fishing.h"
 #include "priv_manager.h"
-#include "castle.h"
 #include "dev_log.h"
 
 extern time_t get_global_time();

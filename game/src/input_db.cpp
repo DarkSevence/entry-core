@@ -30,7 +30,6 @@
 #include "unique_item.h"
 
 #include "affect.h"
-#include "castle.h"
 #include "block_country.h"
 #include "motion.h"
 
@@ -961,9 +960,6 @@ void CInputDB::Boot(const char* data)
 	{
 		CMobManager::instance().DumpRegenCount("mob_count");
 	}
-
-	// castle_boot
-	castle_boot();
 
 	// request blocked_country_ip
 	{
