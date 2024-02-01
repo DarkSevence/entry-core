@@ -448,9 +448,6 @@ enum EWindows
 	MALL,
 	DRAGON_SOUL_INVENTORY,
 	BELT_INVENTORY,
-#ifdef __AUCTION__
-	AUCTION,
-#endif
 	GROUND
 };
 

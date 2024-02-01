@@ -287,7 +287,7 @@ obj/Main.o: ../../libsql/Semaphore.h ClientManager.h ../../common/building.h
 obj/Main.o: ../../common/auction_table.h ../../common/tables.h LoginData.h
 obj/Main.o: GuildManager.h ../../libsql/libsql.h ../../libsql/AsyncSQL.h
 obj/Main.o: ../../libpoly/Poly.h ../../libpoly/SymTable.h ItemAwardManager.h
-obj/Main.o: HB.h PrivManager.h MoneyLog.h Marriage.h Monarch.h BlockCountry.h
+obj/Main.o: HB.h PrivManager.h MoneyLog.h Marriage.h BlockCountry.h
 obj/Main.o: ItemIDRangeManager.h
 obj/Lock.o: stdafx.h ../../libthecore/include/stdafx.h /usr/include/stdio.h
 obj/Lock.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
@@ -614,7 +614,7 @@ obj/ClientManager.o: ../../libsql/Semaphore.h LoginData.h Main.h Config.h
 obj/ClientManager.o: QID.h GuildManager.h ../../libsql/libsql.h
 obj/ClientManager.o: ../../libsql/AsyncSQL.h ../../libpoly/Poly.h
 obj/ClientManager.o: ../../libpoly/SymTable.h PrivManager.h MoneyLog.h
-obj/ClientManager.o: ItemAwardManager.h Marriage.h Monarch.h BlockCountry.h
+obj/ClientManager.o: ItemAwardManager.h Marriage.h BlockCountry.h
 obj/ClientManager.o: ItemIDRangeManager.h Cache.h ../../common/cache.h
 obj/ClientManagerPlayer.o: stdafx.h ../../libthecore/include/stdafx.h
 obj/ClientManagerPlayer.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -865,7 +865,7 @@ obj/ClientManagerBoot.o: ../../libthecore/include/log.h
 obj/ClientManagerBoot.o: ../../libmysql/5.x-5.1.35/mysql/errmsg.h
 obj/ClientManagerBoot.o: ../../libmysql/5.x-5.1.35/mysql/mysqld_error.h
 obj/ClientManagerBoot.o: ../../libsql/Semaphore.h LoginData.h Main.h
-obj/ClientManagerBoot.o: Monarch.h CsvReader.h ProtoReader.h
+obj/ClientManagerBoot.o: CsvReader.h ProtoReader.h
 obj/ClientManagerParty.o: stdafx.h ../../libthecore/include/stdafx.h
 obj/ClientManagerParty.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 obj/ClientManagerParty.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -1546,70 +1546,6 @@ obj/Marriage.o: ../../libmysql/5.x-5.1.35/mysql/mysqld_error.h
 obj/Marriage.o: ../../libsql/Semaphore.h ClientManager.h
 obj/Marriage.o: ../../common/building.h ../../common/auction_table.h
 obj/Marriage.o: ../../common/tables.h LoginData.h
-obj/Monarch.o: Monarch.h ../../libthecore/include/stdafx.h
-obj/Monarch.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-obj/Monarch.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-obj/Monarch.o: /usr/include/machine/_types.h /usr/include/x86/_types.h
-obj/Monarch.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
-obj/Monarch.o: /usr/include/string.h /usr/include/strings.h
-obj/Monarch.o: /usr/include/xlocale/_strings.h /usr/include/xlocale/_string.h
-obj/Monarch.o: /usr/include/stdarg.h /usr/include/x86/stdarg.h
-obj/Monarch.o: /usr/include/sys/_stdarg.h /usr/include/errno.h
-obj/Monarch.o: /usr/include/stdlib.h /usr/include/unistd.h
-obj/Monarch.o: /usr/include/sys/types.h /usr/include/machine/endian.h
-obj/Monarch.o: /usr/include/x86/endian.h /usr/include/sys/_endian.h
-obj/Monarch.o: /usr/include/sys/_pthreadtypes.h /usr/include/sys/_stdint.h
-obj/Monarch.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
-obj/Monarch.o: /usr/include/sys/_timeval.h /usr/include/sys/timespec.h
-obj/Monarch.o: /usr/include/sys/_timespec.h /usr/include/sys/unistd.h
-obj/Monarch.o: /usr/include/fcntl.h /usr/include/assert.h
-obj/Monarch.o: /usr/include/ctype.h /usr/include/_ctype.h
-obj/Monarch.o: /usr/include/runetype.h /usr/include/xlocale/_ctype.h
-obj/Monarch.o: /usr/include/limits.h /usr/include/sys/limits.h
-obj/Monarch.o: /usr/include/sys/syslimits.h /usr/include/dirent.h
-obj/Monarch.o: /usr/include/sys/dirent.h /usr/include/sys/time.h
-obj/Monarch.o: /usr/include/sys/_clock_id.h /usr/include/time.h
-obj/Monarch.o: /usr/include/xlocale/_time.h /usr/include/sys/stat.h
-obj/Monarch.o: /usr/include/netinet/in.h /usr/include/sys/_sockaddr_storage.h
-obj/Monarch.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-obj/Monarch.o: /usr/include/netdb.h /usr/include/sys/socket.h
-obj/Monarch.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-obj/Monarch.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-obj/Monarch.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-obj/Monarch.o: /usr/include/sys/wait.h /usr/include/pthread.h
-obj/Monarch.o: /usr/include/sched.h /usr/include/sys/sched.h
-obj/Monarch.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-obj/Monarch.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-obj/Monarch.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-obj/Monarch.o: /usr/include/sys/event.h /usr/include/sys/queue.h
-obj/Monarch.o: ../../libthecore/include/typedef.h
-obj/Monarch.o: ../../libthecore/include/heart.h
-obj/Monarch.o: ../../libthecore/include/fdwatch.h
-obj/Monarch.o: ../../libthecore/include/socket.h
-obj/Monarch.o: ../../libthecore/include/kstbl.h
-obj/Monarch.o: ../../libthecore/include/hangul.h
-obj/Monarch.o: ../../libthecore/include/buffer.h
-obj/Monarch.o: ../../libthecore/include/signal.h
-obj/Monarch.o: ../../libthecore/include/log.h ../../libthecore/include/main.h
-obj/Monarch.o: ../../libthecore/include/utils.h
-obj/Monarch.o: ../../libthecore/include/crypt.h
-obj/Monarch.o: ../../libthecore/include/memcpy.h ../../common/singleton.h
-obj/Monarch.o: ../../common/tables.h ../../common/length.h
-obj/Monarch.o: ../../common/utils.h Main.h ClientManager.h ../../common/stl.h
-obj/Monarch.o: ../../common/building.h ../../common/auction_table.h
-obj/Monarch.o: ../../common/tables.h Peer.h PeerBase.h NetBase.h DBManager.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/mysql.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/mysql_version.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/mysql_com.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/mysql_time.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/my_list.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/typelib.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/my_alloc.h
-obj/Monarch.o: ../../libsql/AsyncSQL.h ../../libthecore/include/stdafx.h
-obj/Monarch.o: ../../libthecore/include/log.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/errmsg.h
-obj/Monarch.o: ../../libmysql/5.x-5.1.35/mysql/mysqld_error.h
-obj/Monarch.o: ../../libsql/Semaphore.h LoginData.h
 obj/BlockCountry.o: stdafx.h ../../libthecore/include/stdafx.h
 obj/BlockCountry.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 obj/BlockCountry.o: /usr/include/sys/_null.h /usr/include/sys/_types.h

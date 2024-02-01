@@ -36,9 +36,6 @@ bool	g_bNoPasspod = false;
 
 int			test_server = 0;
 int			speed_server = 0;
-#ifdef __AUCTION__
-int			auction_server = 0;
-#endif
 bool		distribution_test_server = false;
 bool		china_event_server = false;
 bool		guild_mark_server = true;
@@ -849,16 +846,7 @@ void config_init(const string& st_localeServiceName)
 			str_to_number(speed_server, value_string);
 			continue;
 		}
-#ifdef __AUCTION__
-		TOKEN("auction_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("AUCTION_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(auction_server, value_string);
-			continue;
-		}
-#endif
+
 		TOKEN("distribution_test_server")
 		{
 			str_to_number(distribution_test_server, value_string);
