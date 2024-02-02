@@ -107,7 +107,6 @@ void MessengerManager::Logout(MessengerManager::accountKeyReference account)
 	}
 
 	m_Relation.erase(account);
-	//m_map_stMobile.erase(account);
 }
 
 void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)

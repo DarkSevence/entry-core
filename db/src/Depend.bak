@@ -589,9 +589,9 @@ obj/ClientManager.o: ../../common/item_length.h ../../common/tables.h
 obj/ClientManager.o: ../../common/length.h ../../common/singleton.h
 obj/ClientManager.o: ../../common/utils.h ../../common/stl.h
 obj/ClientManager.o: ../../common/service.h ../../common/global_config.h
-obj/ClientManager.o: ../../common/billing.h ../../common/building.h
-obj/ClientManager.o: ../../common/VnumHelper.h ../../libgame/include/grid.h
-obj/ClientManager.o: ClientManager.h Peer.h PeerBase.h NetBase.h DBManager.h
+obj/ClientManager.o: ../../common/building.h ../../common/VnumHelper.h
+obj/ClientManager.o: ../../libgame/include/grid.h ClientManager.h Peer.h
+obj/ClientManager.o: PeerBase.h NetBase.h DBManager.h
 obj/ClientManager.o: ../../libmysql/5.x-5.1.35/mysql/mysql.h
 obj/ClientManager.o: ../../libmysql/5.x-5.1.35/mysql/mysql_version.h
 obj/ClientManager.o: ../../libmysql/5.x-5.1.35/mysql/mysql_com.h
