@@ -23,7 +23,6 @@
 #include "regen.h"
 #include "exchange.h"
 #include "shop_manager.h"
-#include "dev_log.h"
 #include "ani.h"
 #include "BattleArena.h"
 #include "packet.h"

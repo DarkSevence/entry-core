@@ -11,7 +11,6 @@
 #include "unique_item.h"
 #include "marriage.h"
 #include "item_addon.h"
-#include "dev_log.h"
 #include "locale_service.h"
 #include "item.h"
 #include "item_manager.h"

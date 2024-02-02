@@ -25,7 +25,6 @@
 #include "questmanager.h"
 #include "item_manager.h"
 #include "mob_manager.h"
-#include "dev_log.h"
 #include "item.h"
 #include "arena.h"
 #include "buffer_manager.h"
@@ -2037,7 +2036,6 @@ ACMD(do_cube)
 	if (!ch->CanDoCube())
 		return;
 
-	dev_log(LOG_DEB0, "CUBE COMMAND <%s>: %s", ch->GetName(), argument);
 	int cube_index = 0, inven_index = 0;
 	const char *line;
 
@@ -2126,14 +2124,8 @@ ACMD(do_cube)
 			}
 			break;
 
-		case 'm':	// make
-			if (0 != arg2[0])
-			{
-				while (true == Cube_make(ch))
-					dev_log (LOG_DEB0, "cube make success");
-			}
-			else
-				Cube_make(ch);
+		case 'm':
+			Cube_make (ch);
 			break;
 
 		default:
@@ -2143,7 +2135,6 @@ ACMD(do_cube)
 
 ACMD(do_in_game_mall)
 {
-	dev_log (LOG_DEB0, "cube make success");
 }
 
 // ¡÷ªÁ¿ß

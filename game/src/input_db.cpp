@@ -33,8 +33,6 @@
 #include "block_country.h"
 #include "motion.h"
 
-#include "dev_log.h"
-
 #include "log.h"
 
 #include "horsename_manager.h"
@@ -963,7 +961,6 @@ void CInputDB::Boot(const char* data)
 	// request blocked_country_ip
 	{
 		db_clientdesc->DBPacket(HEADER_GD_BLOCK_COUNTRY_IP, 0, NULL, 0);
-		dev_log(LOG_DEB0, "<sent HEADER_GD_BLOCK_COUNTRY_IP>");
 	}
 }
 

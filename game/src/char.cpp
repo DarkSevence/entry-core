@@ -45,7 +45,6 @@
 #include "mob_manager.h"
 #include "mining.h"
 #include "arena.h"
-#include "dev_log.h"
 #include "horsename_manager.h"
 #include "gm.h"
 #include "map_location.h"
@@ -3094,29 +3093,9 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				DWORD exp = GetExp();
 				DWORD next_exp = GetNextExp();
 
-				// û�ҳ⺸ȣ
-				if (LC_IsNewCIBN())
-				{
-					if (IsOverTime(OT_NONE))
-					{
-						dev_log(LOG_DEB0, "<EXP_LOG> %s = NONE", GetName());
-					}
-					else if (IsOverTime(OT_3HOUR))
-					{
-						amount = (amount / 2);
-						dev_log(LOG_DEB0, "<EXP_LOG> %s = 3HOUR", GetName());
-					}
-					else if (IsOverTime(OT_5HOUR))
-					{
-						amount = 0;
-						dev_log(LOG_DEB0, "<EXP_LOG> %s = 5HOUR", GetName());
-					}
-				}
-
 				// exp�� 0 ���Ϸ� ���� �ʵ��� �Ѵ�
 				if (amount < 0 && exp < -amount)
 				{
-					sys_log(1, "%s AMOUNT < 0 %d, CUR EXP: %d", GetName(), -amount, exp);
 					amount = -exp;
 
 					SetExp(exp + amount);

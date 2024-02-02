@@ -12,7 +12,6 @@
 #include "utils.h"
 #include "log.h"
 #include "char.h"
-#include "dev_log.h"
 #include "locale_service.h"
 #include "item.h"
 #include "item_manager.h"
@@ -299,17 +298,11 @@ void Cube_open (LPCHARACTER ch)
 	npc = ch->GetQuestNPC();
 	if (NULL==npc)
 	{
-		if (test_server)
-			dev_log(LOG_DEB0, "cube_npc is NULL");
 		return;
 	}
 
 	if ( FN_check_valid_npc(npc->GetRaceNum()) == false )
 	{
-		if ( test_server == true )
-		{
-			dev_log(LOG_DEB0, "cube not valid NPC");
-		}
 		return;
 	}
 
@@ -345,7 +338,6 @@ void Cube_close (LPCHARACTER ch)
 	Cube_clean_item(ch);
 	ch->SetCubeNpc(NULL);
 	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube close");
-	dev_log(LOG_DEB0, "<CUBE> close (%s)", ch->GetName());
 }
 
 void Cube_init()
@@ -441,7 +433,6 @@ bool Cube_load (const char *file)
 			// TODO : check cube data
 			if (false == FN_check_cube_data(cube_data))
 			{
-				dev_log(LOG_DEB0, "something wrong");
 				M2_DELETE(cube_data);
 				continue;
 			}
@@ -452,37 +443,6 @@ bool Cube_load (const char *file)
 	fclose(fp);
 	return true;
 }
-
-static void FN_cube_print (CUBE_DATA *data, DWORD index)
-{
-	DWORD	i;
-	dev_log(LOG_DEB0, "--------------------------------");
-	dev_log(LOG_DEB0, "CUBE_DATA[%d]", index);
-
-	for (i=0; i<data->npc_vnum.size(); ++i)
-	{
-		dev_log(LOG_DEB0, "\tNPC_VNUM[%d] = %d", i, data->npc_vnum[i]);
-	}
-	for (i=0; i<data->item.size(); ++i)
-	{
-		dev_log(LOG_DEB0, "\tITEM[%d]   = (%d, %d)", i, data->item[i].vnum, data->item[i].count);
-	}
-	for (i=0; i<data->reward.size(); ++i)
-	{
-		dev_log(LOG_DEB0, "\tREWARD[%d] = (%d, %d)", i, data->reward[i].vnum, data->reward[i].count);
-	}
-	dev_log(LOG_DEB0, "\tPERCENT = %d", data->percent);
-	dev_log(LOG_DEB0, "--------------------------------");
-}
-
-void Cube_print ()
-{
-	for (DWORD i=0; i<s_cube_proto.size(); ++i)
-	{
-		FN_cube_print(s_cube_proto[i], i);
-	}
-}
-
 
 static bool FN_update_cube_status(LPCHARACTER ch)
 {

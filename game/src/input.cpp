@@ -13,7 +13,6 @@
 #include "login_sim.h"
 #include "fishing.h"
 #include "priv_manager.h"
-#include "dev_log.h"
 
 extern time_t get_global_time();
 extern bool g_bNoPasspod;
@@ -433,8 +432,6 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char* c_pData)
 				else if (!stBuf.compare(0, 3, "DC "))
 				{
 					std::string msg = stBuf.substr(3, LOGIN_MAX_LEN);
-
-dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
 
 					TPacketGGDisconnect pgg;
 
