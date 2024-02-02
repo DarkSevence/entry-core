@@ -663,21 +663,6 @@ int io_loop(LPFDWATCH fdw)
 				{
 					d->SetPhase(PHASE_CLOSE);
 				}
-				else if (g_TeenDesc==d)
-				{
-					int buf_size = buffer_size(d->GetOutputBuffer());
-					int sock_buf_size = fdwatch_get_buffer_size(fdw, d->GetSocket());
-
-					int ret = d->ProcessOutput();
-
-					if (ret < 0)
-					{
-						d->SetPhase(PHASE_CLOSE);
-					}
-
-					if (buf_size)
-						sys_log(0, "TEEN::Send(size %d sock_buf %d ret %d)", buf_size, sock_buf_size, ret);
-				}
 				break;
 
 			case FDW_EOF:

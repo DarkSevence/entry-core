@@ -650,16 +650,6 @@ enum SPECIAL_EFFECT
 	
 } ;
 
-enum ETeenFlags
-{
-	TEENFLAG_NONE = 0,
-	TEENFLAG_1HOUR,
-	TEENFLAG_2HOUR,
-	TEENFLAG_3HOUR,
-	TEENFLAG_4HOUR,
-	TEENFLAG_5HOUR,
-};
-
 #include "item_length.h"
 
 // inventory의 position을 나타내는 구조체
