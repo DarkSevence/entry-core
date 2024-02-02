@@ -42,7 +42,6 @@
 #include "OXEvent.h"
 #include "polymorph.h"
 #include "blend_item.h"
-#include "passpod.h"
 #include "ani.h"
 #include "BattleArena.h"
 #include "over9refine.h"
@@ -333,7 +332,6 @@ int main(int argc, char **argv)
 
 	CTableBySkill SkillPowerByLevel;
 	CPolymorphUtils polymorph_utils;
-	CPasspod		passpod;
 	CBattleArena	ba;
 	COver9RefineManager	o9r;
 	SpamManager		spam_mgr;

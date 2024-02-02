@@ -31,7 +31,6 @@ int		save_event_second_cycle = passes_per_sec * 120;	// 3Ка
 int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
-bool	g_bNoPasspod = false;
 
 int			test_server = 0;
 int			speed_server = 0;

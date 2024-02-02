@@ -93,8 +93,6 @@ enum
 	// END_OF_SCRIPT_SELECT_ITEM
 
 	//
-	HEADER_CG_PASSPOD_ANSWER		= 202,
-
 	//NOTE : 이런 개XXX 정말 이거 Packet설계한 사람은 누구냐. 이렇게 코딩하고 밥이 넘어가나.
 	//enum을 별도로 구별을 하던가. 아님 namepsace로 구별을 하던가..
 	//정말 packet generator까지는 바라지도 않는다. 이런 씨XX
@@ -274,9 +272,6 @@ enum
 	// ROULETTE
 	HEADER_GC_ROULETTE					= 200, 
 	// END_ROULETTE			
-	//
-	HEADER_GC_REQUEST_PASSPOD				= 202,
-	HEADER_GC_REQUEST_PASSPOD_FAILED		= 203,
 
 	HEADER_GC_SPECIFIC_EFFECT				= 208,
 
@@ -818,7 +813,6 @@ enum EPhase
 	PHASE_DBCLIENT,
 	PHASE_P2P,
 	PHASE_AUTH,
-	PHASE_PASSPOD,
 };
 
 typedef struct packet_phase
@@ -2118,18 +2112,6 @@ typedef struct command_runup_matrix_answer
 	BYTE    bHeader;
 	char    szAnswer[RUNUP_MATRIX_ANSWER_MAX_LEN + 1];
 } TPacketCGRunupMatrixAnswer;
-
-typedef struct packet_passpod 
-{
-	BYTE    bHeader;
-	char    szAnswer[8+1];
-} TPacketCGPasspod;
-
-typedef struct packet_passpod_failed 
-{
-	BYTE    bHeader;
-	char    szMessage[128];
-} TPacketCGPasspodFailed;
 
 typedef struct SPacketGGCheckAwakeness
 {
