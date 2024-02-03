@@ -55,10 +55,6 @@
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
 
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	#include "FileMonitor_FreeBSD.h"
-#endif
-
 #ifdef USE_STACKTRACE
 	#include <execinfo.h>
 #endif
@@ -366,11 +362,6 @@ int main(int argc, char **argv)
 	{
 		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
 	}
-
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
-	//FileMonitorFreeBSD::Instance().AddWatch( strPackageCryptInfoName, pPackageNotifyFunc );
-#endif
 
 	while (idle());
 
