@@ -1,40 +1,39 @@
-#ifndef __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
-#define __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
+#pragma once 
 
 #include "packet.h"
 
-typedef struct SPacketElement
+struct TPacketElement 
 {
-	int		iSize;
-	std::string	stName;
-	int		iCalled;
-	DWORD	dwLoad;
-	bool	bSequencePacket;
-} TPacketElement;
+	int iSize;
+	std::string stName;
+	int iCalled;
+	uint dwLoad;
+	bool bSequencePacket;
+};
 
 class CPacketInfo
 {
 	public:
 		CPacketInfo();
-		virtual ~CPacketInfo();
+		virtual ~CPacketInfo() = default;
 
-		void Set(int header, int size, const char * c_pszName, bool bSeq=false);
-		bool Get(int header, int * size, const char ** c_ppszName);
+		void Set(int header, int iSize, const char* c_pszName, bool bSeq = false);
+		bool Get(int header, int* size, const char** c_ppszName);
 
 		void Start();
 		void End();
 
-		void Log(const char * c_pszFileName);
+		void Log(const char* c_pszFileName);
 
 		bool IsSequence(int header);
 		void SetSequence(int header, bool bSeq);
 
 	private:
-		TPacketElement * GetElement(int header);
+		TPacketElement* GetElement(int header);
+		std::unordered_map<int, std::unique_ptr<TPacketElement>> m_pPacketMap;
 
 	protected:
-		std::map<int, TPacketElement *> m_pPacketMap;
-		TPacketElement * m_pCurrentPacket;
+		TPacketElement* m_pCurrentPacket;
 		DWORD m_dwStartTime;
 };
 
@@ -45,20 +44,9 @@ class CPacketInfoCG : public CPacketInfo
 		virtual ~CPacketInfoCG();
 };
 
-// PacketInfo P2P 
 class CPacketInfoGG : public CPacketInfo
 {
 	public:
 		CPacketInfoGG();
 		virtual ~CPacketInfoGG();
 };
-
-/// Implemented in input_udp.cpp
-class CPacketInfoUDP : public CPacketInfo
-{
-	public:
-		CPacketInfoUDP();
-		virtual ~CPacketInfoUDP();
-};
-
-#endif

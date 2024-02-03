@@ -299,7 +299,6 @@ class CInputUDP : public CInputProcessor
 
 	protected:
 		struct sockaddr_in	m_SockAddr;
-		CPacketInfoUDP 		m_packetInfoUDP;
 };
 
 class CInputP2P : public CInputProcessor
