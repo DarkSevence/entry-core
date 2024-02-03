@@ -24,7 +24,6 @@
 #include "arena.h"
 #include "OXEvent.h"
 #include "priv_manager.h"
-#include "block_country.h"
 #include "log.h"
 #include "horsename_manager.h"
 #include "MarkManager.h"
@@ -140,16 +139,6 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
-
-	// is blocked ip?
-	{
-		if (!is_block_exception(login) && is_blocked_country_ip(d->GetHostName()))
-		{
-			sys_log(0, "BLOCK_COUNTRY_IP (%s)", d->GetHostName());
-			d->SetPhase(PHASE_CLOSE);
-			return;
-		}
-	}
 
 	if (g_bNoMoreClient)
 	{

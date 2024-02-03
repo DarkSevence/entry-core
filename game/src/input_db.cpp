@@ -30,7 +30,6 @@
 #include "unique_item.h"
 
 #include "affect.h"
-#include "block_country.h"
 #include "motion.h"
 
 #include "log.h"
@@ -956,11 +955,6 @@ void CInputDB::Boot(const char* data)
 	if (test_server)
 	{
 		CMobManager::instance().DumpRegenCount("mob_count");
-	}
-
-	// request blocked_country_ip
-	{
-		db_clientdesc->DBPacket(HEADER_GD_BLOCK_COUNTRY_IP, 0, NULL, 0);
 	}
 }
 
@@ -2196,14 +2190,6 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		break;
 	//END_RELOAD_ADMIN
 
-	case HEADER_DG_BLOCK_COUNTRY_IP:
-		this->AddBlockCountryIp((TPacketBlockCountryIp *) c_pData);
-		break;
-		
-	case HEADER_DG_BLOCK_EXCEPTION:
-		this->BlockException((TPacketBlockException *) c_pData);
-		break;
-
 	case HEADER_DG_ACK_CHANGE_GUILD_MASTER :
 		this->GuildChangeMaster((TPacketChangeGuildMaster*) c_pData);
 		break;	
@@ -2277,16 +2263,6 @@ bool CInputDB::Process(LPDESC d, const void * orig, int bytes, int & r_iBytesPro
 	}
 
 	return true;
-}
-
-void CInputDB::AddBlockCountryIp(TPacketBlockCountryIp * data)
-{
-	add_blocked_country_ip(data);
-}
-
-void CInputDB::BlockException(TPacketBlockException *data)
-{
-	block_exception(data);
 }
 
 void CInputDB::GuildChangeMaster(TPacketChangeGuildMaster* p)

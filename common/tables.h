@@ -109,9 +109,6 @@ enum
 	HEADER_GD_RELOAD_ADMIN			= 115,			///<운영자 정보 요청
 	HEADER_GD_BREAK_MARRIAGE		= 116,			///< 결혼 파기
 
-	HEADER_GD_BLOCK_COUNTRY_IP		= 127,		// 광대역 IP-Block
-	HEADER_GD_BLOCK_EXCEPTION		= 128,		// 광대역 IP-Block 예외
-
 	HEADER_GD_REQ_CHANGE_GUILD_MASTER	= 129,
 
 	HEADER_GD_REQ_SPARE_ITEM_ID_RANGE	= 130,
@@ -228,9 +225,6 @@ enum
 	HEADER_DG_MYSHOP_PRICELIST_RES	= 157,		///< 가격정보 리스트 응답
 	HEADER_DG_RELOAD_ADMIN = 158, 				///< 운영자 정보 리로드 
 	HEADER_DG_BREAK_MARRIAGE = 159,	
-	
-	HEADER_DG_BLOCK_COUNTRY_IP		= 171,		// 광대역 IP-Block
-	HEADER_DG_BLOCK_EXCEPTION		= 172,		// 광대역 IP-Block 예외 account
 
 	HEADER_DG_ACK_CHANGE_GUILD_MASTER = 173,
 
@@ -1222,26 +1216,6 @@ typedef struct SPacketReloadAdmin
 	char szIP[16];
 } TPacketReloadAdmin;
 //END_RELOAD_ADMIN
-
-// Block Country Ip
-typedef struct tBlockCountryIp
-{
-	DWORD	ip_from;
-	DWORD	ip_to;
-} TPacketBlockCountryIp;
-
-enum EBlockExceptionCommand
-{
-	BLOCK_EXCEPTION_CMD_ADD = 1,
-	BLOCK_EXCEPTION_CMD_DEL = 2,
-};
-
-// Block Exception Account
-typedef struct tBlockException
-{
-	BYTE	cmd;	// 1 == add, 2 == delete
-	char	login[LOGIN_MAX_LEN + 1];
-}TPacketBlockException;
 
 typedef struct tChangeGuildMaster
 {

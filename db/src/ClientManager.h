@@ -506,8 +506,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	void FlushPlayerCacheSet(DWORD pid);
 
-	void BlockException(TPacketBlockException *data);
-
 	void SendSpareItemIDRange(CPeer* peer);
 
 	void UpdateHorseName(TPacketUpdateHorseName* data, CPeer* peer);

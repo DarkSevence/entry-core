@@ -2,7 +2,6 @@
 #include "../../common/stl.h"
 #include "constants.h"
 #include "packet_info.h"
-//#include "XTrapManager.h"
 
 CPacketInfo::CPacketInfo()
 	: m_pCurrentPacket(NULL), m_dwStartTime(0)

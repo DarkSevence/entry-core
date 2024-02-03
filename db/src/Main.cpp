@@ -9,7 +9,6 @@
 #include "PrivManager.h"
 #include "MoneyLog.h"
 #include "Marriage.h"
-#include "BlockCountry.h"
 #include "ItemIDRangeManager.h"
 
 #include <signal.h>
@@ -77,7 +76,6 @@ int main()
 	CMoneyLog MoneyLog;
 	ItemAwardManager ItemAwardManager;
 	marriage::CManager MarriageManager;
-	CBlockCountry	BlockCountry;
 	CItemIDRangeManager ItemIDRangeManager;
 	
 	if (!Start())
@@ -85,7 +83,6 @@ int main()
 
 	GuildManager.Initialize();
 	MarriageManager.Initialize();
-	BlockCountry.Load();
 	ItemIDRangeManager.Build();
 
 	sys_log(0, "Metin2DBCacheServer Start\n");

@@ -257,9 +257,6 @@ protected:
 	void		WeddingReady(TPacketWeddingReady* p);
 	void		WeddingStart(TPacketWeddingStart* p);
 	void		WeddingEnd(TPacketWeddingEnd* p);
-	
-	void		AddBlockCountryIp(TPacketBlockCountryIp * data);
-	void		BlockException(TPacketBlockException * data);
 
 	// MYSHOP_PRICE_LIST
 	/// 아이템 가격정보 리스트 요청에 대한 응답 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리함수
