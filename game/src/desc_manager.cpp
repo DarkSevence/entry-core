@@ -10,7 +10,6 @@
 #include "protocol.h"
 #include "messenger_manager.h"
 #include "p2p.h"
-#include "ip_ban.h"
 #include "ClientPackageCryptInfo.h"
 
 struct valid_ip
@@ -156,16 +155,6 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 		return NULL;
 
 	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
-
-	if (g_bAuthServer)
-	{
-		if (IsBanIP(peer.sin_addr))
-		{
-			sys_log(0, "connection from %s was banned.", host);
-			socket_close(desc);
-			return NULL;
-		}
-	}
 
 	if (!IsValidIP(admin_ip, host)) // admin_ip 에 등록된 IP 는 최대 사용자 수에 구애받지 않는다.
 	{
