@@ -139,15 +139,6 @@ template <class Functor> void DBManager::FuncAfterQuery(Functor f, const char* c
 	m_sql.ReturnQuery(szQuery, p);
 }
 
-////////////////////////////////////////////////////////////////
-typedef struct SHighscoreRegisterQueryInfo
-{
-	char    szBoard[20+1]; 
-	DWORD   dwPID;
-	int     iValue;
-	bool    bOrder;
-} THighscoreRegisterQueryInfo;
-
 // ACCOUNT_DB
 class AccountDB : public singleton<AccountDB>
 {

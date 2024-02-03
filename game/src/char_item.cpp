@@ -32,7 +32,6 @@
 #include "blend_item.h"
 #include "BattleArena.h"
 #include "arena.h"
-#include "threeway_war.h"
 
 #include "safebox.h"
 #include "shop.h"
@@ -4960,13 +4959,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		}
 
 		// 경혼반지 사용지 상대방이 SUMMONABLE_ZONE에 있는가는 WarpToPC()에서 체크
-		
-		//삼거리 관려 맵에서는 귀환부를 막아버린다.
-		if (CThreeWayWar::instance().IsThreeWayWarMapIndex(GetMapIndex()))
-		{
-			ChatPacket(CHAT_TYPE_INFO, "[LS;352]");
-			return false;
-		}
+
 		int iPulse = thecore_pulse();
 
 		//창고 연후 체크

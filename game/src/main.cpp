@@ -49,7 +49,6 @@
 #include "MarkManager.h"
 #include "spam.h"
 #include "panama.h"
-#include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
 #include "DragonSoul.h"
@@ -330,7 +329,6 @@ int main(int argc, char **argv)
 	CBattleArena	ba;
 	COver9RefineManager	o9r;
 	SpamManager		spam_mgr;
-	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 	DSManager dsManager;
 

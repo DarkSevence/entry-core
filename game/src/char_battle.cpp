@@ -32,12 +32,10 @@
 #include "guild_manager.h"
 #include "questmanager.h"
 #include "questlua.h"
-#include "threeway_war.h"
 #include "BlueDragon.h"
 #include "DragonLair.h"
 #include <random>
 #include <algorithm>
-
 
 DWORD AdjustExpByLevel(const LPCHARACTER ch, const DWORD exp)
 {
@@ -1258,25 +1256,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 	}
 
-	//CHECK_FORKEDROAD_WAR
-	if (IsPC())
-	{
-		if (CThreeWayWar::instance().IsThreeWayWarMapIndex(GetMapIndex()))
-			isForked = true;
-	}
-	//END_CHECK_FORKEDROAD_WAR
-
 	if (pkKiller && !isAgreedPVP && !isUnderGuildWar && IsPC() && !isDuel && !isForked)
 	{
 		if (GetGMLevel() == GM_PLAYER || test_server)
 		{
 			ItemDropPenalty(pkKiller);
 		}
-	}
-
-	if (true == isForked)
-	{
-		CThreeWayWar::instance().onDead( this, pkKiller );
 	}
 
 	SetPosition(POS_DEAD);

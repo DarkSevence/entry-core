@@ -29,7 +29,6 @@
 #include "arena.h"
 #include "buffer_manager.h"
 #include "unique_item.h"
-#include "threeway_war.h"
 #include "log.h"
 #include "MountSystemManager.h"
 
@@ -395,9 +394,7 @@ ACMD(do_cmd)
 
 	int nExitLimitTime = 10;
 
-	if (ch->IsHack(false, true, nExitLimitTime) &&
-		false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()) &&
-	   	(!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
+	if (ch->IsHack (false, true, nExitLimitTime) && (!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
 	{
 		return;
 	}
@@ -466,16 +463,6 @@ ACMD(do_restart)
 	{
 		if (!test_server)
 		{
-			if (ch->IsHack())
-			{
-				//성지 맵일경우에는 체크 하지 않는다.
-				if (false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;73;%d]", iTimeToDead - (180 - g_nPortalLimitTime));
-					return;
-				}
-			}
-
 			if (iTimeToDead > 170)
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;74;%d]", iTimeToDead - 170);
@@ -491,9 +478,7 @@ ACMD(do_restart)
 	{
 		if (ch->IsHack())
 		{
-			//길드맵, 성지맵에서는 체크 하지 않는다.
-			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG) ||
-			   	false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
+			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;75;%d]", iTimeToDead - (180 - g_nPortalLimitTime));
 				return;
@@ -513,44 +498,6 @@ ACMD(do_restart)
 	ch->GetDesc()->SetPhase(PHASE_GAME);
 	ch->SetPosition(POS_STANDING);
 	ch->StartRecoveryEvent();
-
-	//FORKED_LOAD
-	//DESC: 삼거리 전투시 부활을 할경우 맵의 입구가 아닌 삼거리 전투의 시작지점으로 이동하게 된다.
-	if (1 == quest::CQuestManager::instance().GetEventFlag("threeway_war"))
-	{
-		if (subcmd == SCMD_RESTART_TOWN || subcmd == SCMD_RESTART_HERE)
-		{
-			if (true == CThreeWayWar::instance().IsThreeWayWarMapIndex(ch->GetMapIndex()) && false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-			{
-				ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
-				ch->ReviveInvisible(5);
-				ch->CheckMount();
-				ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
-				ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
-				return;
-			}
-
-			if (true == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-			{
-				if (CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()) <= 0)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;424]");
-					ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
-				}
-				else
-				{
-					ch->Show(ch->GetMapIndex(), GetSungziStartX(ch->GetEmpire()), GetSungziStartY(ch->GetEmpire()));
-				}
-
-				ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
-				ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
-				ch->ReviveInvisible(5);
-				ch->CheckMount();
-				return;
-			}
-		}
-	}
-	//END_FORKED_LOAD
 
 	if (ch->GetDungeon())
 		ch->GetDungeon()->UseRevive(ch);

@@ -16,10 +16,7 @@
 #include "locale_service.h"
 #include "questmanager.h"
 #include "skill.h"
-#include "threeway_war.h"
 
-
-////////////////////////////////////////////////////////////////////////////////
 // Input Processor
 CInputP2P::CInputP2P()
 {

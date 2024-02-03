@@ -180,8 +180,6 @@ ACMD(do_oxevent_log);
 ACMD(do_oxevent_get_attender);
 
 ACMD(do_effect);
-ACMD(do_threeway_war_info );
-ACMD(do_threeway_war_myinfo );
 
 ACMD(do_hair);
 //gift notify quest command
@@ -455,9 +453,7 @@ struct command_info cmd_info[] =
 	{ "get_oxevent_att",	do_oxevent_get_attender,0,	POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "effect",				do_effect,				0,	POS_DEAD,	GM_LOW_WIZARD	},
-
-	{ "threeway_info",		do_threeway_war_info,	0,	POS_DEAD,	GM_LOW_WIZARD},
-	{ "threeway_myinfo",	do_threeway_war_myinfo, 0,	POS_DEAD,	GM_LOW_WIZARD},
+	
 	{ "hair",				do_hair,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "inventory",			do_inventory,			0,	POS_DEAD,	GM_LOW_WIZARD	},
 	{ "cube",				do_cube,				0,	POS_DEAD,	GM_PLAYER	},
