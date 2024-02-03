@@ -637,8 +637,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	p2.channel = g_bChannel;
 	d->Packet(&p2, sizeof(p2));
 
-	ch->SendGreetMessage();
-
 	_send_bonus_info(ch);
 	std::unique_ptr<SQLMsg> play(DBManager::instance().DirectQuery("UPDATE player%s SET last_play = NOW() WHERE name = '%s'", get_table_postfix(), ch->GetName()));
 	
