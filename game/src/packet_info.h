@@ -8,7 +8,6 @@ struct TPacketElement
 	std::string stName;
 	int iCalled;
 	uint dwLoad;
-	bool bSequencePacket;
 };
 
 class CPacketInfo
@@ -17,17 +16,14 @@ class CPacketInfo
 		CPacketInfo();
 		virtual ~CPacketInfo() = default;
 
-		void Set(int header, int iSize, const char* c_pszName, bool bSeq = false);
+		void Set(int header, int iSize, const char* c_pszName);
 		bool Get(int header, int* size, const char** c_ppszName);
 
 		void Start();
 		void End();
 
 		void Log(const char* c_pszFileName);
-
-		bool IsSequence(int header);
-		void SetSequence(int header, bool bSeq);
-
+		
 	private:
 		TPacketElement* GetElement(int header);
 		std::unordered_map<int, std::unique_ptr<TPacketElement>> m_pPacketMap;
