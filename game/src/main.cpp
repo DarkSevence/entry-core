@@ -60,20 +60,6 @@
 
 extern void WriteVersion();
 
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
-extern void (*_malloc_message)(const char* p1, const char* p2, const char* p3, const char* p4);
-// FreeBSD _malloc_message replacement
-void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const char* p4)
-{
-	auto fp = msl::file_ptr(DBGALLOC_LOG_FILENAME, "a");
-	if (!fp)
-		return;
-	
-	fp.write("%s %s %s %s\n", p1, p2, p3, p4);
-}
-#endif
-
-
 // 게임과 연결되는 소켓
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
@@ -439,10 +425,6 @@ void usage()
 
 int start(int argc, char **argv)
 {
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
-	_malloc_message = WriteMallocMessage;
-#endif
-
 	std::string st_localeServiceName;
 	config_init(st_localeServiceName);
 	thecore_init();
@@ -507,9 +489,6 @@ void destroy()
 
 	sys_log(0, "<shutdown> Closing sockets...");
 	socket_close(tcp_socket);
-#ifndef __UDP_BLOCK__
-	socket_close(udp_socket);
-#endif
 	socket_close(p2p_socket);
 
 	sys_log(0, "<shutdown> fdwatch_delete()...");
