@@ -5528,64 +5528,64 @@ void CHARACTER::GiveGold(int iAmount)
 
 bool CHARACTER::PickupItem(DWORD dwVID)
 {
-    LPITEM item = ITEM_MANAGER::instance().FindByVID(dwVID);
+	LPITEM item = ITEM_MANAGER::instance().FindByVID(dwVID);
 
-    if (IsObserverMode())
+	if (IsObserverMode())
 	{
-        return false;
+		return false;
 	}
 
-    if (!item || !item->GetSectree())
+	if (!item || !item->GetSectree())
 	{
-        return false;
+		return false;
 	}
 
-    if (!item->DistanceValid(this))
+	if (!item->DistanceValid(this))
 	{
-        return false;
+		return false;
 	}
 
-    if (item->IsOwnership(this))
-    {
-        if (item->GetType() == ITEM_ELK)
-        {
-            GiveGold(item->GetCount());
-            item->RemoveFromGround();
-            M2_DESTROY_ITEM(item);
-            Save();
-            return true;
-        }
-        else
-        {
-            if (!TryStackItemInInventory(item, this))
-            {
-                return AddItemToInventory(item, this);
-            }
+	if (item->IsOwnership(this))
+	{
+		if (item->GetType() == ITEM_ELK)
+		{
+			GiveGold(item->GetCount());
+			item->RemoveFromGround();
+			M2_DESTROY_ITEM(item);
+			Save();
+			return true;
+		}
+		else
+		{
+			if (!TryStackItemInInventory(item, this))
+			{
+				return AddItemToInventory(item, this);
+			}
 			
-            return true;
-        }
-    }
-    else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
-    {
-        NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
-        GetParty()->ForEachOnlineMember(funcFindOwnership);
-        LPCHARACTER owner = funcFindOwnership.owner;
+			return true;
+		}
+	}
+	else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
+	{
+		NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
+		GetParty()->ForEachOnlineMember(funcFindOwnership);
+		LPCHARACTER owner = funcFindOwnership.owner;
 
-        if (!owner)
-        {
-            ChatPacket(CHAT_TYPE_INFO, "[LS;366;%s]", item->GetName());
-            return false;
-        }
+		if (!owner)
+		{
+			ChatPacket(CHAT_TYPE_INFO, "[LS;366;%s]", item->GetName());
+			return false;
+		}
 
-        if (!TryStackItemInInventory(item, owner))
-        {
-            return AddItemToInventory(item, owner);
-        }
+		if (!TryStackItemInInventory(item, owner))
+		{
+			return AddItemToInventory(item, owner);
+		}
 		
-        return true;
-    }
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 bool CHARACTER::AddItemToInventory(LPITEM item, LPCHARACTER owner)
@@ -5601,10 +5601,10 @@ bool CHARACTER::AddItemToInventory(LPITEM item, LPCHARACTER owner)
 	{
 		owner->ChatPacket(CHAT_TYPE_INFO, "[LS;314]");
 		
-        if (owner != this)
-        {
-            this->ChatPacket(CHAT_TYPE_INFO, "[LS;768;%s]", owner->GetName());
-        }
+		if (owner != this)
+		{
+			this->ChatPacket(CHAT_TYPE_INFO, "[LS;768;%s]", owner->GetName());
+		}
 		
 		return false;
 	}
@@ -5668,8 +5668,8 @@ bool CHARACTER::TryStackItemInInventory(LPITEM item, LPCHARACTER owner)
 				}
 				else
 				{
-					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;766;%s;%s]", owner->GetName(), item->GetName());
-					this->ChatPacket(CHAT_TYPE_INFO, "[LS;765;%s;%s]", owner->GetName(), item->GetName());
+					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;766;%s;%s]", item->GetName(), owner->GetName());
+					this->ChatPacket(CHAT_TYPE_INFO, "[LS;765;%s;%s]", item->GetName(), owner->GetName());
 				}
 				
 				stackingCompleted = true;
