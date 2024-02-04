@@ -1571,6 +1571,7 @@ ACMD(do_invisibility)
 	else
 	{
 		ch->AddAffect(AFFECT_INVISIBILITY, POINT_NONE, 0, AFF_INVISIBILITY, INFINITE_AFFECT_DURATION, 0, true);
+		ch->ForgetMyAttacker(false);
 	}
 }
 

@@ -2145,8 +2145,11 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 		ChatPacket(CHAT_TYPE_INFO, "[LS;403]");
 	}
 	// END_OF_ADD_GRANDMASTER_SKILL
-
-	//sys_log(0, "XXX SKILL Calc %d Amount %d", dwVnum, iAmount);
+	
+	if (IsPC() && pkSk->dwVnum == SKILL_EUNHYUNG) 
+	{
+		ForgetMyAttacker(false);
+	}
 
 	// REMOVE_BAD_AFFECT_BUG_FIX
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_REMOVE_BAD_AFFECT))

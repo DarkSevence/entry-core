@@ -1303,7 +1303,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool				Shoot(BYTE bType);
 		void				FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader);
 
-		void				ForgetMyAttacker();
+		void 				ForgetMyAttacker(bool shouldRevive = true);
 		void				AggregateMonster();
 		void				AttractRanger();
 		void				PullMonster();

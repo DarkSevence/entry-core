@@ -505,7 +505,7 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 
 	iDam = MAX(0, iAtk - iDef);
 
-	if (test_server)
+	/*if (test_server)
 	{
 		int DEBUG_iLV = pkAttacker->GetLevel()*2;
 		int DEBUG_iST = int((pkAttacker->GetPoint(POINT_ATT_GRADE) - DEBUG_iLV) * fAR);
@@ -565,7 +565,7 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 
 		pkAttacker->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
 		pkVictim->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
-	}
+	}*/
 
 	return CalcBattleDamage(iDam, pkAttacker->GetLevel(), pkVictim->GetLevel());
 }

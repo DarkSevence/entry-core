@@ -3314,15 +3314,20 @@ struct FuncPullMonster
 	}
 };
 
-void CHARACTER::ForgetMyAttacker()
+void CHARACTER::ForgetMyAttacker(bool shouldRevive)
 {
-	LPSECTREE pSec = GetSectree();
+	const LPSECTREE pSec = GetSectree();
+	
 	if (pSec)
 	{
 		FuncForgetMyAttacker f(this);
 		pSec->ForEachAround(f);
 	}
-	ReviveInvisible(5);
+
+	if (shouldRevive)
+	{
+		ReviveInvisible(5);
+	}
 }
 
 void CHARACTER::AggregateMonster()
