@@ -5579,7 +5579,14 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 		if (!TryStackItemInInventory(item, owner))
 		{
-			return AddItemToInventory(item, owner);
+			bool added = AddItemToInventory(item, owner);
+			
+			if (added)
+			{
+				this->ChatPacket(CHAT_TYPE_INFO, "[LS;765;%s;%s]", item->GetName(), owner->GetName());
+			}
+			
+			return added;
 		}
 		
 		return true;
@@ -5603,7 +5610,7 @@ bool CHARACTER::AddItemToInventory(LPITEM item, LPCHARACTER owner)
 		
 		if (owner != this)
 		{
-			this->ChatPacket(CHAT_TYPE_INFO, "[LS;768;%s]", owner->GetName());
+			this->ChatPacket(CHAT_TYPE_INFO, "[LS;767;%s]", owner->GetName());
 		}
 		
 		return false;
@@ -5615,7 +5622,6 @@ bool CHARACTER::AddItemToInventory(LPITEM item, LPCHARACTER owner)
 
 	LogManager::instance().ItemLog(owner, item, "GET", fmt::format("{} {} {}", item->GetName(), item->GetCount(), item->GetOriginalVnum()).c_str());
 	owner->ChatPacket(CHAT_TYPE_INFO, "[LS;216;%s]", item->GetName());
-	this->ChatPacket(CHAT_TYPE_INFO, "[LS;767;%s;%s]", item->GetName(), owner->GetName());
 
 	return true;
 }
@@ -5668,7 +5674,7 @@ bool CHARACTER::TryStackItemInInventory(LPITEM item, LPCHARACTER owner)
 				}
 				else
 				{
-					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;766;%s;%s]", item->GetName(), owner->GetName());
+					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;766;%s;%s]", item->GetName(), GetName());
 					this->ChatPacket(CHAT_TYPE_INFO, "[LS;765;%s;%s]", item->GetName(), owner->GetName());
 				}
 				
