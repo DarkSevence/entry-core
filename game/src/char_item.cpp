@@ -5528,181 +5528,169 @@ void CHARACTER::GiveGold(int iAmount)
 
 bool CHARACTER::PickupItem(DWORD dwVID)
 {
-	LPITEM item = ITEM_MANAGER::instance().FindByVID(dwVID);
+    LPITEM item = ITEM_MANAGER::instance().FindByVID(dwVID);
 
-	if (IsObserverMode())
-		return false;
-
-	if (!item || !item->GetSectree())
-		return false;
-
-	if (item->DistanceValid(this))
+    if (IsObserverMode())
 	{
-		if (item->IsOwnership(this))
-		{
-			// 만약 주으려 하는 아이템이 엘크라면
-			if (item->GetType() == ITEM_ELK)
-			{
-				GiveGold(item->GetCount());
-				item->RemoveFromGround();
+        return false;
+	}
 
-				M2_DESTROY_ITEM(item);
+    if (!item || !item->GetSectree())
+	{
+        return false;
+	}
 
-				Save();
-			}
-			// 평범한 아이템이라면
-			else
-			{
-				if (item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
-				{
-					BYTE bCount = item->GetCount();
+    if (!item->DistanceValid(this))
+	{
+        return false;
+	}
 
-					for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
-					{
-						LPITEM item2 = GetInventoryItem(i);
-
-						if (!item2)
-							continue;
-
-						if (item2->GetVnum() == item->GetVnum())
-						{
-							int j;
-
-							for (j = 0; j < ITEM_SOCKET_MAX_NUM; ++j)
-								if (item2->GetSocket(j) != item->GetSocket(j))
-									break;
-
-							if (j != ITEM_SOCKET_MAX_NUM)
-								continue;
-
-							BYTE bCount2 = MIN(200 - item2->GetCount(), bCount);
-							bCount -= bCount2;
-
-							item2->SetCount(item2->GetCount() + bCount2);
-
-							if (bCount == 0)
-							{
-								ChatPacket(CHAT_TYPE_INFO, "[LS;216;%s]", item2->GetName());
-								M2_DESTROY_ITEM(item);
-								if (item2->GetType() == ITEM_QUEST)
-									quest::CQuestManager::instance().PickupItem (GetPlayerID(), item2);
-								return true;
-							}
-						}
-					}
-
-					item->SetCount(bCount);
-				}
-
-				int iEmptyCell;
-				if (item->IsDragonSoul())
-				{
-					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
-					{
-						sys_log(0, "No empty ds inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
-						ChatPacket(CHAT_TYPE_INFO, "[LS;365]");
-						return false;
-					}
-				}
-				else
-				{
-					if ((iEmptyCell = GetEmptyInventory(item->GetSize())) == -1)
-					{
-						sys_log(0, "No empty inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
-						ChatPacket(CHAT_TYPE_INFO, "[LS;365]");
-						return false;
-					}
-				}
-
-				item->RemoveFromGround();
-				
-				if (item->IsDragonSoul())
-					item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
-				else
-					item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell));
-
-				char szHint[32+1];
-				snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
-				LogManager::instance().ItemLog(this, item, "GET", szHint);
-				ChatPacket(CHAT_TYPE_INFO, "[LS;216;%s]", item->GetName());
-
-				if (item->GetType() == ITEM_QUEST)
-					quest::CQuestManager::instance().PickupItem (GetPlayerID(), item);
-			}
-
-			//Motion(MOTION_PICKUP);
-			return true;
-		}
-		else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
-		{
-			// 다른 파티원 소유권 아이템을 주으려고 한다면
-			NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
-
-			GetParty()->ForEachOnlineMember(funcFindOwnership);
-
-			LPCHARACTER owner = funcFindOwnership.owner;
+    if (item->IsOwnership(this))
+    {
+        if (item->GetType() == ITEM_ELK)
+        {
+            GiveGold(item->GetCount());
+            item->RemoveFromGround();
+            M2_DESTROY_ITEM(item);
+            Save();
+            return true;
+        }
+        else
+        {
+            if (!TryStackItemInInventory(item, this))
+            {
+                return AddItemToInventory(item, this);
+            }
 			
-			if (!owner)
-			{
-				ChatPacket(CHAT_TYPE_INFO, "[LS;366;%s]", item->GetName());
-				return false;
-			}
+            return true;
+        }
+    }
+    else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
+    {
+        NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
+        GetParty()->ForEachOnlineMember(funcFindOwnership);
+        LPCHARACTER owner = funcFindOwnership.owner;
 
-			int iEmptyCell;
+        if (!owner)
+        {
+            ChatPacket(CHAT_TYPE_INFO, "[LS;366;%s]", item->GetName());
+            return false;
+        }
 
-			if (item->IsDragonSoul())
+        if (!TryStackItemInInventory(item, owner))
+        {
+            return AddItemToInventory(item, owner);
+        }
+		
+        return true;
+    }
+
+    return false;
+}
+
+bool CHARACTER::AddItemToInventory(LPITEM item, LPCHARACTER owner)
+{
+	if (owner == nullptr) 
+	{		
+		owner = this;
+	}
+
+	int iEmptyCell = item->IsDragonSoul() ? owner->GetEmptyDragonSoulInventory(item) : owner->GetEmptyInventory(item->GetSize());
+	
+	if (iEmptyCell == -1)
+	{
+		owner->ChatPacket(CHAT_TYPE_INFO, "[LS;314]");
+		
+        if (owner != this)
+        {
+            this->ChatPacket(CHAT_TYPE_INFO, "[LS;768;%s]", owner->GetName());
+        }
+		
+		return false;
+	}
+
+	item->RemoveFromGround();
+	TItemPos destPos = item->IsDragonSoul() ? TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell) : TItemPos(INVENTORY, iEmptyCell);
+	item->AddToCharacter(owner, destPos);
+
+	LogManager::instance().ItemLog(owner, item, "GET", fmt::format("{} {} {}", item->GetName(), item->GetCount(), item->GetOriginalVnum()).c_str());
+	owner->ChatPacket(CHAT_TYPE_INFO, "[LS;216;%s]", item->GetName());
+	this->ChatPacket(CHAT_TYPE_INFO, "[LS;767;%s;%s]", item->GetName(), owner->GetName());
+
+	return true;
+}
+
+bool CHARACTER::TryStackItemInInventory(LPITEM item, LPCHARACTER owner)
+{
+	if (!item->IsStackable() || IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
+	{
+		return false;
+	}
+
+	BYTE remainingCount = item->GetCount();
+	bool stackingCompleted = false;
+
+	for (int32_t i = 0; i < INVENTORY_MAX_NUM; ++i)
+	{
+		LPITEM itemInInventory = owner->GetInventoryItem(i);
+		
+		if (!itemInInventory)
+		{
+			continue;
+		}
+
+		if (itemInInventory->GetVnum() == item->GetVnum())
+		{
+			int32_t j;
+			
+			for (int32_t j = 0; j < ITEM_SOCKET_MAX_NUM; ++j)
 			{
-				if (!(owner && (iEmptyCell = owner->GetEmptyDragonSoulInventory(item)) != -1))
+				if (itemInInventory->GetSocket(j) != item->GetSocket(j))
 				{
-					owner = this;
-
-					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
-					{
-						owner->ChatPacket(CHAT_TYPE_INFO, "[LS;365]");
-						return false;
-					}
+					break;
 				}
 			}
-			else
+
+			if (j != ITEM_SOCKET_MAX_NUM)
 			{
-				if (!(owner && (iEmptyCell = owner->GetEmptyInventory(item->GetSize())) != -1))
+				continue;
+			}
+
+			BYTE stackableCount = MIN(200 - itemInInventory->GetCount(), remainingCount);
+			itemInInventory->SetCount(itemInInventory->GetCount() + stackableCount);
+			remainingCount -= stackableCount;
+
+			if (remainingCount == 0)
+			{
+				if (owner == this)
 				{
-					owner = this;
-
-					if ((iEmptyCell = GetEmptyInventory(item->GetSize())) == -1)
-					{
-						owner->ChatPacket(CHAT_TYPE_INFO, "[LS;365]");
-						return false;
-					}
+					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;764;%s]", item->GetName());
 				}
+				else
+				{
+					owner->ChatPacket(CHAT_TYPE_INFO, "[LS;766;%s;%s]", owner->GetName(), item->GetName());
+					this->ChatPacket(CHAT_TYPE_INFO, "[LS;765;%s;%s]", owner->GetName(), item->GetName());
+				}
+				
+				stackingCompleted = true;
+				break;
 			}
-
-			item->RemoveFromGround();
-
-			if (item->IsDragonSoul())
-				item->AddToCharacter(owner, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
-			else
-				item->AddToCharacter(owner, TItemPos(INVENTORY, iEmptyCell));
-
-			char szHint[32+1];
-			snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
-			LogManager::instance().ItemLog(owner, item, "GET", szHint);
-
-			if (owner == this)
-				ChatPacket(CHAT_TYPE_INFO, "[LS;216;%s]", item->GetName());
-			else
-			{
-				owner->ChatPacket(CHAT_TYPE_INFO, "[LS;367;%s;%s]", GetName(), item->GetName());
-				ChatPacket(CHAT_TYPE_INFO, "[LS;368;%s;%s]", owner->GetName(), item->GetName());
-			}
-
-			if (item->GetType() == ITEM_QUEST)
-				quest::CQuestManager::instance().PickupItem (owner->GetPlayerID(), item);
-
-			return true;
 		}
 	}
 
+	if (stackingCompleted)
+	{
+		M2_DESTROY_ITEM(item);
+		
+		if (item->GetType() == ITEM_QUEST)
+		{
+			quest::CQuestManager::instance().PickupItem(owner->GetPlayerID(), item);
+		}
+		
+		return true;
+	}
+
+	item->SetCount(remainingCount);
 	return false;
 }
 

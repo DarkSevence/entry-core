@@ -1193,6 +1193,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		void			SendEquipment(LPCHARACTER ch);
 		// End of Item
+		
+	private:
+		bool TryStackItemInInventory(LPITEM item, LPCHARACTER owner);
+		bool AddItemToInventory(LPITEM item, LPCHARACTER owner);
+
 
 	protected:
 
