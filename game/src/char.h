@@ -2090,6 +2090,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// SyncPosition이 일어날 때를 기록.
 		timeval		m_tvLastSyncTime;
 		int			m_iSyncHackCount;
+		
 	public:
 		void			SetLastSyncTime(const timeval &tv) { memcpy(&m_tvLastSyncTime, &tv, sizeof(timeval)); }
 		const timeval&	GetLastSyncTime() { return m_tvLastSyncTime; }

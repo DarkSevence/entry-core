@@ -442,7 +442,7 @@ LPITEM CItem::RemoveFromCharacter()
 			{
 				assert(m_wCell < DRAGON_SOUL_INVENTORY_MAX_NUM);
 				owner->SetItem(TItemPos(m_bWindow, m_wCell), nullptr);
-			}
+			}		
 			else
 			{
 				TItemPos inventoryCell(INVENTORY, m_wCell);

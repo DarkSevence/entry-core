@@ -1,6 +1,8 @@
 #ifndef __INC_METIN_II_LENGTH_H__
 #define __INC_METIN_II_LENGTH_H__
 
+#include "global_config.h"
+
 #define WORD_MAX 0xffff
 enum EMisc
 {
@@ -697,6 +699,7 @@ typedef struct SItemPos
 		case SAFEBOX:
 		case MALL:
 			return false;
+
 		default:
 			return false;
 		}

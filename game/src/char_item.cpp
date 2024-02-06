@@ -226,28 +226,30 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 {
 	if (!IsValidItemPosition(Cell))
 		return NULL;
+	
+	
 	WORD wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
 	switch (window_type)
 	{
-	case INVENTORY:
-	case EQUIPMENT:
-		if (wCell >= INVENTORY_AND_EQUIP_SLOT_MAX)
-		{
-			sys_err("CHARACTER::GetInventoryItem: invalid item cell %d", wCell);
-			return NULL;
-		}
-		return m_pointsInstant.pItems[wCell];
-	case DRAGON_SOUL_INVENTORY:
-		if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
-		{
-			sys_err("CHARACTER::GetInventoryItem: invalid DS item cell %d", wCell);
-			return NULL;
-		}
-		return m_pointsInstant.pDSItems[wCell];
+		case INVENTORY:
+		case EQUIPMENT:
+			if (wCell >= INVENTORY_AND_EQUIP_SLOT_MAX)
+			{
+				sys_err("CHARACTER::GetInventoryItem: invalid item cell %d", wCell);
+				return NULL;
+			}
+			return m_pointsInstant.pItems[wCell];
+		case DRAGON_SOUL_INVENTORY:
+			if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
+			{
+				sys_err("CHARACTER::GetInventoryItem: invalid DS item cell %d", wCell);
+				return NULL;
+			}
+			return m_pointsInstant.pDSItems[wCell];
 
-	default:
-		return NULL;
+		default:
+			return NULL;
 	}
 	return NULL;
 }
@@ -380,7 +382,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 			m_pointsInstant.pDSItems[wCell] = pItem;
 		}
-		break;
+		break;	
+		
 	default:
 		sys_err ("Invalid Inventory type %d", window_type);
 		return;
@@ -435,7 +438,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 			break;
 		case DRAGON_SOUL_INVENTORY:
 			pItem->SetWindow(DRAGON_SOUL_INVENTORY);
-			break;
+			break;				
 		}
 	}
 }
@@ -662,7 +665,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 				return true;
 			}
-		}
+		}	
 	}
 }
 
@@ -4933,7 +4936,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 	if (item->IsExchanging())
 		return false;
-
+	
 	// if (!item->CanCharacterEquipItem(this))
 	// {
 		// ChatPacket(CHAT_TYPE_INFO, "[LS;268]");
@@ -7250,6 +7253,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 			return m_pkMall->IsValidPosition(cell);
 		else
 			return false;
+			
 	default:
 		return false;
 	}

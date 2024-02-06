@@ -1475,7 +1475,7 @@ void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 			switch (p->window)
 			{
 				case INVENTORY:
-				case DRAGON_SOUL_INVENTORY:
+				case DRAGON_SOUL_INVENTORY:				
 					item->AddToCharacter(ch, TItemPos(p->window, p->pos));
 					break;
 
@@ -1492,6 +1492,7 @@ void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 						v.push_back(item);
 					}
 					break;
+			
 			}
 		}
 

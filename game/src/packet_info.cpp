@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "constants.h"
 #include "packet_info.h"
+#include "../../common/stl.h"
+
 
 CPacketInfo::CPacketInfo() : m_pCurrentPacket(nullptr), m_dwStartTime(0) {}
 

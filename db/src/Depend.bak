@@ -286,7 +286,7 @@ obj/Main.o: ../../libsql/Semaphore.h ClientManager.h ../../common/building.h
 obj/Main.o: LoginData.h GuildManager.h ../../libsql/libsql.h
 obj/Main.o: ../../libsql/AsyncSQL.h ../../libpoly/Poly.h
 obj/Main.o: ../../libpoly/SymTable.h ItemAwardManager.h HB.h PrivManager.h
-obj/Main.o: MoneyLog.h Marriage.h BlockCountry.h ItemIDRangeManager.h
+obj/Main.o: MoneyLog.h Marriage.h ItemIDRangeManager.h
 obj/Lock.o: stdafx.h ../../libthecore/include/stdafx.h /usr/include/stdio.h
 obj/Lock.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
 obj/Lock.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -608,8 +608,8 @@ obj/ClientManager.o: ../../libsql/Semaphore.h LoginData.h Main.h Config.h
 obj/ClientManager.o: QID.h GuildManager.h ../../libsql/libsql.h
 obj/ClientManager.o: ../../libsql/AsyncSQL.h ../../libpoly/Poly.h
 obj/ClientManager.o: ../../libpoly/SymTable.h PrivManager.h MoneyLog.h
-obj/ClientManager.o: ItemAwardManager.h Marriage.h BlockCountry.h
-obj/ClientManager.o: ItemIDRangeManager.h Cache.h ../../common/cache.h
+obj/ClientManager.o: ItemAwardManager.h Marriage.h ItemIDRangeManager.h
+obj/ClientManager.o: Cache.h ../../common/cache.h
 obj/ClientManagerPlayer.o: stdafx.h ../../libthecore/include/stdafx.h
 obj/ClientManagerPlayer.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 obj/ClientManagerPlayer.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
@@ -1525,74 +1525,6 @@ obj/Marriage.o: ../../libmysql/5.x-5.1.35/mysql/errmsg.h
 obj/Marriage.o: ../../libmysql/5.x-5.1.35/mysql/mysqld_error.h
 obj/Marriage.o: ../../libsql/Semaphore.h ClientManager.h
 obj/Marriage.o: ../../common/building.h LoginData.h
-obj/BlockCountry.o: stdafx.h ../../libthecore/include/stdafx.h
-obj/BlockCountry.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-obj/BlockCountry.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-obj/BlockCountry.o: /usr/include/machine/_types.h /usr/include/x86/_types.h
-obj/BlockCountry.o: /usr/include/machine/_limits.h /usr/include/x86/_limits.h
-obj/BlockCountry.o: /usr/include/string.h /usr/include/strings.h
-obj/BlockCountry.o: /usr/include/xlocale/_strings.h
-obj/BlockCountry.o: /usr/include/xlocale/_string.h /usr/include/stdarg.h
-obj/BlockCountry.o: /usr/include/x86/stdarg.h /usr/include/sys/_stdarg.h
-obj/BlockCountry.o: /usr/include/errno.h /usr/include/stdlib.h
-obj/BlockCountry.o: /usr/include/unistd.h /usr/include/sys/types.h
-obj/BlockCountry.o: /usr/include/machine/endian.h /usr/include/x86/endian.h
-obj/BlockCountry.o: /usr/include/sys/_endian.h
-obj/BlockCountry.o: /usr/include/sys/_pthreadtypes.h
-obj/BlockCountry.o: /usr/include/sys/_stdint.h /usr/include/sys/select.h
-obj/BlockCountry.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-obj/BlockCountry.o: /usr/include/sys/timespec.h /usr/include/sys/_timespec.h
-obj/BlockCountry.o: /usr/include/sys/unistd.h /usr/include/fcntl.h
-obj/BlockCountry.o: /usr/include/assert.h /usr/include/ctype.h
-obj/BlockCountry.o: /usr/include/_ctype.h /usr/include/runetype.h
-obj/BlockCountry.o: /usr/include/xlocale/_ctype.h /usr/include/limits.h
-obj/BlockCountry.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-obj/BlockCountry.o: /usr/include/dirent.h /usr/include/sys/dirent.h
-obj/BlockCountry.o: /usr/include/sys/time.h /usr/include/sys/_clock_id.h
-obj/BlockCountry.o: /usr/include/time.h /usr/include/xlocale/_time.h
-obj/BlockCountry.o: /usr/include/sys/stat.h /usr/include/netinet/in.h
-obj/BlockCountry.o: /usr/include/sys/_sockaddr_storage.h
-obj/BlockCountry.o: /usr/include/netinet6/in6.h /usr/include/arpa/inet.h
-obj/BlockCountry.o: /usr/include/netdb.h /usr/include/sys/socket.h
-obj/BlockCountry.o: /usr/include/sys/_iovec.h /usr/include/machine/_align.h
-obj/BlockCountry.o: /usr/include/x86/_align.h /usr/include/sys/signal.h
-obj/BlockCountry.o: /usr/include/machine/signal.h /usr/include/x86/signal.h
-obj/BlockCountry.o: /usr/include/sys/wait.h /usr/include/pthread.h
-obj/BlockCountry.o: /usr/include/sched.h /usr/include/sys/sched.h
-obj/BlockCountry.o: /usr/include/sys/cpuset.h /usr/include/sys/_cpuset.h
-obj/BlockCountry.o: /usr/include/sys/_bitset.h /usr/include/sys/bitset.h
-obj/BlockCountry.o: /usr/include/semaphore.h /usr/include/sys/_umtx.h
-obj/BlockCountry.o: /usr/include/sys/event.h /usr/include/sys/queue.h
-obj/BlockCountry.o: ../../libthecore/include/typedef.h
-obj/BlockCountry.o: ../../libthecore/include/heart.h
-obj/BlockCountry.o: ../../libthecore/include/fdwatch.h
-obj/BlockCountry.o: ../../libthecore/include/socket.h
-obj/BlockCountry.o: ../../libthecore/include/kstbl.h
-obj/BlockCountry.o: ../../libthecore/include/hangul.h
-obj/BlockCountry.o: ../../libthecore/include/buffer.h
-obj/BlockCountry.o: ../../libthecore/include/signal.h
-obj/BlockCountry.o: ../../libthecore/include/log.h
-obj/BlockCountry.o: ../../libthecore/include/main.h
-obj/BlockCountry.o: ../../libthecore/include/utils.h
-obj/BlockCountry.o: ../../libthecore/include/crypt.h
-obj/BlockCountry.o: ../../libthecore/include/memcpy.h ../../common/length.h
-obj/BlockCountry.o: ../../common/item_length.h ../../common/tables.h
-obj/BlockCountry.o: ../../common/length.h ../../common/singleton.h
-obj/BlockCountry.o: ../../common/utils.h ../../common/stl.h
-obj/BlockCountry.o: ../../common/service.h ../../common/global_config.h
-obj/BlockCountry.o: BlockCountry.h Peer.h PeerBase.h NetBase.h DBManager.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/mysql.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/mysql_version.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/mysql_com.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/mysql_time.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/my_list.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/typelib.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/my_alloc.h
-obj/BlockCountry.o: ../../libsql/AsyncSQL.h ../../libthecore/include/stdafx.h
-obj/BlockCountry.o: ../../libthecore/include/log.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/errmsg.h
-obj/BlockCountry.o: ../../libmysql/5.x-5.1.35/mysql/mysqld_error.h
-obj/BlockCountry.o: ../../libsql/Semaphore.h
 obj/ItemIDRangeManager.o: stdafx.h ../../libthecore/include/stdafx.h
 obj/ItemIDRangeManager.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 obj/ItemIDRangeManager.o: /usr/include/sys/_null.h /usr/include/sys/_types.h

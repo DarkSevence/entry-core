@@ -8,6 +8,7 @@
 #include "ItemAwardManager.h"
 #include "HB.h"
 #include "Cache.h"
+#include "../../common/length.h"
 
 extern bool g_bHotBackup;
 
@@ -324,7 +325,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		{
 			snprintf(szQuery, sizeof(szQuery), 
 					"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
-					"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
+					"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d) ",
 					GetTablePostfix(), pTab->id, SAFEBOX, DRAGON_SOUL_INVENTORY);
 
 			CDBManager::instance().ReturnQuery(szQuery,
@@ -381,7 +382,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
-				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
+				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d) ",
 				GetTablePostfix(), packet->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
 		CDBManager::instance().ReturnQuery(queryStr, QID_ITEM, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 

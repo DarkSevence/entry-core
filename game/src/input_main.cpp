@@ -3363,7 +3363,6 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 					break;
 				}
 			}
-
 			break;
 	}
 	return (iExtraLen);
@@ -3413,4 +3412,3 @@ int CInputDead::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 	return (iExtraLen);
 }
-

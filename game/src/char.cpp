@@ -54,6 +54,10 @@
 #include "PetSystem.h"
 #include "MountSystemManager.h"
 
+#ifdef ENABLE_SWITCHBOT
+#include "switchbot.h"
+#endif
+
 extern const uint8_t g_aBuffOnAttrPoints;
 extern bool RaceToJob(unsigned race, unsigned *ret_job);
 
@@ -358,6 +362,11 @@ void CHARACTER::Initialize()
 	
 	memset(&m_tvLastSyncTime, 0, sizeof(m_tvLastSyncTime));
 	m_iSyncHackCount = 0;
+	
+#ifdef ENABLE_SWITCHBOT
+	use_item_anti_flood_count_ = 0;
+	use_item_anti_flood_pulse_ = 0;
+#endif	
 }
 
 std::optional<VID> CHARACTER::GenerateUniqueID(std::string_view displayName, DWORD vid)
@@ -5257,6 +5266,15 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 	p.lAddr	= lAddr;
 	p.wPort	= wPort;
 	p.l_MapIndex = lMapIndex;
+
+#ifdef ENABLE_SWITCHBOT
+	CSwitchbotManager::Instance().SetIsWarping(GetPlayerID(), true);
+
+	if (p.wPort != mother_port)
+	{
+		CSwitchbotManager::Instance().P2PSendSwitchbot(GetPlayerID(), p.wPort);
+	}
+#endif	
 
 	GetDesc()->Packet(&p, sizeof(TPacketGCWarp));
 

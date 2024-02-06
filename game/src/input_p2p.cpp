@@ -458,9 +458,8 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_GG_CHECK_AWAKENESS:
 			IamAwake(d, c_pData);
-			break;
+			break;			
 	}
 
 	return (iExtraLen);
 }
-

@@ -463,6 +463,7 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		
 		const static int MAX_NORM_ATTR_NUM = 5;
 		const static int MAX_RARE_ATTR_NUM = 2;
+		
 		bool ReadItemVnumMaskTable(const char * c_pszFileName);
 	private:
 #ifdef M2_USE_POOL
