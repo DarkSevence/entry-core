@@ -120,7 +120,7 @@ bool DSManager::IsValidCellForThisItem(const LPITEM pItem, const TItemPos& Cell)
 		return false;
 
 	WORD wBaseCell = GetBasePosition(pItem);
-	if (WORD_MAX == wBaseCell)
+	if (0xFFFF == wBaseCell)
 		return false;
 
 	if (Cell.window_type != DRAGON_SOUL_INVENTORY
@@ -136,7 +136,7 @@ bool DSManager::IsValidCellForThisItem(const LPITEM pItem, const TItemPos& Cell)
 WORD DSManager::GetBasePosition(const LPITEM pItem) const
 {
 	if (NULL == pItem)
-		return WORD_MAX;
+		return 0xFFFF;
 
 	BYTE type, grade_idx, step_idx, strength_idx;
 	GetDragonSoulInfo(pItem->GetVnum(), type, grade_idx, step_idx, strength_idx);
@@ -144,7 +144,7 @@ WORD DSManager::GetBasePosition(const LPITEM pItem) const
 	BYTE col_type = pItem->GetSubType();
 	BYTE row_type = grade_idx;
 	if (row_type > DRAGON_SOUL_GRADE_MAX)
-		return WORD_MAX;
+		return 0xFFFF;
 
 	return col_type * DRAGON_SOUL_STEP_MAX * DRAGON_SOUL_BOX_SIZE + row_type * DRAGON_SOUL_BOX_SIZE;
 }

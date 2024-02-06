@@ -1,7 +1,6 @@
 #pragma once
 
 #include "global_config.h"
-#include "item_length.h"
 
 enum EMisc
 {
@@ -47,7 +46,6 @@ enum EMisc
 	POINT_MAX_NUM = 255,
 	DRAGON_SOUL_BOX_SIZE = 32,
 	DRAGON_SOUL_BOX_COLUMN_NUM = 8,
-	DRAGON_SOUL_BOX_ROW_NUM = DRAGON_SOUL_BOX_SIZE / DRAGON_SOUL_BOX_COLUMN_NUM,
 	DRAGON_SOUL_REFINE_GRID_SIZE = 15,
 	MAX_AMOUNT_OF_MALL_BONUS = 20,
 	WEAR_MAX_NUM = 32,
@@ -120,7 +118,7 @@ enum EDirection
 enum EAbilityDifficulty
 {
 	DIFFICULTY_EASY = 0,
-	DIFFICULTY_NORMAL 1,
+	DIFFICULTY_NORMAL = 1,
 	DIFFICULTY_HARD = 2,
 	DIFFICULTY_VERY_HARD = 3,
 	DIFFICULTY_NUM_TYPES = 4,
@@ -326,7 +324,7 @@ enum EApplyTypes
 	APPLY_POISON_REDUCE = 41,
 	APPLY_KILL_SP_RECOVER = 42,
 	APPLY_EXP_DOUBLE_BONUS = 43,
-	APPLY_GOLD_DOUBLE_BONUS, = 44,
+	APPLY_GOLD_DOUBLE_BONUS = 44,
 	APPLY_ITEM_DROP_BONUS = 45,
 	APPLY_POTION_BONUS = 46,
 	APPLY_KILL_HP_RECOVER = 47,
@@ -589,7 +587,7 @@ enum SPECIAL_EFFECT
 	SE_AUTO_SPUP = 20,
 	SE_EQUIP_RAMADAN_RING = 21,
 	SE_EQUIP_HALLOWEEN_CANDY = 22,
-	SE_EQUIP_HAPPINESS_RING, = 23,
+	SE_EQUIP_HAPPINESS_RING = 23,
 	SE_EQUIP_LOVE_PENDANT = 24,
 	SE_EFFECT_CAPE_OF_COURAGE = 25,
 };
@@ -598,6 +596,14 @@ enum EDragonSoulRefineWindowSize
 {
 	DRAGON_SOUL_REFINE_GRID_MAX = 15,
 };
+
+typedef enum
+{
+	SHOP_COIN_TYPE_GOLD = 0,
+	SHOP_COIN_TYPE_SECONDARY_COIN = 1
+} EShopCoinType;
+
+#include "item_length.h"
 
 enum EMisc2
 {
@@ -610,7 +616,6 @@ enum EMisc2
 };
 
 #pragma pack(push, 1)
-
 typedef struct SItemPos
 {
 	BYTE window_type;
@@ -619,7 +624,7 @@ typedef struct SItemPos
 	SItemPos ()
 	{
 		window_type = INVENTORY;
-		cell = WORD_MAX;
+		cell = 0xFFFF;
 	}
 
 	SItemPos (BYTE _window_type, WORD _cell)

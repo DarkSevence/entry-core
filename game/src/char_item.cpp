@@ -707,7 +707,7 @@ int CHARACTER::GetEmptyDragonSoulInventory(LPITEM pItem) const
 	BYTE bSize = pItem->GetSize();
 	WORD wBaseCell = DSManager::instance().GetBasePosition(pItem);
 
-	if (WORD_MAX == wBaseCell)
+	if (0xFFFF == wBaseCell)
 		return -1;
 
 	for (int i = 0; i < DRAGON_SOUL_BOX_SIZE; ++i)
