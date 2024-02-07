@@ -545,14 +545,14 @@ typedef struct SQuestTable
 
 typedef struct SItemLimit
 {
-	BYTE	bType;
-	long	lValue;
+	BYTE bType;
+	long lValue;
 } TItemLimit;
 
 typedef struct SItemApply
 {
-	BYTE	bType;
-	long	lValue;
+	BYTE bType;
+	long lValue;
 } TItemApply;
 
 typedef struct SItemTable : public SEntityTable
@@ -579,10 +579,9 @@ typedef struct SItemTable : public SEntityTable
 	uint8_t bAlterToMagicItemPct;
 	uint8_t bSpecular;
 	uint8_t bGainSocketPct;
-	short int sAddonType;
+	int16_t sAddonType;
 	char cLimitRealTimeFirstUseIndex;
 	char cLimitTimerBasedOnWearIndex;
-
 } TItemTable;
 
 struct TItemAttrTable
