@@ -2257,20 +2257,24 @@ void CInputMain::SafeboxItemMove(LPCHARACTER ch, const char * data)
 	ch->GetSafebox()->MoveItem(pinfo->Cell.cell, pinfo->CellTo.cell, pinfo->count);
 }
 
-// PARTY_JOIN_BUG_FIX
-void CInputMain::PartyInvite(LPCHARACTER ch, const char * c_pData)
+void CInputMain::PartyInvite(LPCHARACTER ch, const char* c_pData)
 {
+	if (!ch)
+	{
+		return;
+	}
+
 	if (ch->GetArena())
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;101]");
 		return;
 	}
 
-	TPacketCGPartyInvite * p = (TPacketCGPartyInvite*) c_pData;
+	TPacketCGPartyInvite* p = (TPacketCGPartyInvite*) c_pData;
 
 	LPCHARACTER pInvitee = CHARACTER_MANAGER::instance().Find(p->vid);
 
-	if (!pInvitee || !ch->GetDesc() || !pInvitee->GetDesc())
+	if (!pInvitee || !ch->GetDesc() || !pInvitee->GetDesc() || !pInvitee->IsPC() || !ch->IsPC())
 	{
 		sys_err("PARTY Cannot find invited character");
 		return;
@@ -2279,28 +2283,36 @@ void CInputMain::PartyInvite(LPCHARACTER ch, const char * c_pData)
 	ch->PartyInvite(pInvitee);
 }
 
-void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char * c_pData)
+void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char* c_pData)
 {
+if (!ch)
+{
+	return;
+}
+	
 	if (ch->GetArena())
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;101]");
 		return;
 	}
 
-	TPacketCGPartyInviteAnswer * p = (TPacketCGPartyInviteAnswer*) c_pData;
+	TPacketCGPartyInviteAnswer* p = (TPacketCGPartyInviteAnswer*) c_pData;
 
 	LPCHARACTER pInviter = CHARACTER_MANAGER::instance().Find(p->leader_vid);
 
-	// pInviter 가 ch 에게 파티 요청을 했었다.
-
-	if (!pInviter)
+	if (!pInviter || !pInviter->IsPC())
+	{
 		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;672]");
+	}
 	else if (!p->accept)
+	{
 		pInviter->PartyInviteDeny(ch->GetPlayerID());
+	}
 	else
+	{
 		pInviter->PartyInviteAccept(ch);
+	}
 }
-// END_OF_PARTY_JOIN_BUG_FIX
 
 void CInputMain::PartySetState(LPCHARACTER ch, const char* c_pData)
 {
@@ -2522,8 +2534,11 @@ void CInputMain::AnswerMakeGuild(LPCHARACTER ch, const char* c_pData)
 void CInputMain::PartyUseSkill(LPCHARACTER ch, const char* c_pData)
 {
 	TPacketCGPartyUseSkill* p = (TPacketCGPartyUseSkill*) c_pData;
+	
 	if (!ch->GetParty())
+	{
 		return;
+	}
 
 	if (ch->GetPlayerID() != ch->GetParty()->GetLeaderPID())
 	{
@@ -2534,17 +2549,25 @@ void CInputMain::PartyUseSkill(LPCHARACTER ch, const char* c_pData)
 	switch (p->bySkillIndex)
 	{
 		case PARTY_SKILL_HEAL:
+		{
 			ch->GetParty()->HealParty();
 			break;
+		}
+
 		case PARTY_SKILL_WARP:
+		{
+			LPCHARACTER pch = CHARACTER_MANAGER::instance().Find(p->vid);
+
+			if (pch && pch->IsPC() && ch->GetParty() == pch->GetParty())
 			{
-				LPCHARACTER pch = CHARACTER_MANAGER::instance().Find(p->vid);
-				if (pch)
-					ch->GetParty()->SummonToLeader(pch->GetPlayerID());
-				else
-					ch->ChatPacket(CHAT_TYPE_INFO, "[LS;683]");
+				ch->GetParty()->SummonToLeader(pch->GetPlayerID());
 			}
-			break;
+			else
+			{
+				ch->ChatPacket(CHAT_TYPE_INFO, "[LS;683]");
+			}
+		}
+		break;
 	}
 }
 
