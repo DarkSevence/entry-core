@@ -2285,10 +2285,10 @@ void CInputMain::PartyInvite(LPCHARACTER ch, const char* c_pData)
 
 void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char* c_pData)
 {
-if (!ch)
-{
-	return;
-}
+	if (!ch)
+	{
+		return;
+	}
 	
 	if (ch->GetArena())
 	{
