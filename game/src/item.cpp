@@ -801,7 +801,7 @@ void CItem::ModifyPoints(bool bAdd, LPCHARACTER character)
 				break;
 			}
 
-			if (GetSubType() == ARMOR_BODY || GetSubType() == ARMOR_HEAD || GetSubType() == ARMOR_FOOTS || GetSubType() == ARMOR_SHIELD)
+			if (GetSubType() == ARMOR_BODY)
 			{
 				if (bAdd)
 				{
@@ -824,33 +824,28 @@ void CItem::ModifyPoints(bool bAdd, LPCHARACTER character)
 		case ITEM_COSTUME:
 		{
 			uint32_t toSetValue = this->GetVnum();
-			EParts toSetPart = PART_MAX_NUM;
+			EParts targetPart = PART_MAX_NUM;
 
 			if (GetSubType() == COSTUME_BODY)
 			{
-				toSetPart = PART_MAIN;
+				targetPart = PART_MAIN;
 
-				const CItem* pArmor = character->GetWear(WEAR_BODY);
-
-				if (pArmor && (pArmor->GetVnum() == ITEM_MARRIAGE_SMOKING || pArmor->GetVnum() == ITEM_MARRIAGE_WEDDING_DRESS))
-				{
-					return;
-				}
+				const CItem* currentArmor = character->GetWear(WEAR_BODY);
 				
 				if (!bAdd)
 				{
-					toSetValue = pArmor ? pArmor->GetDisplayVnum() : character->GetOriginalPart(PART_MAIN);
+					toSetValue = currentArmor  ? currentArmor ->GetDisplayVnum() : character->GetOriginalPart(targetPart);
 				}
 			}
 			else if (GetSubType() == COSTUME_HAIR)
 			{
-				toSetPart = PART_HAIR;
+				targetPart = PART_HAIR;
 				toSetValue = bAdd ? this->GetValue(3) : 0;
 			}
 
-			if (PART_MAX_NUM != toSetPart)
+			if (PART_MAX_NUM != targetPart)
 			{
-				m_pOwner->SetPart((BYTE)toSetPart, toSetValue);
+				m_pOwner->SetPart((uint8_t)targetPart, toSetValue);
 				m_pOwner->UpdatePacket();
 			}
 		}
@@ -863,13 +858,16 @@ void CItem::ModifyPoints(bool bAdd, LPCHARACTER character)
 			if (sigVnum != 0)
 			{
 				const CSpecialItemGroup* pItemGroup = ITEM_MANAGER::instance().GetSpecialItemGroup(sigVnum);
+				
 				if (pItemGroup)
 				{
 					uint32_t dwAttrVnum = pItemGroup->GetAttrVnum(GetVnum());
 					const CSpecialAttrGroup* pAttrGroup = ITEM_MANAGER::instance().GetSpecialAttrGroup(dwAttrVnum);
+					
 					if (pAttrGroup)
 					{
 						int32_t applyModifier = bAdd ? 1 : -1;
+						
 						for (const auto& attr : pAttrGroup->m_vecAttrs)
 						{
 							character->ApplyPoint(attr.apply_type, applyModifier * attr.apply_value);
