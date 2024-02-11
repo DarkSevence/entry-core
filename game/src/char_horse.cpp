@@ -43,8 +43,12 @@ bool CHARACTER::StartRiding()
 			return false;
 	}
 
-
 	DWORD dwMountVnum = m_chHorse ? m_chHorse->GetRaceNum() : GetMyHorseVnum();
+
+	if (const LPITEM mountWearItem = GetWear(WEAR_COSTUME_MOUNT))
+	{
+		dwMountVnum = mountWearItem->GetValue(1);
+	}
 
 	if (false == CHorseRider::StartRiding())
 	{
@@ -94,6 +98,8 @@ bool CHARACTER::StopRiding()
 		PointChange(POINT_DX, 0);
 		PointChange(POINT_HT, 0);
 		PointChange(POINT_IQ, 0);
+
+		RemoveAffect(AFFECT_MOUNT_BONUS);
 
 		return true;
 	}
@@ -151,8 +157,24 @@ LPCHARACTER CHARACTER::GetRider() const
 
 void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const char* pPetName)
 {
-	if ( bSummon )
+	if (const LPITEM mountWearItem = GetWear(WEAR_COSTUME_MOUNT))
 	{
+		dwVnum = mountWearItem->GetValue(1);
+	}
+	
+	if (bSummon)
+	{
+		if (m_chHorse)
+		{
+			if (GetMountVnum() != dwVnum)
+			{
+				HorseSummon(false);
+				HorseSummon(true);
+			}
+			
+			return;
+		}
+		
 		//NOTE : summon했는데 이미 horse가 있으면 아무것도 안한다.
 		if( m_chHorse != NULL )
 			return;
@@ -217,7 +239,7 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		else
 		{
 			m_chHorse->m_stName = GetName();
-			m_chHorse->m_stName += "[LS;17]";
+			m_chHorse->m_stName += CMobVnumHelper::IsMount(dwVnum) ? "[LS;768]" : "[LS;17]";
 		}
 
 		if (!m_chHorse->Show(GetMapIndex(), x, y, GetZ()))
@@ -241,7 +263,9 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 	else
 	{
 		if (!m_chHorse)
+		{
 			return;
+		}
 
 		LPCHARACTER chHorse = m_chHorse;
 

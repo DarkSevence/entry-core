@@ -394,6 +394,11 @@ class CItem : public CEntity
 		{ 
 			return m_iData; 
 		}
+		
+		const bool IsMount()
+		{ 
+			return GetType() == ITEM_COSTUME && GetSubType() == COSTUME_MOUNT; 
+		}
 
 	private:
 		int32_t m_iData;

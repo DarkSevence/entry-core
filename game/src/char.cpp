@@ -1950,18 +1950,12 @@ void CHARACTER::SetProto(const CMob * pkMob)
 		m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateFlagBase, &CHARACTER::EndStateEmpty);
 	}
 
-	if (m_bCharType == CHAR_TYPE_HORSE || 
-			GetRaceNum() == 20101 ||
-			GetRaceNum() == 20102 ||
-			GetRaceNum() == 20103 ||
-			GetRaceNum() == 20104 ||
-			GetRaceNum() == 20105 ||
-			GetRaceNum() == 20106 ||
-			GetRaceNum() == 20107 ||
-			GetRaceNum() == 20108 ||
-			GetRaceNum() == 20109
-	  )
-	{
+	if (m_bCharType == CHAR_TYPE_HORSE ||
+		GetRaceNum() == 20101 || GetRaceNum() == 20102 || GetRaceNum() == 20103 ||
+		GetRaceNum() == 20104 || GetRaceNum() == 20105 || GetRaceNum() == 20106 ||
+		GetRaceNum() == 20107 || GetRaceNum() == 20108 || GetRaceNum() == 20109 ||
+		CMobVnumHelper::IsMount(GetRaceNum())) {
+
 		m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateHorse, &CHARACTER::EndStateEmpty);
 		m_stateMove.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateMove, &CHARACTER::EndStateEmpty);
 		m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateHorse, &CHARACTER::EndStateEmpty);
@@ -6268,24 +6262,23 @@ bool CHARACTER::CanSummon(int iLeaderShip)
 	return (iLeaderShip >= 20 || iLeaderShip >= 12 && m_dwLastDeadTime + 180 > get_dword_time());
 }
 
-
 void CHARACTER::MountVnum(DWORD vnum)
 {
 	if (m_dwMountVnum == vnum)
+	{
 		return;
+	}
 
 	m_dwMountVnum = vnum;
 	m_dwMountTime = get_dword_time();
 
 	if (m_bIsObserver)
+	{
 		return;
+	}
 
-	//NOTE : Mount�Ѵٰ� �ؼ� Client Side�� ��ü�� �������� �ʴ´�.
-	//�׸��� ����Side���� ������ ��ġ �̵��� ���� �ʴ´�. �ֳ��ϸ� Client Side���� Coliision Adjust�� �Ҽ� �ִµ�
-	//��ü�� �Ҹ���״ٰ� ������ġ�� �̵���Ű�� �̶� collision check�� ������ �����Ƿ� ��濡 ���ų� �հ� ������ ������ �����Ѵ�.
 	m_posDest.x = m_posStart.x = GetX();
 	m_posDest.y = m_posStart.y = GetY();
-	//EncodeRemovePacket(this);
 	EncodeInsertPacket(this);
 
 	ENTITY_MAP::iterator it = m_map_view.begin();
@@ -6293,18 +6286,30 @@ void CHARACTER::MountVnum(DWORD vnum)
 	while (it != m_map_view.end())
 	{
 		LPENTITY entity = (it++)->first;
-
-		//Mount�Ѵٰ� �ؼ� Client Side�� ��ü�� �������� �ʴ´�.
-		//EncodeRemovePacket(entity);
-		//if (!m_bIsObserver)
 		EncodeInsertPacket(entity);
-
-		//if (!entity->IsObserverMode())
-		//	entity->EncodeInsertPacket(this);
 	}
 
 	SetValidComboInterval(0);
 	SetComboSequence(0);
+
+	RemoveAffect(AFFECT_MOUNT_BONUS);
+	
+	const auto* mountItem = GetWear(WEAR_COSTUME_MOUNT);
+
+	if (mountItem)
+	{
+		for (int32_t applyIndex = 0; applyIndex < ITEM_APPLY_MAX_NUM; ++applyIndex)
+		{
+			const auto& applyData = mountItem->GetProto()->aApplies[applyIndex];
+
+			if (applyData.bType == APPLY_NONE || vnum == 0) 
+			{
+				continue;
+			}
+
+			AddAffect(AFFECT_MOUNT_BONUS, aApplyInfo[applyData.bType].bPointType, applyData.lValue, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true);
+		}
+	}
 
 	ComputePoints();
 }
@@ -7124,4 +7129,17 @@ DWORD CHARACTER::GetNextExp() const
 int	CHARACTER::GetSkillPowerByLevel(int level, bool bMob) const
 {
 	return CTableBySkill::instance().GetSkillPowerByLevelFromType(GetJob(), GetSkillGroup(), MINMAX(0, level, SKILL_MAX_LEVEL), bMob); 
+}
+
+void CHARACTER::CheckEnterMount()
+{
+	if (GetHorse())
+	{
+		return;
+	}
+
+	if (const auto mountWearItem = GetWear(WEAR_COSTUME_MOUNT))
+	{
+		HorseSummon(true, false, mountWearItem->GetValue(1));
+	}
 }

@@ -594,6 +594,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		ch->EnterHorse();
 	}
 
+	ch->CheckEnterMount();
+
 	// 플레이시간 레코딩 시작
 	ch->ResetPlayTime();
 

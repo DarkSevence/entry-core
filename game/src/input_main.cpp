@@ -1553,14 +1553,6 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 			return;
 		}
 
-		if (ch->IsPC() && ch->IsDead())
-		{
-			sys_log(0, "MOVE: %s attempting to move while dead.", ch->GetName());
-			const auto [curX, curY, curZ] = std::tuple{ch->GetX(), ch->GetY(), ch->GetZ()};
-			ch->Show(ch->GetMapIndex(), curX, curY, curZ);
-			ch->Stop();
-		}
-
 		//
 		// Ω∫««µÂ«Ÿ(SPEEDHACK) Check
 		//

@@ -750,6 +750,11 @@ void CItem::ModifyPoints(bool bAdd, LPCHARACTER character)
 		{
 			continue;
 		}
+		
+		if (IsMount())
+		{
+			continue;
+		}
 
 		int32_t value = m_pProto->aApplies[i].lValue;
 		

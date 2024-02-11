@@ -1633,6 +1633,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				SetRider(LPCHARACTER ch);
 
 		bool				IsRiding() const;
+		
+		
 
 #ifdef __PET_SYSTEM__
 	public:
@@ -2062,6 +2064,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		const timeval&	GetLastSyncTime() { return m_tvLastSyncTime; }
 		void			SetSyncHackCount(int iCount) { m_iSyncHackCount = iCount;}
 		int				GetSyncHackCount() { return m_iSyncHackCount; }
+		
+	public:
+		void CheckEnterMount();
 };
 
 ESex GET_SEX(LPCHARACTER ch);

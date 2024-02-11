@@ -5306,6 +5306,11 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 			ChatPacket(CHAT_TYPE_INFO, "[LS;363]");
 		return false;
 	}
+	
+	if (item->IsMount() && item->IsEquipped() && DestCell.IsDefaultInventoryPosition()) {
+		StopRiding();
+		HorseSummon(false);
+	}	
 
 	// 기획자의 요청으로 벨트 인벤토리에는 특정 타입의 아이템만 넣을 수 있다.
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
@@ -5803,6 +5808,11 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 		item1->AddToCharacter(this, TItemPos(INVENTORY, bCell2));
 		item2->AddToCharacter(this, TItemPos(INVENTORY, bCell1));
 	}
+	
+	if (item1->IsMount() && item2->IsMount() && destCell.IsEquipPosition()) {
+		HorseSummon(false);
+		HorseSummon(true);
+	}	
 
 	return true;
 }
@@ -5813,6 +5823,11 @@ bool CHARACTER::UnequipItem(LPITEM item)
 
 	if (false == CanUnequipNow(item))
 		return false;
+	
+	if (item->IsMount()) {
+		StopRiding();
+		HorseSummon(false);
+	}	
 
     if (item->GetType() == ITEM_BELT && CBeltInventoryHelper::IsExistItemInBeltInventory(this))
     {
@@ -6029,6 +6044,9 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		}
 		
 	}
+	
+	if (item->IsMount())
+		HorseSummon(true);	
 
 	return true;
 }
