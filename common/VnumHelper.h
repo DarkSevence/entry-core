@@ -43,7 +43,7 @@ class CMobVnumHelper
 			return mountVnums.contains(vnum);
 		}
 
-		static bool	IsPhoenix(DWORD vnum)
+		static bool IsPhoenix(DWORD vnum)
 		{
 			return 34001 == vnum;
 		}
@@ -58,7 +58,7 @@ class CMobVnumHelper
 			return (IsPhoenix(vnum) || IsReindeerYoung(vnum)) || IsIcePhoenix(vnum);
 		}
 
-		static bool	IsReindeerYoung(DWORD vnum)
+		static bool IsReindeerYoung(DWORD vnum)
 		{
 			return 34002 == vnum;
 		}
