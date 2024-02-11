@@ -30,7 +30,6 @@
 #include "buffer_manager.h"
 #include "unique_item.h"
 #include "log.h"
-#include "MountSystemManager.h"
 
 #include "../../common/VnumHelper.h"
 
@@ -523,7 +522,6 @@ ACMD(do_restart)
 					ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
 					ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
 					ch->ReviveInvisible(5);
-					ch->CheckMount();
 					break;
 
 				case SCMD_RESTART_HERE:
@@ -532,7 +530,6 @@ ACMD(do_restart)
 					ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
 					ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
 					ch->ReviveInvisible(5);
-					ch->CheckMount();
 					break;
 			}
 
@@ -561,7 +558,6 @@ ACMD(do_restart)
 			ch->PointChange(POINT_HP, 50 - ch->GetHP());
 			ch->DeathPenalty(0);
 			ch->ReviveInvisible(5);
-			ch->CheckMount();
 			break;
 	}
 }
@@ -1228,18 +1224,6 @@ ACMD(do_setblockmode)
 ACMD(do_unmount)
 {
 	auto mount = ch->GetWear(WEAR_COSTUME_MOUNT);
-	auto mountSystem = ch->GetMountSystem();
-	
-	if (mount)
-	{
-		DWORD mobVnum = mount->GetValue(1) != 0 ? mount->GetValue(1) : 0;
-
-		if (mountSystem && ch->GetMountVnum() && mountSystem->CountSummoned() == 0)
-		{
-			mountSystem->Unmount(mobVnum);
-		}
-		return;
-	}
 
 	auto unequipRideItem = [&](LPITEM item) 
 	{
@@ -2133,23 +2117,7 @@ ACMD(do_ride)
 		ch->ChatPacket(CHAT_TYPE_INFO, "[LS;11]");
 		return;
 	}
-
-	auto mount = ch->GetWear(WEAR_COSTUME_MOUNT);
-	auto mountSystem = ch->GetMountSystem();
-	if (!mountSystem || !mount)
-	{
-		return;
-	}
-
-	const DWORD mobVnum = mount->GetValue(1) != 0 ? mount->GetValue(1) : 0;
-	const auto isMounted = ch->GetMountVnum() != 0;
-
-	if ((isMounted && mountSystem->CountSummoned() == 0) || (!isMounted && mountSystem->CountSummoned() == 1))
-	{
-		isMounted ? mountSystem->Unmount(mobVnum) : mountSystem->Mount(mobVnum, mount);
-		return;
-	}
-
+	
 	if (ch->IsHorseRiding())
 	{
 		ch->StopRiding();

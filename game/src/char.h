@@ -17,7 +17,6 @@
 
 class CBuffOnAttributes;
 class CPetSystem;
-class CMountSystem;
 
 #define INSTANT_FLAG_DEATH_PENALTY		(1 << 0)
 #define INSTANT_FLAG_SHOP			(1 << 1)
@@ -807,10 +806,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			ResetChatCounter();
 		BYTE			IncreaseChatCounter();
 		BYTE			GetChatCounter() const;
-		
-		void ResetMountCounter();
-		BYTE IncreaseMountCounter();
-		BYTE GetMountCounter() const;
 
 	protected:
 		DWORD			m_dwPolymorphRace;
@@ -829,7 +824,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		BYTE			m_bAddChrState;
 		bool			m_bSkipSave;
 		BYTE			m_bChatCounter;
-		BYTE			m_bMountCounter;
 
 		// End of Basic Points
 
@@ -1650,20 +1644,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	public:
 #endif 
 
-	public:
-		CMountSystem* GetMountSystem() 
-		{	
-			return m_mountSystem; 
-		}
-		
-		void MountSummon(LPITEM mountItem);
-		void MountUnsummon(LPITEM mountItem);
-		void CheckMount();
-		bool IsRidingMount();
-		
-	protected:
-		CMountSystem* m_mountSystem;
-
 	protected:
 		LPCHARACTER			m_chHorse;
 		LPCHARACTER			m_chRider;
@@ -2012,20 +1992,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void SetPet() { m_bIsPet = true; }
 		bool IsPet() { return m_bIsPet; }
 #endif
-
-	private:
-		bool m_bIsMount;
-
-	public:
-		void SetMount()
-		{ 
-			m_bIsMount = true; 
-		}
-		
-		bool IsMount() 
-		{ 
-			return m_bIsMount; 
-		}
 
 	//최종 데미지 보정.
 	private:

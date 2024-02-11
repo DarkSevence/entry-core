@@ -229,7 +229,6 @@ void CItem::EncodeRemovePacket(LPENTITY entity)
 
 	if (!desc)
 	{
-		sys_err("CItem::EncodeRemovePacket: Descriptor for entity is null");
 		return;
 	}
 
@@ -751,11 +750,6 @@ void CItem::ModifyPoints(bool bAdd, LPCHARACTER character)
 		{
 			continue;
 		}
-		
-		if(IsMountItem())
-		{
-			continue;
-		}
 
 		int32_t value = m_pProto->aApplies[i].lValue;
 		
@@ -964,11 +958,6 @@ bool CItem::EquipTo(LPCHARACTER character, uint8_t bWearCell)
 	character->BuffOnAttr_AddBuffsFromItem(this);
 	
 	m_pOwner->ComputeBattlePoints();
-
-	if (IsMountItem())
-	{
-		character->MountSummon(this);
-	}
 	
 	m_pOwner->UpdatePacket();
 	Save();
@@ -988,11 +977,6 @@ bool CItem::Unequip()
 	{
 		sys_err("m_pOwner->GetWear() != this");
 		return false;
-	}
-	
-	if (IsMountItem())
-	{
-		m_pOwner->MountUnsummon(this);
 	}
 
 	if (IsRideItem())
@@ -1687,16 +1671,6 @@ bool CItem::IsRideItem()
 		return true;
 	}
 
-	return false;
-}
-
-bool CItem::IsMountItem()
-{
-	if (GetType() == ITEM_COSTUME && GetSubType() == COSTUME_MOUNT)
-	{
-		return true;
-	}
-	
 	return false;
 }
 

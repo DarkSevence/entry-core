@@ -119,7 +119,6 @@ class CItem : public CEntity
 
 		void ClearMountAttributeAndAffect();
 		bool IsNewMountItem();
-		bool IsMountItem();
 		
 		bool CanPutInto(LPITEM item);
 		bool CheckItemUseLevel(int32_t nLevel) const;

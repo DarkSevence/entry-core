@@ -54,12 +54,6 @@ namespace quest
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		
-#ifdef ENABLE_MOUNT_COSTUME_SYSTEM
-		if (ch->IsRidingMount())
-		{
-			return 0;
-		}
-#endif
 		ch->StartRiding();
 		return 0;
 	}
@@ -74,13 +68,6 @@ namespace quest
 	int horse_summon(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-
-#ifdef ENABLE_MOUNT_COSTUME_SYSTEM
-		if (ch->IsRidingMount())
-		{
-			return 0;
-		}
-#endif
 
 		if (ch->GetMapIndex() == 113)
 		{

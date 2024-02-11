@@ -506,11 +506,6 @@ void CHARACTER::__StateIdle_NPC()
 	MonsterChat(MONSTER_CHAT_WAIT);
 	m_dwStateDuration = PASSES_PER_SEC(5);
 
-	if (IsMount())
-	{
-		return;
-	}
-
 	// 펫 시스템의 Idle 처리는 기존 거의 모든 종류의 캐릭터들이 공유해서 사용하는 상태머신이 아닌 CPetActor::Update에서 처리함.
 	if (IsPet())
 		return;

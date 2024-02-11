@@ -52,11 +52,6 @@
 #include "buff_on_attributes.h"
 #include "DragonSoul.h"
 #include "PetSystem.h"
-#include "MountSystemManager.h"
-
-#ifdef ENABLE_SWITCHBOT
-#include "switchbot.h"
-#endif
 
 extern const uint8_t g_aBuffOnAttrPoints;
 extern bool RaceToJob(unsigned race, unsigned *ret_job);
@@ -274,7 +269,6 @@ void CHARACTER::Initialize()
 	m_pWarMap = NULL;
 	m_pWeddingMap = NULL;
 	m_bChatCounter = 0;
-	m_bMountCounter = 0;
 
 	ResetStopTime();
 
@@ -357,16 +351,8 @@ void CHARACTER::Initialize()
 
 	m_pointsInstant.iDragonSoulActiveDeck = -1;
 	
-	m_mountSystem = 0;
-	m_bIsMount = false;	
-	
 	memset(&m_tvLastSyncTime, 0, sizeof(m_tvLastSyncTime));
 	m_iSyncHackCount = 0;
-	
-#ifdef ENABLE_SWITCHBOT
-	use_item_anti_flood_count_ = 0;
-	use_item_anti_flood_pulse_ = 0;
-#endif	
 }
 
 std::optional<VID> CHARACTER::GenerateUniqueID(std::string_view displayName, DWORD vid)
@@ -426,20 +412,13 @@ void CHARACTER::Destroy()
 	{
 		SetDungeon(NULL);
 	}
-
-	if (m_mountSystem)
-	{
-		m_mountSystem->Destroy();
-		delete m_mountSystem;
-
-		m_mountSystem = 0;
-	}
 	
 	if(GetMountVnum())
 	{
 		RemoveAffect(AFFECT_MOUNT);
 		RemoveAffect(AFFECT_MOUNT_BONUS);
 	}
+	
 	HorseSummon(false);
 
 #ifdef __PET_SYSTEM__
@@ -1870,14 +1849,6 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	m_petSystem = M2_NEW CPetSystem(this);
 #endif
-
-	if (m_mountSystem)
-	{
-		m_mountSystem->Destroy();
-		delete m_mountSystem;
-	}
-
-	m_mountSystem = M2_NEW CMountSystem(this);	
 }
 
 EVENTFUNC(kill_ore_load_event)
@@ -7114,22 +7085,6 @@ BYTE CHARACTER::GetChatCounter() const
 	return m_bChatCounter;
 }
 
-BYTE CHARACTER::GetMountCounter() const
-{
-	return m_bMountCounter;
-}
-
-void CHARACTER::ResetMountCounter()
-{
-	m_bMountCounter = 0;
-}
-
-BYTE CHARACTER::IncreaseMountCounter()
-{
-	return ++m_bMountCounter;
-}
-
-// ���̳� �ٸ����� Ÿ�� �ֳ�?
 bool CHARACTER::IsRiding() const
 {
 	return IsHorseRiding() || GetMountVnum();
@@ -7169,107 +7124,4 @@ DWORD CHARACTER::GetNextExp() const
 int	CHARACTER::GetSkillPowerByLevel(int level, bool bMob) const
 {
 	return CTableBySkill::instance().GetSkillPowerByLevelFromType(GetJob(), GetSkillGroup(), MINMAX(0, level, SKILL_MAX_LEVEL), bMob); 
-}
-
-void CHARACTER::MountSummon(LPITEM mountItem)
-{
-	CMountSystem* mountSystem = GetMountSystem();
-	DWORD mobVnum = 0;
-
-	if (IsPolymorphed() == true)
-	{
-		return; 
-	}
-
-	if (GetMapIndex() == 113)
-	{
-		return;
-	}
-
-	if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
-	{
-		return;
-	}
-
-	if (!mountSystem || !mountItem)
-	{
-		return;
-	}
-
-	if(mountItem->GetValue(1) != 0)
-	{
-		mobVnum = mountItem->GetValue(1);
-	}
-
-	if (IsHorseRiding())
-	{
-		StopRiding();
-	}
-
-	if (GetHorse())
-	{
-		HorseSummon(false);
-	}
-
-	mountSystem->Summon(mobVnum, mountItem, false);
-}
-
-void CHARACTER::MountUnsummon(LPITEM mountItem)
-{
-	CMountSystem* mountSystem = GetMountSystem();
-	DWORD mobVnum = 0;
-	
-	if (!mountSystem || !mountItem)
-	{
-		return;
-	}
-
-	if(mountItem->GetValue(1) != 0)
-	{
-		mobVnum = mountItem->GetValue(1);
-	}
-
-	if (GetMountVnum() == mobVnum)
-	{
-		mountSystem->Unmount(mobVnum);
-	}
-
-	mountSystem->Unsummon(mobVnum);
-}
-
-void CHARACTER::CheckMount()
-{
-	CMountSystem* mountSystem = GetMountSystem();
-	LPITEM mountItem = GetWear(WEAR_COSTUME_MOUNT);
-	DWORD mobVnum = 0;
-	
-	if (GetMapIndex() == 113)
-	{
-		return;
-	}
-	
-	if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
-	{
-		return;
-	}
-
-	if (!mountSystem || !mountItem)
-	{
-		return;
-	}
-
-	if(mountItem->GetValue(1) != 0)
-	{
-		mobVnum = mountItem->GetValue(1);
-	}
-	
-	if(mountSystem->CountSummoned() == 0)
-	{
-		mountSystem->Summon(mobVnum, mountItem, false);
-	}
-}
-
-bool CHARACTER::IsRidingMount()
-{
-	return (GetWear(WEAR_COSTUME_MOUNT) || FindAffect(AFFECT_MOUNT));
 }

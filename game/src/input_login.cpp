@@ -28,8 +28,6 @@
 #include "horsename_manager.h"
 #include "MarkManager.h"
 
-#include "MountSystemManager.h"
-
 static void _send_bonus_info(LPCHARACTER ch)
 {
 	int	item_drop_bonus = 0;
@@ -762,6 +760,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 		ch->RemoveAffect(AFFECT_MOUNT);
 		ch->RemoveAffect(AFFECT_MOUNT_BONUS);
+		
 		if (ch->IsRiding())
 		{
 			ch->StopRiding();
@@ -789,11 +788,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 		if (pid != 0 && CHorseNameManager::instance().GetHorseName(pid) == NULL)
 			db_clientdesc->DBPacket(HEADER_GD_REQ_HORSE_NAME, 0, &pid, sizeof(DWORD));
-	}
-
-	if (ch->GetMapIndex() != 113 && CArenaManager::instance().IsArenaMap(ch->GetMapIndex()) == false)
-	{
-		ch->CheckMount();
 	}
 }
 

@@ -612,7 +612,7 @@ namespace quest
 				if (pChar == ExceptChar)
 					return;
 					
-				if (!pChar->IsMount() && (true == pChar->IsMonster() || true == pChar->IsStone()))
+				if (true == pChar->IsMonster() || true == pChar->IsStone())
 				{
 					if (x1 <= pChar->GetX() && pChar->GetX() <= x2 && y1 <= pChar->GetY() && pChar->GetY() <= y2)
 					{
