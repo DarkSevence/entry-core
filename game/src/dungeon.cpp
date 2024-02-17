@@ -1082,25 +1082,26 @@ void CDungeon::ExitAll()
 	pMap->for_each(f);
 }
 
-// DUNGEON_NOTICE
 namespace
 {
 	struct FNotice
 	{
-		FNotice(const char * psz) : m_psz(psz)
-		{
-		}
+		FNotice(const char* psz) : m_psz(psz) {}
 
 		void operator() (LPENTITY ent)
 		{
 			if (ent->IsType(ENTITY_CHARACTER))
 			{
 				LPCHARACTER ch = (LPCHARACTER) ent;
-				ch->ChatPacket(CHAT_TYPE_NOTICE, "%s", m_psz);
+				
+				if (ch && ch->IsPC())
+				{
+					ch->ChatPacket(CHAT_TYPE_NOTICE, "%s", m_psz);
+				}
 			}
 		}
 
-		const char * m_psz;
+		const char* m_psz;
 	};
 }
 

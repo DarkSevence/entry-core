@@ -5232,15 +5232,6 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 	p.wPort	= wPort;
 	p.l_MapIndex = lMapIndex;
 
-#ifdef ENABLE_SWITCHBOT
-	CSwitchbotManager::Instance().SetIsWarping(GetPlayerID(), true);
-
-	if (p.wPort != mother_port)
-	{
-		CSwitchbotManager::Instance().P2PSendSwitchbot(GetPlayerID(), p.wPort);
-	}
-#endif	
-
 	GetDesc()->Packet(&p, sizeof(TPacketGCWarp));
 
 	//if (!LC_IsNewCIBN())

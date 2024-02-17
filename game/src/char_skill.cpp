@@ -3538,19 +3538,9 @@ bool CHARACTER::CanUseSkill(DWORD dwSkillVnum) const
 			if (pSkill[i] == dwSkillVnum) return true;
 		}
 	}
-
-	//if (true == IsHorseRiding())
-
-	if (true == IsRiding())
+	
+	if (IsRiding())
 	{
-		//마운트 탈것중 고급말만 스킬 사용가능
-		if(GetMountVnum())
-		{
-			if( GetMountVnum() < 20209 && GetMountVnum() > 20212)
-				if (GetMountVnum() != 20215 || GetMountVnum() != 20218 || GetMountVnum() != 20220)
-					return false;
-		}
-
 		switch(dwSkillVnum)
 		{
 			case SKILL_HORSE_WILDATTACK:
@@ -3561,11 +3551,26 @@ bool CHARACTER::CanUseSkill(DWORD dwSkillVnum) const
 		}
 	}
 
-	switch( dwSkillVnum )
+	switch (dwSkillVnum)
 	{
-		case 121: case 122: case 124: case 126: case 127: case 128: case 129: case 130:
+		case 121:
+		case 122:
+		case 124:
+		case 126:
+		case 127:
+		case 128:
+		case 129:
+		case 130:
 		case 131:
-		case 151: case 152: case 153: case 154: case 155: case 156: case 157: case 158: case 159:
+		case 151:
+		case 152:
+		case 153:
+		case 154:
+		case 155:
+		case 156:
+		case 157:
+		case 158:
+		case 159:
 			return true;
 	}
 
