@@ -5424,57 +5424,71 @@ namespace NPartyPickupDistribute
 		LPITEM item;
 		LPCHARACTER owner;
 
-		FFindOwnership(LPITEM item) 
-			: item(item), owner(NULL)
-		{
-		}
+		FFindOwnership(LPITEM item) : item(item), owner(nullptr) 
+		{}
 
-		void operator () (LPCHARACTER ch)
+		void operator()(LPCHARACTER ch)
 		{
 			if (item->IsOwnership(ch))
+			{
 				owner = ch;
+			}
 		}
 	};
 
 	struct FCountNearMember
 	{
-		int		total;
-		int		x, y;
+		int total;
+		int x, y;
+		int index;
 
-		FCountNearMember(LPCHARACTER center )
-			: total(0), x(center->GetX()), y(center->GetY())
-		{
-		}
+		FCountNearMember(LPCHARACTER center) : total(0), x(center->GetX()), y(center->GetY()), index(center->GetMapIndex()) 
+		{}
 
-		void operator () (LPCHARACTER ch)
+		void operator()(LPCHARACTER ch)
 		{
+			if (!ch)
+			{
+				return;
+			}
+
+			if (index != ch->GetMapIndex())
+			{
+				return;
+			}
+			
 			if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
+			{
 				total += 1;
+			}
 		}
 	};
 
 	struct FMoneyDistributor
 	{
-		int		total;
+		int total;
 		LPCHARACTER	c;
-		int		x, y;
-		int		iMoney;
+		int x, y;
+		int iMoney;
+		int index;
 
-		FMoneyDistributor(LPCHARACTER center, int iMoney) 
-			: total(0), c(center), x(center->GetX()), y(center->GetY()), iMoney(iMoney) 
-		{
-		}
+		FMoneyDistributor(LPCHARACTER center, int iMoney) : total(0), c(center), x(center->GetX()), y(center->GetY()), iMoney(iMoney), index(center->GetMapIndex())
+		{}
 
-		void operator ()(LPCHARACTER ch)
+		void operator()(LPCHARACTER ch)
 		{
 			if (ch!=c)
+			{
 				if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
 				{
 					ch->PointChange(POINT_GOLD, iMoney, true);
 
-					if (iMoney > 1000) // 천원 이상만 기록한다.
+					if (iMoney > 1000)
+					{
 						LogManager::instance().CharLog(ch, iMoney, "GET_GOLD", "");
+					}
 				}
+			}
 		}
 	};
 }

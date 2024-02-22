@@ -2373,12 +2373,13 @@ namespace NPartyExpDistribute
 		int		total;
 		LPCHARACTER	c;
 		int		x, y;
+		int		index;
 		DWORD		_iExp;
 		int		m_iMode;
 		int		m_iMemberCount;
 
 		FPartyDistributor(LPCHARACTER center, int member_count, int total, DWORD iExp, int iMode) 
-			: total(total), c(center), x(center->GetX()), y(center->GetY()), _iExp(iExp), m_iMode(iMode), m_iMemberCount(member_count)
+			: total(total), c(center), x(center->GetX()), y(center->GetY()), _iExp(iExp), m_iMode(iMode), m_iMemberCount(member_count), index(center->GetMapIndex())
 			{
 				if (m_iMemberCount == 0)
 					m_iMemberCount = 1;
@@ -2386,6 +2387,12 @@ namespace NPartyExpDistribute
 
 		void operator () (LPCHARACTER ch)
 		{
+			if (!ch)
+				return;
+
+			if (index != ch->GetMapIndex())
+				return;			
+			
 			if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
 			{
 				DWORD iExp2 = 0;
