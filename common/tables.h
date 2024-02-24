@@ -557,6 +557,7 @@ typedef struct SItemApply
 
 typedef struct SItemTable : public SEntityTable
 {
+	uint32_t dwVnum;
 	uint32_t dwVnumRange;
 	char szName[ITEM_NAME_MAX_LEN + 1];
 	char szLocaleName[ITEM_NAME_MAX_LEN + 1];

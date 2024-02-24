@@ -13,6 +13,7 @@
 #include "../../common/length.h"
 #include "exchange.h"
 #include "DragonSoul.h"
+#include "questmanager.h"
 
 void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TItemPos arg2, DWORD arg3, void * pvData = NULL);
 
@@ -529,9 +530,19 @@ bool CExchange::Accept(bool bAccept)
 		victim->SetExchangeTime();		
 		//END_PREVENT_PORTAL_AFTER_EXCHANGE
 
-		// exchange_check 에서는 교환할 아이템들이 제자리에 있나 확인하고,
-		// 엘크도 충분히 있나 확인한다, 두번째 인자로 교환할 아이템 개수
-		// 를 리턴한다.
+		if (quest::CQuestManager::Instance().GetPCForce(GetOwner()->GetPlayerID())->IsRunning() == true)
+		{
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, "[LS;768]");
+			victim->ChatPacket(CHAT_TYPE_INFO, "[LS;769]");
+			goto EXCHANGE_END;
+		}
+		else if (quest::CQuestManager::Instance().GetPCForce(victim->GetPlayerID())->IsRunning() == true)
+		{
+			victim->ChatPacket(CHAT_TYPE_INFO, "[LS;768]");
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, "[LS;769]");
+			goto EXCHANGE_END;
+		}
+
 		if (!Check(&iItemCount))
 		{
 			GetOwner()->ChatPacket(CHAT_TYPE_INFO, "[LS;589]");

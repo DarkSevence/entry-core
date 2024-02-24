@@ -4202,7 +4202,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									break;
 
-								case USE_CHANGE_ATTRIBUTE :
+								case USE_CHANGE_ATTRIBUTE:
+								case USE_CHANGE_ATTRIBUTE2:
+								
 									if (item2->GetAttributeSetIndex() == -1)
 									{
 										ChatPacket(CHAT_TYPE_INFO, "[LS;323]");
@@ -6498,7 +6500,15 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 bool CHARACTER::GiveItem(LPCHARACTER victim, TItemPos Cell)
 {
 	if (!CanHandleItem())
+	{
 		return false;
+	}
+
+	if (quest::CQuestManager::Instance().GetPCForce(GetPlayerID())->IsRunning() == true)
+	{
+		ChatPacket(CHAT_TYPE_INFO, "[LS;770]");
+		return false;
+	}
 
 	LPITEM item = GetItem(Cell);
 
