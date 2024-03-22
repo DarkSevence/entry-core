@@ -859,7 +859,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		void			SetLastAttacked(DWORD time);	// 마지막으로 공격받은 시간 및 위치를 저장함
 
-		bool			SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList = true);
+		bool			SetSyncOwner(LPCHARACTER newOwner, bool shouldRemoveFromList = true);
 		bool			IsSyncOwner(LPCHARACTER ch) const;
 
 		bool			WarpSet(long x, long y, long lRealMapIndex = 0);
@@ -1440,6 +1440,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		void				ComputePassiveSkill(DWORD dwVnum);
 		int					ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel = 0);
+		int					ComputeSkillParty(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel = 0);
 		int					ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTarget, BYTE bSkillLevel = 0);
 		void				ComputeSkillPoints();
 

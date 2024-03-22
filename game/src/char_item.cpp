@@ -815,8 +815,6 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		return false;
 	}
 	
-	//개량 시간제한 : upgrade_refine_scroll.quest 에서 개량후 5분이내에 일반 개량을 
-	//진행할수 없음
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -825,6 +823,9 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			return false;
 		}
 	}
+
+	if (!item)
+		return false;
 
 	const TRefineTable * prt = CRefineManager::instance().GetRefineRecipe(item->GetRefineSet());
 
@@ -2480,27 +2481,27 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 								
-							//라마단용 사탕
-							case ITEM_RAMADAN_CANDY:
+								case ITEM_RAMADAN_CANDY:
 								{
-									/*
-									사탕능력치 : item_proto value 의미
-										이동속도  value 1
-										공격력	  value 2
-										경험치    value 3
-										지속시간  value 0 (단위 초)
+									if (FindAffect(AFFECT_NOG_ABILITY))
+									{
+										ChatPacket(CHAT_TYPE_INFO, "[LS;224]");
+										return false;
+									}
 
-									*/
-									long time = item->GetValue(0);
-									long moveSpeedPer	= item->GetValue(1);
-									long attPer	= item->GetValue(2);
-									long expPer			= item->GetValue(3);
-									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MOV_SPEED, moveSpeedPer, AFF_MOV_SPEED_POTION, time, 0, true, true);
-									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MALL_ATTBONUS, attPer, AFF_NONE, time, 0, true, true);
-									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MALL_EXPBONUS, expPer, AFF_NONE, time, 0, true, true);
+									int64_t durationInSeconds = item->GetValue(0);
+									int32_t movementSpeedBonus = item->GetValue(1);
+									int32_t attackPowerBonus = item->GetValue(2);
+									int32_t experienceBonus = item->GetValue(3);
+
+									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MOV_SPEED, movementSpeedBonus, AFF_MOV_SPEED_POTION, durationInSeconds, 0, true, true);
+									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MALL_ATTBONUS, attackPowerBonus, AFF_NONE, durationInSeconds, 0, true, true);
+									AddAffect(AFFECT_RAMADAN_ABILITY, POINT_MALL_EXPBONUS, experienceBonus, AFF_NONE, durationInSeconds, 0, true, true);
+									
 									item->SetCount(item->GetCount() - 1);
 								}
 								break;
+							
 							case ITEM_MARRIAGE_RING:
 								{
 									marriage::TMarriage* pMarriage = marriage::CManager::instance().Get(GetPlayerID());

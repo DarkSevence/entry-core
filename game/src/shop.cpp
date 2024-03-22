@@ -215,20 +215,14 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		if (!pkSelectedItem)
 		{
-			sys_log(0, "Shop::Buy : Critical: This user seems to be a hacker : invalid pcshop item : BuyerPID:%d SellerPID:%d",
-					ch->GetPlayerID(),
-					m_pkPC->GetPlayerID());
-
-			return false;
+			sys_log(0, "Shop::Buy : Critical: This user seems to be a hacker : invalid pcshop item : BuyerPID:%d SellerPID:%d", ch->GetPlayerID(), m_pkPC->GetPlayerID());
+			return SHOP_SUBHEADER_GC_SOLD_OUT;
 		}
 
 		if ((pkSelectedItem->GetOwner() != m_pkPC))
 		{
-			sys_log(0, "Shop::Buy : Critical: This user seems to be a hacker : invalid pcshop item : BuyerPID:%d SellerPID:%d",
-					ch->GetPlayerID(),
-					m_pkPC->GetPlayerID());
-
-			return false;
+			sys_log(0, "Shop::Buy : Critical: This user seems to be a hacker : invalid pcshop item : BuyerPID:%d SellerPID:%d", ch->GetPlayerID(), m_pkPC->GetPlayerID());
+			return SHOP_SUBHEADER_GC_SOLD_OUT;
 		}
 	}
 

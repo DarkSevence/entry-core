@@ -417,50 +417,68 @@ namespace quest
 			sys_err("QUEST no such pc id : %d", pc);
 	}
 
-	void CQuestManager::Kill(unsigned int pc, unsigned int npc)
+	void CQuestManager::Kill(uint32_t playerID, uint32_t npcID)
 	{
-		//m_CurrentNPCRace = npc;
-		PC * pPC;
+		sys_log(0, "CQuestManager::Kill QUEST_KILL_EVENT (playerID=%d, npcID=%d)", playerID, npcID);
+		PC* playerCharacter = GetPC(playerID);
 
-		sys_log(0, "CQuestManager::Kill QUEST_KILL_EVENT (pc=%d, npc=%d)", pc, npc);
-
-		if ((pPC = GetPC(pc)))
+		if (!playerCharacter)
 		{
-			if (!CheckQuestLoaded(pPC))
-				return;
+			sys_err("QUEST: no such player id : %d", playerID);
+			return;
+		}
 
-			/* [hyo] 몹 kill시 중복 카운팅 이슈 관련한 수정사항
-			   quest script에 when 171.kill begin ... 등의 코드로 인하여 스크립트가 처리되었더라도
-			   바로 return하지 않고 다른 검사도 수행하도록 변경함. (2011/07/21)
-			*/   
-			// call script
-			m_mapNPC[npc].OnKill(*pPC);
+		if (!CheckQuestLoaded(playerCharacter))
+		{
+			return;
+		}
 
-			LPCHARACTER ch = GetCurrentCharacterPtr();
-			LPPARTY pParty = ch->GetParty();
-			LPCHARACTER leader = pParty ? pParty->GetLeaderCharacter() : ch;
+		auto npcIterator = m_mapNPC.find(npcID);
+		auto questNPCIterator = m_mapNPC.find(QUEST_NO_NPC);
+		bool npcExists = npcIterator != m_mapNPC.end();
+		bool questNpcExists = questNPCIterator != m_mapNPC.end();
 
-			if (leader)
+		if (npcExists && npcID >= MAIN_RACE_MAX_NUM)
+		{
+			npcIterator->second.OnKill(*playerCharacter);
+		}
+
+		if (questNpcExists)
+		{
+			questNPCIterator->second.OnKill(*playerCharacter);
+		}
+
+		LPCHARACTER activeCharacter = GetCurrentCharacterPtr();
+		
+		if (!activeCharacter)
+		{
+			return;
+		}
+
+		LPPARTY characterParty = activeCharacter->GetParty();
+		LPCHARACTER partyLeader = characterParty ? characterParty->GetLeaderCharacter() : activeCharacter;
+
+		if (partyLeader)
+		{
+			m_pCurrentPartyMember = activeCharacter;
+			uint32_t partyLeaderID = partyLeader->GetPlayerID();
+			PC* partyLeaderPC = GetPC(partyLeaderID);
+
+			if (!partyLeaderPC)
 			{
-				m_pCurrentPartyMember = ch;
-
-				if (m_mapNPC[npc].OnPartyKill(*GetPC(leader->GetPlayerID())))
-					return;
-
-				pPC = GetPC(pc);
+				return;
 			}
 
-			if (m_mapNPC[QUEST_NO_NPC].OnKill(*pPC))
-				return;
-
-			if (leader)
+			if (npcExists && npcID >= MAIN_RACE_MAX_NUM)
 			{
-				m_pCurrentPartyMember = ch;
-				m_mapNPC[QUEST_NO_NPC].OnPartyKill(*GetPC(leader->GetPlayerID()));
+				npcIterator->second.OnPartyKill(*partyLeaderPC);
+			}
+
+			if (questNpcExists)
+			{
+				questNPCIterator->second.OnPartyKill(*partyLeaderPC);
 			}
 		}
-		else
-			sys_err("QUEST: no such pc id : %d", pc);
 	}
 
 	bool CQuestManager::ServerTimer(unsigned int npc, unsigned int arg)

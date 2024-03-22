@@ -1318,18 +1318,41 @@ namespace quest
 		return 0;
 	}
 
-	int pc_mount_bonus(lua_State* L)
+	int32_t pc_mount_bonus(lua_State* L) 
 	{
-		BYTE applyOn = static_cast<BYTE>(lua_tonumber(L, 1));
-		long value = static_cast<long>(lua_tonumber(L, 2));
-		long duration = static_cast<long>(lua_tonumber(L, 3));
-
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-
-		if( NULL != ch )
+		auto* character = CQuestManager::Instance().GetCurrentCharacterPtr();
+		
+		if (!character) 
 		{
-			ch->RemoveAffect(AFFECT_MOUNT_BONUS);
-			ch->AddAffect(AFFECT_MOUNT_BONUS, aApplyInfo[applyOn].bPointType, value, AFF_NONE, duration, 0, false);
+			sys_err("Attempted to apply mount bonus to a null character instance. File: %s, Line: %d", __FILE__, __LINE__);
+			return 0;
+		}
+
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) 
+		{
+			sys_err("Invalid argument types for pc_mount_bonus. Expected numbers for effect type, bonus value, and duration.");
+			return 0;
+		}
+
+		auto bonusTypeIndex = static_cast<uint8_t>(lua_tonumber(L, 1));
+		auto bonusValue = static_cast<int32_t>(lua_tonumber(L, 2));
+		auto effectDuration = static_cast<int32_t>(lua_tonumber(L, 3));
+
+		if (!character->GetMountVnum()) 
+		{
+			sys_err("No mount equipped for character: %s. Cannot apply mount bonus.", character->GetName());
+			return 0;
+		}
+
+		character->RemoveAffect(AFFECT_MOUNT_BONUS);
+
+		if (character->GetPoint(aApplyInfo[bonusTypeIndex].bPointType) < character->GetLimitPoint(aApplyInfo[bonusTypeIndex].bPointType)) 
+		{
+			character->AddAffect(AFFECT_MOUNT_BONUS, aApplyInfo[bonusTypeIndex].bPointType, bonusValue, AFF_NONE, effectDuration, 0, false);
+		}
+		else 
+		{
+			sys_err("Mount bonus application overflow for character: %s. Effect type index: %u exceeds limit.", character->GetName(), bonusTypeIndex);
 		}
 
 		return 0;

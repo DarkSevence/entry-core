@@ -2025,7 +2025,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 		return BATTLE_NONE;
 	}
 
-	if (pkSk->dwTargetRange && DISTANCE_SQRT(GetX() - pkVictim->GetX(), GetY() - pkVictim->GetY()) >= pkSk->dwTargetRange + 50)
+	if (!IS_SET(pkSk->dwFlag, SKILL_FLAG_PARTY) && pkSk->dwTargetRange && DISTANCE_SQRT(GetX() - pkVictim->GetX(), GetY() - pkVictim->GetY()) >= pkSk->dwTargetRange + 50)
 	{
 		if (test_server)
 			sys_log(0, "ComputeSkill: Victim too far, skill %d : %s to %s (distance %u limit %u)",
@@ -2441,6 +2441,57 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 	}
 }
 
+struct FComputeSkillParty
+{
+    FComputeSkillParty(uint32_t dwVnum, LPCHARACTER pkAttacker, uint8_t bSkillLevel = 0) : m_dwVnum(dwVnum), m_pkAttacker(pkAttacker), m_bSkillLevel(bSkillLevel)
+    {}
+
+    void operator () (LPCHARACTER ch)
+    {
+       #ifdef ENABLE_PARTY_SKILL_FULL_MAP
+        if (ch->GetMapIndex() == m_pkAttacker->GetMapIndex())
+        {
+            m_pkAttacker->ComputeSkill(m_dwVnum, ch, m_bSkillLevel);
+        }
+        #else
+		m_pkAttacker->ComputeSkill(m_dwVnum, ch, m_bSkillLevel);
+        #endif
+    }
+
+    uint32_t m_dwVnum;
+    LPCHARACTER m_pkAttacker;
+    uint8_t m_bSkillLevel;
+};
+
+int32_t CHARACTER::ComputeSkillParty(uint32_t dwVnum, LPCHARACTER pkVictim, uint8_t bSkillLevel)
+{
+#ifdef ENABLE_PARTY_SKILL_FULL_MAP
+    FComputeSkillParty f(dwVnum, this, bSkillLevel);
+	
+    if (GetParty())
+    {
+        GetParty()->ForEachOnMapMember(f, GetMapIndex());
+    }
+    else
+    {
+        f(this);
+    }
+#else
+    FComputeSkillParty f(dwVnum, this, bSkillLevel);
+	
+    if (GetParty() && GetParty()->GetNearMemberCount())
+	{
+        GetParty()->ForEachNearMember(f);
+	}
+    else
+	{
+        f(this);
+	}
+#endif
+
+    return BATTLE_NONE;
+}
+
  /*
   * This function checks if a Game Master (GM) is trying to apply a restricted buff on a regular player,
   * or if a regular player is trying to apply a restricted buff on a GM. If either condition is met, the
@@ -2668,6 +2719,8 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		pkVictim = this;
+	else if (IS_SET(pkSk->dwFlag, SKILL_FLAG_PARTY))
+		pkVictim = this;
 
 	if (pkSk->dwVnum == SKILL_MUYEONG || pkSk->IsChargeSkill() && !IsAffectFlag(AFF_TANHWAN_DASH) && !pkVictim)
 	{
@@ -2701,6 +2754,8 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);
+	else if (IS_SET(pkSk->dwFlag, SKILL_FLAG_PARTY))
+		ComputeSkillParty(dwVnum, this);	
 	else if (!IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
 		ComputeSkill(dwVnum, pkVictim);
 	else if (dwVnum == SKILL_BYEURAK)

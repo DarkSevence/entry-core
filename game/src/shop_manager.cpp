@@ -102,11 +102,14 @@ LPSHOP CShopManager::GetByNPCVnum(DWORD dwVnum)
 // 상점 거래를 시작
 bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper, int iShopVnum)
 {
-	if (pkChr->GetShopOwner() == pkChrShopKeeper)
+	if (test_server)
+		sys_log(0, "StartShopping [%s at %u %s vnum %u]", pkChr->GetName(), pkChrShopKeeper ? pkChrShopKeeper->GetRaceNum() : 0, pkChrShopKeeper ? pkChrShopKeeper->GetName() : "none", iShopVnum);
+	
+	if (pkChrShopKeeper && pkChr->GetShopOwner() == pkChrShopKeeper)
 		return false;
-	// this method is only for NPC
-	if (pkChrShopKeeper->IsPC())
-		return false;
+	
+	if (pkChrShopKeeper && pkChrShopKeeper->IsPC())
+		return false;	
 
 	//PREVENT_TRADE_WINDOW
 	if (pkChr->IsOpenSafebox() || pkChr->GetExchange() || pkChr->GetMyShop() || pkChr->IsCubeOpen())

@@ -168,7 +168,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 		if ("attr" == stType)
 		{
 			CSpecialAttrGroup * pkGroup = M2_NEW CSpecialAttrGroup(iVnum);
-			for (int k = 1; k < 256; ++k)
+			for (int k = 1; k < 1024; ++k)
 			{
 				char buf[4];
 				snprintf(buf, sizeof(buf), "%d", k);
@@ -211,7 +211,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 		else
 		{
 			CSpecialItemGroup * pkGroup = M2_NEW CSpecialItemGroup(iVnum, type);
-			for (int k = 1; k < 256; ++k)
+			for (int k = 1; k < 1024; ++k)
 			{
 				char buf[4];
 				snprintf(buf, sizeof(buf), "%d", k);
@@ -274,18 +274,17 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 					sys_log(0,"        name %s count %d prob %d rare %d", name.c_str(), iCount, iProb, iRarePct);
 					pkGroup->AddItem(dwVnum, iCount, iProb, iRarePct);
 
-					// CHECK_UNIQUE_GROUP
 					if (iVnum < 30000)
 					{
 						m_ItemToSpecialGroup[dwVnum] = iVnum;
 					}
-					// END_OF_CHECK_UNIQUE_GROUP
 
 					continue;
 				}
 
 				break;
 			}
+			
 			loader.SetParentNode();
 			if (CSpecialItemGroup::QUEST == type)
 			{
@@ -301,14 +300,13 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 	return true;
 }
 
-
 bool ITEM_MANAGER::ConvSpecialDropItemFile()
 {
 	char szSpecialItemGroupFileName[256];
-	snprintf(szSpecialItemGroupFileName, sizeof(szSpecialItemGroupFileName),
-		"%s/special_item_group.txt", LocaleService_GetBasePath().c_str());
+	snprintf(szSpecialItemGroupFileName, sizeof(szSpecialItemGroupFileName), "%s/special_item_group.txt", LocaleService_GetBasePath().c_str());
 
 	FILE *fp = fopen("special_item_group_vnum.txt", "w");
+	
 	if (!fp)
 	{
 		sys_err("could not open file (%s)", "special_item_group_vnum.txt");
@@ -328,7 +326,6 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 	for (DWORD i = 0; i < loader.GetChildNodeCount(); ++i)
 	{
 		loader.SetChildNode(i);
-
 		loader.GetCurrentNodeName(&stName);
 
 		int iVnum;
@@ -343,12 +340,25 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 		std::string str;
 		int type = 0;
+		
 		if (loader.GetTokenString("type", &str))
 		{
 			stl_lowers(str);
 			if (str == "pct")
 			{
 				type = 1;
+			}
+			else if (str == "quest")
+			{
+				type = 2;
+			}
+			else if (str == "special")
+			{
+				type = 3;
+			}
+			else if (str == "attr")
+			{
+				type = 4;
 			}
 		}
 
@@ -357,10 +367,26 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 		fprintf(fp, "Group	%s\n", stName.c_str());
 		fprintf(fp, "{\n");
 		fprintf(fp, "	Vnum	%i\n", iVnum);
+		
 		if (type)
+		{
 			fprintf(fp, "	Type	Pct");
+		}
+		else if (type == 2)
+		{
+			fprintf(fp, "	Type	Quest\n");
+		}
+		else if (type == 3)
+		{
+			fprintf(fp, "	Type	special\n");
+		}
 
-		for (int k = 1; k < 256; ++k)
+		else if (type == 4)
+		{
+			fprintf(fp, "	Type	ATTR\n");
+		}
+
+		for (int k = 1; k < 1024; ++k)
 		{
 			char buf[4];
 			snprintf(buf, sizeof(buf), "%d", k);
@@ -372,23 +398,18 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
-					if (	name == "경험치" ||
-						name == "mob" ||
-						name == "slow" ||
-						name == "drain_hp" ||
-						name == "poison" ||
-						name == "group")
+					if (name == "경험치" || name == "mob" || name == "slow" || name == "drain_hp" || name == "poison" || name == "group")
 					{
 						dwVnum = 0;
 					}
 					else
 					{
 						str_to_number(dwVnum, name.c_str());
+						
 						if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 						{
 							sys_err("ReadSpecialDropItemFile : there is no item %s : node %s", name.c_str(), stName.c_str());
 							fclose(fp);
-
 							return false;
 						}
 					}
@@ -397,7 +418,11 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 				int iCount = 0;
 				str_to_number(iCount, pTok->at(1).c_str());
 				int iProb = 0;
-				str_to_number(iProb, pTok->at(2).c_str());
+				
+				if (pTok->size() > 2)
+				{
+					str_to_number(iProb, pTok->at(2).c_str());
+				}
 
 				int iRarePct = 0;
 				if (pTok->size() > 3)
@@ -405,11 +430,19 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 					str_to_number(iRarePct, pTok->at(3).c_str());
 				}
 
-				//    1   "기술 수련서"   1   100
+				if (type == 4)
+				{
+					fprintf(fp, "	%d	%u	%d\n", k, dwVnum, iCount);
+				}
+
 				if (0 == dwVnum)
+				{
 					fprintf(fp, "	%d	%s	%d	%d\n", k, name.c_str(), iCount, iProb);
+				}
 				else
+				{
 					fprintf(fp, "	%d	%u	%d	%d\n", k, dwVnum, iCount, iProb);
+				}
 
 				continue;
 			}

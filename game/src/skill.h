@@ -33,6 +33,7 @@ enum ESkillFlags
 	SKILL_FLAG_ELEC		= (1 << 25),	// 傈扁 加己
 	SKILL_FLAG_FIRE		= (1 << 26),	// 阂 加己
 	SKILL_FLAG_KNOCKBACK	= (1 << 27),
+	SKILL_FLAG_PARTY	= (1 << 28),
 };
 
 enum

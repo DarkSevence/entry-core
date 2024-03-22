@@ -120,7 +120,6 @@ void CHARACTER::Initialize()
 	CEntity::Initialize(ENTITY_CHARACTER);
 
 	m_bNoOpenedShop = true;
-
 	m_bOpeningSafebox = false;
 
 	m_fSyncTime = get_float_time()-3;
@@ -413,6 +412,14 @@ void CHARACTER::Destroy()
 		SetDungeon(NULL);
 	}
 	
+	if (m_petSystem)
+	{
+		m_petSystem->Destroy();
+		delete m_petSystem;
+
+		m_petSystem = 0;
+	}	
+	
 	if(GetMountVnum())
 	{
 		RemoveAffect(AFFECT_MOUNT);
@@ -421,23 +428,12 @@ void CHARACTER::Destroy()
 	
 	HorseSummon(false);
 
-#ifdef __PET_SYSTEM__
-	if (m_petSystem)
-	{
-		m_petSystem->Destroy();
-		delete m_petSystem;
-
-		m_petSystem = 0;
-	}
-#endif
-
 	if (GetRider())
 		GetRider()->ClearHorseInfo();
 
 	if (GetDesc())
 	{
 		GetDesc()->BindCharacter(NULL);
-//		BindDesc(NULL);
 	}
 
 	if (m_pkExchange)
@@ -499,6 +495,15 @@ void CHARACTER::Destroy()
 		M2_DELETE(m_pkMall);
 		m_pkMall = NULL;
 	}
+	
+	for (TMapBuffOnAttrs::iterator it = m_map_buff_on_attrs.begin();  it != m_map_buff_on_attrs.end(); it++)
+	{
+		if (NULL != it->second)
+		{
+			M2_DELETE(it->second);
+		}
+	}
+	m_map_buff_on_attrs.clear();	
 
 	m_set_pkChrSpawnedBy.clear();
 
@@ -513,15 +518,8 @@ void CHARACTER::Destroy()
 	event_cancel(&m_pkPoisonEvent);
 	event_cancel(&m_pkFireEvent);
 	event_cancel(&m_pkPartyRequestEvent);
-	//DELAYED_WARP
 	event_cancel(&m_pkWarpEvent);
 	event_cancel(&m_pkCheckSpeedHackEvent);
-	//END_DELAYED_WARP
-
-	// RECALL_DELAY
-	//event_cancel(&m_pkRecallEvent);
-	// END_OF_RECALL_DELAY
-
 	event_cancel(&currentMiningEventPtr);
 
 	for (itertype(m_mapMobSkillEvent) it = m_mapMobSkillEvent.begin(); it != m_mapMobSkillEvent.end(); ++it)
@@ -531,17 +529,7 @@ void CHARACTER::Destroy()
 	}
 	m_mapMobSkillEvent.clear();
 
-	//event_cancel(&m_pkAffectEvent);
 	ClearAffect();
-
-	for (TMapBuffOnAttrs::iterator it = m_map_buff_on_attrs.begin();  it != m_map_buff_on_attrs.end(); it++)
-	{
-		if (NULL != it->second)
-		{
-			M2_DELETE(it->second);
-		}
-	}
-	m_map_buff_on_attrs.clear();
 
 	event_cancel(&m_pkDestroyWhenIdleEvent);
 
@@ -555,9 +543,6 @@ void CHARACTER::Destroy()
 
 	if (GetSectree())
 		GetSectree()->RemoveEntity(this);
-
-	if (m_bMonsterLog)
-		CHARACTER_MANAGER::instance().UnregisterForMonsterLog(this);
 }
 
 const char * CHARACTER::GetName() const
@@ -565,29 +550,37 @@ const char * CHARACTER::GetName() const
 	return m_stName.empty() ? (m_pkMobData ? m_pkMobData->m_table.szLocaleName : "") : m_stName.c_str();
 }
 
-void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE bItemCount)
-{
+void CHARACTER::OpenMyShop(const char* c_pszSign, TShopItemTable* pTable, BYTE bItemCount)
+{	
+	if (!CanHandleItem())
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 거래중(창고,교환,상점)에는 개인상점을 사용할 수 없습니다."));
+		return;
+	}
+
 	if (GetPart(PART_MAIN) > 2)
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("갑옷을 벗어야 개인 상점을 열 수 있습니다."));
 		return;
 	}
 
-	if (GetMyShop())	// 이미 샵이 열려 있으면 닫는다.
+	if (GetMyShop())
 	{
 		CloseMyShop();
 		return;
 	}
 
-	// 진행중인 퀘스트가 있으면 상점을 열 수 없다.
 	quest::PC * pPC = quest::CQuestManager::instance().GetPCForce(GetPlayerID());
 
-	// GetPCForce는 NULL일 수 없으므로 따로 확인하지 않음
 	if (pPC->IsRunning())
+	{
 		return;
+	}
 
 	if (bItemCount == 0)
+	{
 		return;
+	}
 
 	int64_t nTotalMoney = 0;
 
@@ -613,13 +606,10 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	if (m_stShopSign.length() == 0)
 		return;
 
-	if (LC_IsCanada() == false)
+	if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
 	{
-		if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("비속어나 은어가 포함된 상점 이름으로 상점을 열 수 없습니다."));	
-			return;
-		}
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("비속어나 은어가 포함된 상점 이름으로 상점을 열 수 없습니다."));	
+		return;
 	}
 
 	// MYSHOP_PRICE_LIST
@@ -722,16 +712,13 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	{
 		HorseSummon( false, true );
 	}
-	// new mount 이용 중에, 개인 상점 열면 자동 unmount
-	// StopRiding으로 뉴마운트까지 처리하면 좋은데 왜 그렇게 안해놨는지 알 수 없다.
 	else if (GetMountVnum())
 	{
 		RemoveAffect(AFFECT_MOUNT);
 		RemoveAffect(AFFECT_MOUNT_BONUS);
 	}
-	//if (!LC_IsNewCIBN())
-		SetPolymorph(30000, true);
-
+	
+	SetPolymorph(30000, true);
 }
 
 void CHARACTER::CloseMyShop()
@@ -1109,16 +1096,10 @@ void CHARACTER::SetPosition(int pos)
 		switch (pos)
 		{
 			case POS_FIGHTING:
-				if (!IsState(m_stateBattle))
-					MonsterLog("[BATTLE] �ο�� ����");
-
 				GotoState(m_stateBattle);
 				break;
 
 			default:
-				if (!IsState(m_stateIdle))
-					MonsterLog("[IDLE] ���� ����");
-
 				GotoState(m_stateIdle);
 				break;
 		}
@@ -4129,11 +4110,17 @@ BYTE CHARACTER::GetCharType() const
 
 bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 {
-	// TRENT_MONSTER
 	if (IS_SET(m_pointsInstant.dwAIFlag, AIFLAG_NOMOVE))
+	{
 		return false;
-	// END_OF_TRENT_MONSTER
-
+	}
+	
+	if (ch && !battle_is_attackable(ch, this))
+	{
+		SendDamagePacket(ch, 0, DAMAGE_BLOCK);
+		return false;
+	}
+	
 	if (ch == this)
 	{
 		sys_err("SetSyncOwner owner == this (%p)", this);
@@ -4844,9 +4831,7 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
         return;
     }
 
-	// ������ �����·� ����Ʈ�� ������ �� ����.
 	{
-		// ��, �ڽ��� �ڽ��� ������ Ŭ���� �� �ִ�.
 		if (pkChrCauser->GetMyShop() && pkChrCauser != this) 
 		{
 			sys_err("OnClick Fail (%s->%s) - PlayerCharacter has shop", pkChrCauser->GetName(), GetName());
@@ -4854,7 +4839,6 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 		}
 	}
 
-	// ��ȯ���϶� ����Ʈ�� ������ �� ����.
 	{
 		if (pkChrCauser->GetExchange())
 		{
@@ -4865,41 +4849,35 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 
 	if (IsPC())
 	{
-		// Ÿ������ ������ ���� PlayerCharacter�� ���� Ŭ���� ����Ʈ�� ó���ϵ��� �մϴ�.
 		if (!CTargetManager::instance().GetTargetInfo(pkChrCauser->GetPlayerID(), TARGET_TYPE_VID, GetVID()))
 		{
-			// 2005.03.17.myevan.Ÿ���� �ƴ� ���� ���� ���� ó�� ����� �۵���Ų��.
 			if (GetMyShop())
 			{
 				if (pkChrCauser->IsDead() == true) return;
 
 				//PREVENT_TRADE_WINDOW
-				if (pkChrCauser == this) // �ڱ�� ����
+				if (pkChrCauser == this)
 				{
 					if ((GetExchange() || IsOpenSafebox() || GetShopOwner()) || IsCubeOpen())
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;30;]");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;303333]");
 						return;
 					}
 				}
-				else // �ٸ� ����� Ŭ��������
+				else
 				{
-					// Ŭ���� ����� ��ȯ/â��/���λ���/�����̿����̶�� �Ұ�
-					if ((pkChrCauser->GetExchange() || pkChrCauser->IsOpenSafebox() || pkChrCauser->GetMyShop() || pkChrCauser->GetShopOwner()) || pkChrCauser->IsCubeOpen() )
+					if ((pkChrCauser->GetExchange() || pkChrCauser->IsOpenSafebox() || pkChrCauser->GetMyShop() || pkChrCauser->GetShopOwner()) || pkChrCauser->IsCubeOpen())
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;30;]");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;30222]");
 						return;
 					}
 
-					// Ŭ���� ����� ��ȯ/â��/�����̿����̶�� �Ұ�
-					//if ((GetExchange() || IsOpenSafebox() || GetShopOwner()))
 					if ((GetExchange() || IsOpenSafebox() || IsCubeOpen()))
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;30;]");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "[LS;30111]");
 						return;
 					}
 				}
-				//END_PREVENT_TRADE_WINDOW
 
 				if (pkChrCauser->GetShop())
 				{
@@ -4935,7 +4913,6 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 
 		m_triggerOnClick.pFunc(this, pkChrCauser);
 	}
-
 }
 
 BYTE CHARACTER::GetGMLevel() const
